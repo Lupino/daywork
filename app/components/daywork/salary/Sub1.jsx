@@ -4,9 +4,9 @@ import phone from 'reapp-kit/icons/phone.svg';
 export default class extends React.Component {
   render() {
     const backButton =
-      <BackButton onTap={() => window.history.back()} />;
+      <BackButton onTap={() => this.router().transitionTo('salary')}> 我的工资 </BackButton>;
 
-    var call = <Button icon={<Icon file={phone} chromeless />}> </Button>;
+    var call = <Button icon={<Icon file={phone} />}> </Button>;
 
     return (
       <View {...this.props} title={[

@@ -1,5 +1,5 @@
 {
-  "author": "Your Name Here",
+  "author": "Lupino",
   "name": "daywork",
   "repository": "",
   "description": "",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "react": "0.13.2",
+    "react-dropzone": "^2.0.1",
     "reapp-kit": "^1.2.0"
   }
 }
