@@ -8,10 +8,15 @@ import session from 'express-session';
 import errorHandler from 'errorhandler';
 import mongoStoreLib from 'connect-mongo';
 import config from './config';
+import Daywork from './lib/daywork';
+import expressCommon from './lib/express_common';
+import api from './api';
 
 var MongoStore = mongoStoreLib(session);
 
 var app = express();
+
+let daywork = new Daywork(config);
 
 app.set('port', config.port || process.env.PORT || 3000);
 app.set('host', config.host || process.env.HOST || '127.0.0.1');
@@ -23,7 +28,7 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(session({
-  secret: config.cookie_secret,
+  secret: config.cookieSecret,
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({
@@ -32,6 +37,16 @@ app.use(session({
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(daywork.auth('/auth'));
+
+expressCommon(app, daywork);
+
+api(app, daywork);
+
+app.get('/', (req, res) => {
+  res.send('Daywork.');
+});
 
 if ('development' === app.get('env')) {
   app.use(errorHandler());

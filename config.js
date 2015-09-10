@@ -1,7 +1,8 @@
 var config = {
   mongod: 'mongodb://localhost/daywork',
-  cookie_secret: 'yabby-chknonlaedfasdwe',
+  cookieSecret: 'yabby-chknonlaedfasdwe',
   host: '127.0.0.1',
+  apiPrefix: '/api',
   port: 3000
 };
 
