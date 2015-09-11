@@ -1,4 +1,6 @@
 import { React, Page, NestedViewList, View, BackButton, List, Input, Router, Modal, Title } from 'reapp-kit';
+import request from 'superagent';
+import { host } from '../../config';
 
 var {Link} = Router;
 
@@ -8,6 +10,10 @@ class Settings extends Page {
   }
   toggleModal(type) {
     this.setState({logOutModal: type});
+  }
+  handleLogOut() {
+    request.post(host + '/api/logOut',
+                 () => this.router().transitionTo('signin'));
   }
   render() {
     const backButton =
@@ -25,6 +31,7 @@ class Settings extends Page {
             {this.state.logOutModal && <Modal
               title="确定退出当前账号吗？"
               type={this.state.logOutModal}
+              onConfirm={this.handleLogOut}
               onClose={this.toggleModal.bind(this, false)} />}
 
             <Title> 提醒 </Title>

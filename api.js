@@ -255,6 +255,13 @@ export default function(app, daywork) {
     });
   });
 
+  app.post(apiPrefix + '/logOut', (req, res) => {
+    if (req.session.currentUser) {
+      delete req.session.currentUser;
+    }
+    sendJsonResponse(res, null, { result: 'success' });
+  });
+
   app.post(apiPrefix + '/sendSmsCode', (req, res) => {
     sendJsonResponse(res, null, { result: 'success' });
   });
