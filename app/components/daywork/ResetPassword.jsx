@@ -70,7 +70,7 @@ export default class extends React.Component {
       if (rsp.err) {
         return this.alert(rsp.msg || rsp.err);
       }
-      this.router().transitionTo('siguin');
+      this.router().transitionTo('signin');
     });
   }
   render() {
