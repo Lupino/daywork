@@ -5,7 +5,7 @@ import async from 'async';
 import _ from 'lodash';
 
 export default function(app, daywork) {
-  let  { requireLogin } = daywork;
+  let  { requireLogin, hashedPassword } = daywork;
 
   app.get(apiPrefix + '/users/me', requireLogin(),
           (req, res) => sendJsonResponse(res, null, { user: req.currentUser }));
@@ -259,9 +259,22 @@ export default function(app, daywork) {
     sendJsonResponse(res, null, { result: 'success' });
   });
 
-  app.post(apiPrefix + '/resetPasswd', requireLogin(), (req, res) => {
+  app.post(apiPrefix + '/resetPasswd', (req, res) => {
     let pwds = req.body;
-    pwds.userId = req.currentUser.userId;
+    if (pwds.phoneNumber && pwds.smsCode) {
+      if (pwds.smsCode !== '9988') {
+        return sendJsonResponse(res, '请填写正确的短信验证码');
+      }
+    } else {
+      if (!req.currentUser) {
+        return sendJsonResponse(res, 'Unauthorized');
+      }
+      pwds.phoneNumber = req.currentUser.phoneNumber;
+      var oldHash = hashedPassword(pwds.oldPasswd);
+      if (oldHash != req.currentUser.passwd) {
+        return sendJsonResponse(res, '旧密码输入错误');
+      }
+    }
     daywork.changePasswd(pwds, (err) =>
                          sendJsonResponse(res, err, { result: 'success' }));
   });
