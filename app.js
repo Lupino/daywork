@@ -11,6 +11,7 @@ import config from './config';
 import Daywork from './lib/daywork';
 import expressCommon from './lib/express_common';
 import api from './api';
+import cors from 'cors';
 
 var MongoStore = mongoStoreLib(session);
 
@@ -35,6 +36,8 @@ app.use(session({
     url: config.mongod
   })
 }));
+
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
