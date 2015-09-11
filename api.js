@@ -255,6 +255,10 @@ export default function(app, daywork) {
     });
   });
 
+  app.post(apiPrefix + '/sendSmsCode', (req, res) => {
+    sendJsonResponse(res, null, { result: 'success' });
+  });
+
   app.post(apiPrefix + '/resetPasswd', requireLogin(), (req, res) => {
     let pwds = req.body;
     pwds.userId = req.currentUser.userId;
