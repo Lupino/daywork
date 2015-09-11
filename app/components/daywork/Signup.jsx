@@ -45,6 +45,7 @@ export default class extends React.Component {
     let phoneNumber = this.refs.phoneNumber.getDOMNode().value.trim();
     let passwd = this.refs.passwd.getDOMNode().value.trim();
     let smsCode = this.refs.smsCode.getDOMNode().value.trim();
+    let realName = this.refs.realName.getDOMNode().value.trim();
 
     if (!phoneNumber.match(/\d{11}/)) {
       return this.alert('请填写正确的手机号码');
@@ -54,6 +55,10 @@ export default class extends React.Component {
       return this.alert('请填写手机验证码');
     }
 
+    if (!realName) {
+      return this.alert('请填写您的姓名');
+    }
+
     if (!passwd) {
       return this.alert('请填写密码');
     }
@@ -61,6 +66,7 @@ export default class extends React.Component {
     request.post(host + '/api/signup', {
       phoneNumber: phoneNumber,
       smsCode: smsCode,
+      realName: realName,
       passwd: passwd
     }, (err, res) => {
       if (err) {
@@ -68,13 +74,15 @@ export default class extends React.Component {
       }
       let rsp = res.body;
       if (rsp.err) {
+        if (rsp.msg && /phoneNumber/.exec(rsp.msg)) {
+          return this.alert('手机号码: ' + phoneNumber + ' 已经被注册了');
+        }
         return this.alert(rsp.msg || rsp.err);
       }
       this.router().transitionTo('daywork');
     });
   }
   render() {
-
     return (
       <View {...this.props} title="新用户注册">
         {this.state.modal && <Modal
@@ -90,6 +98,12 @@ export default class extends React.Component {
         <List>
           <List.Item before="验证码" after={<Button inactive={!this.state.btnActive} chromeless onTap={this.handleSendSmsCode}> 发送验证码<span>{this.state.btnCutDown}</span> </Button>}>
             <Input ref="smsCode" type="text" placeholder="手机验证码" />
+          </List.Item>
+        </List>
+        <br />
+        <List>
+          <List.Item before="姓名">
+            <Input ref="realName" type="text" placeholder="请填写您的姓名" />
           </List.Item>
         </List>
         <br />
