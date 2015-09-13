@@ -141,6 +141,12 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/jobs/create', requireLogin(), (req, res) => {
     let job = req.body;
     job.userId = req.currentUser.userId;
+    if (!job.title) {
+      return sendJsonResponse(res, '请填写标题');
+    }
+    if (!job.salary) {
+      return sendJsonResponse(res, '请填写单位工资');
+    }
     daywork.createJob(job, (err, job) => sendJsonResponse(res, err, { job: job }));
   });
 
