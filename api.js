@@ -46,7 +46,7 @@ export default function(app, daywork) {
       limit = 50;
     }
     let status = req.query.status || null;
-    let userId = req.params.userId;
+    let userId = Number(req.params.userId);
     let skip = limit * page;
 
     let query = { userId: userId };
@@ -221,7 +221,7 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
 
-    let userId = Number(req.param('userId'));
+    let userId = Number(req.body.userId);
     let jobId = req.job.jobId;
 
     if (req.currentUser.userId === userId) {
