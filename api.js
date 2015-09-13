@@ -115,8 +115,8 @@ export default function(app, daywork) {
 
     daywork.getRecordByJob(jobId,
                            { limit: limit, skip: skip, status: status, userId: userId },
-                           (err, workers) => {
-                             sendJsonResponse(res, err, { workers: workers });
+                           (err, records) => {
+                             sendJsonResponse(res, err, { records: records });
                            });
   });
 
@@ -133,8 +133,8 @@ export default function(app, daywork) {
 
     daywork.getRecordByUser(userId,
                             { limit: limit, skip: skip, status: status, jobId: jobId },
-                            (err, jobs) => {
-                              sendJsonResponse(res, err, { jobs: jobs });
+                            (err, records) => {
+                              sendJsonResponse(res, err, { records: records });
                             });
   });
 
