@@ -244,10 +244,10 @@ export default function(app, daywork) {
       let record = {
         jobId: jobId,
         userId: userId,
-        recordNumber: Number(req.param('recordNumber')) || 1
+        recordNumber: Number(req.body.recordNumber) || 1
       };
       daywork.addRecord(record,
-                        (err, rec) => sendJsonResponse(res, err, rec));
+                        (err, rec) => sendJsonResponse(res, err, { record: rec }));
     });
   });
 
