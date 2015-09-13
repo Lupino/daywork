@@ -1,15 +1,98 @@
-import { Reapp, React, NestedViewList, View, List, Router, Bar, Badge, Icon } from 'reapp-kit';
+import { Reapp, React, NestedViewList, View, List, Router, Bar, Badge, Icon,
+  store, action, Immutable } from 'reapp-kit';
 import trendIcon from 'reapp-kit/icons/timer.svg';
 import discoverIcon from 'reapp-kit/icons/paper-plane.svg';
 import peopleIcon from '../../assets/silhouette121.svg';
 import gearIcon from 'reapp-kit/icons/gear.svg';
 import workingIcon from '../../assets/working9.svg';
 import dollarsIcon from 'reapp-kit/icons/dollars.svg';
+import addIcon from 'reapp-kit/icons/add.svg';
+import squareIcon from 'reapp-kit/icons/square.svg';
 import avatarIcon from '../../assets/profile5.png';
+import { host } from '../config';
 
 var {Link} = Router;
 
-class Daywork extends React.Component {
+let oauthToken = localStorage.getItem('oauthToken');
+if (oauthToken) {
+  try {
+    oauthToken = JSON.parse(oauthToken);
+  } catch (e) {
+    oauthToken = {};
+  }
+} else {
+  oauthToken = {};
+}
+
+let profile = localStorage.getItem('profile');
+if (profile) {
+  try {
+    profile = JSON.parse(profile);
+  } catch (e) {
+    profile = {};
+  }
+} else {
+  profile = {};
+}
+
+let settings = localStorage.getItem('settings');
+if (settings) {
+  try {
+    settings = JSON.parse(settings);
+  } catch (e) {
+    settings = {};
+  }
+} else {
+  settings = {};
+}
+
+store({ profile: profile, oauthToken: oauthToken, settings: settings });
+action('setOauthToken', (oauthToken) => {
+  store().withMutations(store => {
+    localStorage.setItem('oauthToken', JSON.stringify(oauthToken));
+    store.set('oauthToken', Immutable.fromJS(oauthToken));
+  });
+});
+action('delOauthToken', () => {
+  store().withMutations(store => {
+    localStorage.removeItem('oauthToken');
+    store.set('oauthToken', Immutable.fromJS({}));
+  });
+});
+action('setProfile', (profile) => {
+  store().withMutations(store => {
+    localStorage.setItem('profile', JSON.stringify(profile));
+    store.set('profile', Immutable.fromJS(profile));
+  });
+});
+action('updateProfile', (data) => {
+  store().withMutations(store => {
+    let key;
+    for (key in data) {
+      let value = data[key];
+      if (typeof value === 'object') {
+        value = Immutable.fromJS(value);
+      }
+      store.setIn(['profile', key], value);
+    }
+    localStorage.setItem('profile', JSON.stringify(store.get('profile').toJSON()));
+  });
+});
+action('updateSettings', (data) => {
+  store().withMutations(store => {
+    let key;
+    for (key in data) {
+      let value = data[key];
+      if (typeof value === 'object') {
+        value = Immutable.fromJS(value);
+      }
+      store.setIn(['settings', key], value);
+    }
+    localStorage.setItem('settings', JSON.stringify(store.get('settings').toJSON()));
+  });
+});
+
+const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Component {
   constructor(props) {
     super(props);
     var pathname = window.location.pathname;
@@ -100,13 +183,17 @@ class Daywork extends React.Component {
   }
   renderMeView() {
     var badge = <Badge> 5 </Badge>;
+    let avatarImgUrl = avatarIcon;
+    if (this.props.profile.get('avatar')) {
+      avatarImgUrl = host + '/upload/' + this.props.profile.getIn(['avatar', 'key']);
+    }
     return (
       <View>
         <List>
           <List.Item
-            title="李孟君"
-            titleSub="手机号: 13159228627"
-            before={<img src={avatarIcon} style={styles.avatar} />}
+            title={this.props.profile.get('realName')}
+            titleSub={'手机号: ' + this.props.profile.get('phoneNumber')}
+            before={<img src={avatarImgUrl} style={styles.avatar} />}
             wrapper={<Link to="profile" />}
             icon
             nopad
@@ -168,7 +255,7 @@ class Daywork extends React.Component {
       </NestedViewList>
     );
   }
-}
+});
 
 var styles = {
   listIcon: {

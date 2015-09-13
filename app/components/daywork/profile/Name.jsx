@@ -1,10 +1,15 @@
-import { React, View, BackButton, Button, List, Input } from 'reapp-kit';
+import { React, View, BackButton, Button, List, Input, Alert } from 'reapp-kit';
+import { alert } from '../../lib/higherOrderComponent';
 
-export default class extends React.Component {
+export default alert(class extends React.Component {
   handleSave() {
     var name = this.refs.name.getDOMNode().value.trim();
-    this.props.profileUpdate('name', name);
-    this.router().transitionTo('profile');
+    this.props.profileUpdate('realName', name, (err) => {
+      if (err) {
+        return this.props.alert(err);
+      }
+      this.router().transitionTo('profile');
+    });
   }
   render() {
     const backButton =
@@ -19,9 +24,9 @@ export default class extends React.Component {
         save
       ]}>
         <List wrap>
-          <Input ref="name" type="text" defaultValue={this.props.profile.name} />
+          <Input ref="name" type="text" defaultValue={this.props.profile.realName} />
         </List>
       </View>
     );
   }
-}
+});

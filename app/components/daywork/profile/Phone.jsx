@@ -3,8 +3,7 @@ import { React, View, BackButton, Button, List, Input } from 'reapp-kit';
 export default class extends React.Component {
   handleSave() {
     var phone = this.refs.phone.getDOMNode().value.trim();
-    this.props.profileUpdate('phone', phone);
-    this.router().transitionTo('profile');
+    this.props.profileUpdate('phoneNumber', phone);
   }
   render() {
     const backButton =
@@ -19,7 +18,7 @@ export default class extends React.Component {
         save
       ]}>
         <List wrap>
-          <Input ref="phone" type="text" defaultValue={this.props.profile.phone} />
+          <Input ref="phone" type="text" defaultValue={this.props.profile.phoneNumber} />
         </List>
       </View>
     );

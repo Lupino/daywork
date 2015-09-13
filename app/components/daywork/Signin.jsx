@@ -25,6 +25,7 @@ export default class extends React.Component {
       return this.alert('请填写密码');
     }
     request.post(host + '/auth', {
+      type: 'access_token',
       userName: phoneNumber,
       passwd: passwd
     }, (err, res) => {
@@ -35,6 +36,18 @@ export default class extends React.Component {
       if (rsp.err) {
         return this.alert(rsp.msg || rsp.err);
       }
+      this.action.setOauthToken(rsp);
+      request.get(host + '/api/users/me?access_token=' + rsp.accessToken,
+                  (err, res) => {
+                    if (err) {
+                      return this.alert('登录失败');
+                    }
+                    let rsp = res.body;
+                    if (rsp.err) {
+                      return this.alert(rsp.msg || rsp.err);
+                    }
+                    this.action.setProfile(rsp.user);
+                  });
       this.router().transitionTo('daywork');
     });
   }

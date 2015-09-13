@@ -1,9 +1,14 @@
 import { React, View, BackButton, List, Input } from 'reapp-kit';
+import { alert } from '../../lib/higherOrderComponent';
 
-export default class extends React.Component {
+export default alert(class extends React.Component {
   handleChange(sex) {
-    this.props.profileUpdate('sex', sex);
-    this.router().transitionTo('profile');
+    this.props.profileUpdate('sex', sex, (err) => {
+      if (err) {
+        return this.props.alert(err);
+      }
+      this.router().transitionTo('profile');
+    });
   }
   render() {
     const backButton =
@@ -22,10 +27,10 @@ export default class extends React.Component {
         '性别'
       ]}>
         <List wrap>
-          <Input type="radio" label="男" checked={M} onClick={this.handleChange.bind(this, '男')} />
-          <Input type="radio" label="女" checked={F} onClick={this.handleChange.bind(this, '女')} />
+          <Input type="radio" label="男" defaultChecked={M} onClick={this.handleChange.bind(this, '男')} />
+          <Input type="radio" label="女" defaultChecked={F} onClick={this.handleChange.bind(this, '女')} />
         </List>
       </View>
     );
   }
-}
+});

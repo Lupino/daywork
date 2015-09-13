@@ -1,4 +1,4 @@
-import { React, Page, NestedViewList, View, BackButton, List, Input, Router, Modal, Title } from 'reapp-kit';
+import { React, Page, NestedViewList, View, BackButton, List, Input, Router, Modal, Title, store } from 'reapp-kit';
 import request from 'superagent';
 import { host } from '../../config';
 
@@ -11,7 +11,16 @@ class Settings extends Page {
   toggleModal(type) {
     this.setState({logOutModal: type});
   }
+  handleChange(key, value) {
+    if (value === undefined) {
+      return;
+    }
+    var settings = {};
+    settings[key] = value;
+    this.action.updateSettings(settings);
+  }
   handleLogOut() {
+    this.action.delOauthToken();
     request.post(host + '/api/logOut',
                  () => this.router().transitionTo('signin'));
   }
@@ -37,17 +46,23 @@ class Settings extends Page {
             <Title> 提醒 </Title>
             <List>
               <List.Item>
-                <Input type="checkbox" label="工作提醒" />
+                <Input type="checkbox" label="工作提醒" ref="notify"
+                  defaultChecked={this.props.settings.get('notify')}
+                  onChange={this.handleChange.bind(this, 'notify')} />
               </List.Item>
             </List>
             <List>
               <List.Item>
-                <Input type="checkbox" label="声音" />
+                <Input type="checkbox" label="声音" ref="voice"
+                  defaultChecked={this.props.settings.get('voice')}
+                  onChange={this.handleChange.bind(this, 'voice')} />
               </List.Item>
             </List>
             <List>
               <List.Item>
-                <Input type="checkbox" label="震动" />
+                <Input type="checkbox" label="震动" ref="shock"
+                  defaultChecked={this.props.settings.get('shock')}
+                  onChange={this.handleChange.bind(this, 'shock')} />
               </List.Item>
             </List>
             <br />
@@ -76,4 +91,4 @@ class Settings extends Page {
   }
 }
 
-export default Settings;
+export default store.cursor(['settings'], Settings);

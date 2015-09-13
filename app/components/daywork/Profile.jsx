@@ -1,28 +1,65 @@
-import { React, Page, NestedViewList, View, BackButton, List, Router } from 'reapp-kit';
+import { React, Page, NestedViewList, View, BackButton, List, Router, store } from 'reapp-kit';
 import avatarIcon from '../../../assets/profile5.png';
 import Dropzone from 'react-dropzone';
+import request from 'superagent';
+import { host } from '../../config';
+import { alert } from '../lib/higherOrderComponent';
 
 var {Link} = Router;
 
-export default class extends Page {
+export default store.cursor(['profile', 'oauthToken'], alert(class extends Page {
   constructor(props) {
     super(props);
+    let avatar = props.profile.get('avatar');
+    if (avatar) {
+      avatar = avatar.toJSON();
+    }
     this.state = {
-      name: '李孟君',
-      sex: '男',
-      phone: '13159228627'
+      realName: props.profile.get('realName'),
+      sex: props.profile.get('sex'),
+      phoneNumber: props.profile.get('phoneNumber'),
+      avatar: avatar
     };
   }
 
-  handleChange(key, value) {
+  handleChange(key, value, cb) {
+    if (this.state[key] === value) {
+      return cb();
+    }
     var state = {};
     state[key] = value;
-    this.setState(state);
+    state.access_token = this.props.oauthToken.get('accessToken');
+    request.post(host + '/api/updateProfile', state, (err, res) => {
+      if (err) {
+        return cb('网络错误');
+      }
+      let rsp = res.body;
+      if (rsp.err) {
+        return cb(rsp.msg || rsp.err);
+      }
+      this.action.updateProfile(state);
+      this.setState(state);
+      cb();
+    });
   }
 
   onDrop(files) {
     /*eslint-disable no-console */
-    console.log(files);
+    let req = request.post(host + '/api/updateAvatar?access_token=' + this.props.oauthToken.get('accessToken'));
+    files.forEach((file) => {
+      req.attach('avatar', file);
+    });
+    req.end((err, res) => {
+      if (err) {
+        return this.props.alert('网络错误');
+      }
+      let rsp = res.body;
+      if (rsp.err) {
+        return this.props.alert(rsp.msg || rsp.err);
+      }
+      this.setState({ avatar: rsp });
+      this.action.updateProfile({ avatar: rsp });
+    });
     /*eslint-enable no-console */
   }
 
@@ -37,6 +74,11 @@ export default class extends Page {
 
     var viewListProps = this.routedViewListProps();
 
+    let avatarImgUrl = avatarIcon;
+    if (this.state.avatar) {
+      avatarImgUrl = host + '/upload/' + this.state.avatar.key;
+    }
+
     return (
       <View {...this.props}>
         <NestedViewList {...viewListProps}>
@@ -47,7 +89,7 @@ export default class extends Page {
             <List>
               <List.Item
                 title={<div style={styles.avatarText}>头像</div>}
-                titleAfter={<div style={styles.avatar}><img src={avatarIcon} style={styles.avatarIcon}/> </div>}
+                titleAfter={<div style={styles.avatar}><img src={avatarImgUrl} style={styles.avatarIcon}/> </div>}
                 wrapper={<Dropzone onDrop={this.onDrop} />}
                 icon
                 nopad
@@ -57,7 +99,7 @@ export default class extends Page {
             </List>
               <List.Item
                 title="性名"
-                titleAfter={<span>{this.state.name}</span>}
+                titleAfter={<span>{this.state.realName}</span>}
                 wrapper={<Link to="name" />}
                 icon
                 nopad
@@ -71,9 +113,7 @@ export default class extends Page {
               />
               <List.Item
                 title="手机号"
-                titleAfter={<span>{this.state.phone}</span>}
-                wrapper={<Link to="phone" />}
-                icon
+                titleAfter={<span>{this.state.phoneNumber}</span>}
                 nopad
               />
             </List>
@@ -83,7 +123,7 @@ export default class extends Page {
       </View>
     );
   }
-}
+}));
 
 var styles = {
   avatar: {
