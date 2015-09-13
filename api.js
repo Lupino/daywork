@@ -314,6 +314,13 @@ export default function(app, daywork) {
                          sendJsonResponse(res, err, { result: 'success' }));
   });
 
+  app.post(apiPrefix + '/updateProfile', requireLogin(), (req, res) => {
+    let userId = req.currentUser.userId;
+    let body = req.body;
+    daywork.updateUser(userId, body,
+                       (err, user) => sendJsonResponse(res, err, { user: user }));
+  });
+
   app.post(apiPrefix + '/upload', requireLogin(), (req, res) => {
     async.waterfall([
       (next) => {
@@ -328,6 +335,28 @@ export default function(app, daywork) {
       }
     ], (err, files) => {
       sendJsonResponse(res, err, files);
+    });
+  });
+  app.post(apiPrefix + '/updateAvatar', requireLogin(), (req, res) => {
+    async.waterfall([
+      (next) => {
+        let form = new formidable.IncomingForm();
+        form.hash = 'sha1';
+        form.parse(req, (err, _, files) => next(err, files));
+      },
+      (files, next) => {
+        if (!files.avatar) {
+          return next('请选择头像');
+        }
+        let file = files.avatar;
+        daywork.upload(file, next);
+      },
+      (file, next) => {
+        daywork.updateUser(req.currentUser.userId, { avatar: file.toJSON() },
+                           (err) => next(err, file));
+      }
+    ], (err, file) => {
+      sendJsonResponse(res, err, file);
     });
   });
 }
