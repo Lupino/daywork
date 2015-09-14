@@ -4,6 +4,10 @@ import { router, route } from 'reapp-kit';
 router(require,
   route('daywork', '/',
     route('sub'),
+    route('newJob'),
+    route('jobs',
+      route('jobDetail', '/jobs/:jobId')
+    ),
     route('signup'),
     route('signin'),
     route('problem'),

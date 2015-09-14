@@ -97,7 +97,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
     super(props);
     var pathname = window.location.pathname;
     var barIndex = 0;
-    if (pathname.match(/profile|settings|salary/)) {
+    if (pathname.match(/profile|settings|salary|newJob|jobs/)) {
       barIndex = 2;
     }
     this.state = {
@@ -214,6 +214,20 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
             before={<Icon file={workingIcon} size={20} />}
             titleAfter={badge}
             wrapper={<Link to="sub" />}
+            icon
+            nopad
+          />
+          <List.Item
+            title="发布新职位"
+            before={<Icon file={addIcon} size={20} />}
+            wrapper={<Link to="newJob" />}
+            icon
+            nopad
+          />
+          <List.Item
+            title="我发布的职位"
+            before={<Icon file={squareIcon} size={20} />}
+            wrapper={<Link to="jobs" />}
             icon
             nopad
           />
