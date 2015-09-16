@@ -277,12 +277,12 @@ export default function(app, daywork) {
     ], (err, rec) => sendJsonResponse(res, err, { record: rec }));
   });
 
-  app.post(apiPrefix + 'jobs/:jobId/payOffline', requireLogin(), (req, res) => {
+  app.post(apiPrefix + '/jobs/:jobId/payOffline', requireLogin(), (req, res) => {
     if (!req.isOwner) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    let id = req.body.id;
-    let money = req.body.money;
+    let id = Number(req.body.id);
+    let money = Number(req.body.money);
     daywork.payOffline(id, money,
                        (err, result) => sendJsonResponse(res, err, { result: result }));
   });
