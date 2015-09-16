@@ -262,13 +262,7 @@ export default function(app, daywork) {
         if (record.userId != req.currentUser.userId) {
           return sendJsonResponse(res, 403, 'no permission.');
         }
-        if (record.status === 'Unpaid') {
-          return next('该记录以被支付了');
-        }
-        if (new Date() - record.createdAt < 30 * 60 * 1000) {
-          return next('无法取消超过 30 分钟的记录');
-        }
-        return daywork.updateRecord(recId, 'Cancel', next);
+        return daywork.cancelRecord(recId, next);
       }
     ], (err, rec) => sendJsonResponse(res, err, { record: rec }));
   });
