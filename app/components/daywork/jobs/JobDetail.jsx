@@ -16,7 +16,27 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
     tab: 0,
     inActiveBtns: {},
     needUpdatedSalary: false,
+    loadMoreButton: [true, true, true, false],
+    currentPage: [0, 0, 0, 0],
     records: []
+  }
+  updateButtonState(idx, state) {
+    let loadMoreButton = this.state.loadMoreButton;
+    loadMoreButton[idx] = state;
+    this.setState({ loadMoreButton });
+  }
+  updateTabPage(idx, page) {
+    let currentPage = this.state.currentPage;
+    currentPage[idx] = page;
+    this.setState({ currentPage });
+  }
+  handleLoadMore(tab, page) {
+    if (tab === 0 || tab === 2) {
+      this.loadWorkers(page);
+    }
+    if (tab === 1) {
+      this.loadRecords(page);
+    }
   }
   loadJob() {
     let jobId = Number(this.context.router.getCurrentParams().jobId);
@@ -36,9 +56,10 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
       this.setState(rsp);
     });
   }
-  loadWorkers() {
+  loadWorkers(page) {
     let jobId = Number(this.context.router.getCurrentParams().jobId);
-    request.get(host + '/api/jobs/' + jobId + '/workers', (err, res) => {
+    page = page || 0;
+    request.get(host + '/api/jobs/' + jobId + '/workers?page=' + page, (err, res) => {
       if (err) {
         return this.props.alert('网络错误');
       }
@@ -46,13 +67,23 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
       if (rsp.err) {
         return this.props.alert(rsp.msg || rsp.err);
       }
+      let workers = this.state.workers.concat(_.clone(rsp.workers));
+      workers = _.uniq(workers, 'id');
+      this.setState({ workers });
       this.setState(rsp);
       this.setState({ needUpdatedSalary: false });
+      if (rsp.workers.length < 10) {
+        this.updateButtonState(0, false);
+        this.updateButtonState(2, false);
+      }
+      this.updateTabPage(0, page);
+      this.updateTabPage(2, page);
     });
   }
-  loadRecords() {
+  loadRecords(page) {
     let jobId = Number(this.context.router.getCurrentParams().jobId);
-    request.get(host + '/api/jobs/' + jobId + '/records', (err, res) => {
+    page = page || 0;
+    request.get(host + '/api/jobs/' + jobId + '/records?page='+page, (err, res) => {
       if (err) {
         return this.props.alert('网络错误');
       }
@@ -60,7 +91,13 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
       if (rsp.err) {
         return this.props.alert(rsp.msg || rsp.err);
       }
-      this.setState(rsp);
+      let records = this.state.records.concat(_.clone(rsp.records));
+      records = _.uniq(records, 'recordId');
+      this.setState({ records });
+      if (rsp.records.length < 10) {
+        this.updateButtonState(1, false);
+      }
+      this.updateTabPage(1, page);
     });
   }
   setInActiveButton(userId, type) {
@@ -279,10 +316,19 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
       );
     });
 
+
     let tabs = [workers, records, salarys, null];
     let tab = tabs[this.state.tab];
     let tabTitles = ['工人', '记录', '工资', '请求'];
     let tabTitle = tabTitles[this.state.tab];
+
+    let button = null;
+    if (this.state.loadMoreButton[this.state.tab]) {
+      let page = this.state.currentPage[this.state.tab] + 1;
+      button = <Button
+        onTap={this.handleLoadMore.bind(this, this.state.tab, page)}>
+        加载更多... </Button>;
+    }
 
     return (
       <div>
@@ -291,6 +337,8 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
         <List>
           {tab}
         </List>
+        <br />
+        {button}
       </div>
     );
   }
