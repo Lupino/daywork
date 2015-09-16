@@ -1,7 +1,7 @@
-import { React, View, BackButton, Button, List, Input, Alert } from 'reapp-kit';
-import { alert } from '../../lib/higherOrderComponent';
+import { React, View, BackButton, Button, List, Input } from 'reapp-kit';
+import { modal } from '../../lib/higherOrderComponent';
 
-export default alert(class extends React.Component {
+export default modal(class extends React.Component {
   handleSave() {
     var name = this.refs.name.getDOMNode().value.trim();
     this.props.profileUpdate('realName', name, (err) => {

@@ -1,6 +1,6 @@
 import { React, Modal } from 'reapp-kit';
 
-export function alert(Component) {
+export function modal(Component) {
   return class extends React.Component {
     state = {
       modal: false,

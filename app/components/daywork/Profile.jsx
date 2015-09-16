@@ -3,11 +3,11 @@ import avatarIcon from '../../../assets/profile5.png';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import { host } from '../../config';
-import { alert } from '../lib/higherOrderComponent';
+import { modal } from '../lib/higherOrderComponent';
 
 var {Link} = Router;
 
-export default store.cursor(['profile', 'oauthToken'], alert(class extends Page {
+export default store.cursor(['profile', 'oauthToken'], modal(class extends Page {
   constructor(props) {
     super(props);
     let avatar = props.profile.get('avatar');

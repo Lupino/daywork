@@ -2,14 +2,14 @@ import { React, View, BackButton, ButtonGroup, Button, Card, Container,
   Swiper, List, Title, store } from 'reapp-kit';
 import { host } from '../../../config';
 import request from 'superagent';
-import { alert } from '../../lib/higherOrderComponent';
+import { modal } from '../../lib/higherOrderComponent';
 import { prettyTime } from '../../lib/util';
 import JobTitle from './../JobTitle';
 import RecordTitle from './../RecordTitle';
 import avatarIcon from '../../../../assets/profile5.png';
 import _ from 'lodash';
 
-export default store.cursor(['profile', 'oauthToken'], alert(class extends React.Component {
+export default store.cursor(['profile', 'oauthToken'], modal(class extends React.Component {
   state = {
     job: {},
     workers: [],

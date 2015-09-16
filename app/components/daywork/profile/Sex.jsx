@@ -1,7 +1,7 @@
 import { React, View, BackButton, List, Input } from 'reapp-kit';
-import { alert } from '../../lib/higherOrderComponent';
+import { modal } from '../../lib/higherOrderComponent';
 
-export default alert(class extends React.Component {
+export default modal(class extends React.Component {
   handleChange(sex) {
     this.props.profileUpdate('sex', sex, (err) => {
       if (err) {

@@ -2,10 +2,10 @@ import { React, View, BackButton, Button, Container, Input,
   List, Title, Icon, store } from 'reapp-kit';
 import { host } from '../../../config';
 import request from 'superagent';
-import { alert } from '../../lib/higherOrderComponent';
+import { modal } from '../../lib/higherOrderComponent';
 import RecordTitle from './../RecordTitle';
 
-export default store.cursor(['profile', 'oauthToken'], alert(class extends React.Component {
+export default store.cursor(['profile', 'oauthToken'], modal(class extends React.Component {
   state = {
     step: 0,
     payment: {},

@@ -3,9 +3,9 @@ import { React, View, BackButton, List, Input, Button, Title, TextArea,
 
 import { host } from '../../config';
 import request from 'superagent';
-import { alert } from '../lib/higherOrderComponent';
+import { modal } from '../lib/higherOrderComponent';
 
-export default store.cursor(['oauthToken'], alert(class extends React.Component {
+export default store.cursor(['oauthToken'], modal(class extends React.Component {
   state = {
     byDaily: true,
     publish: false

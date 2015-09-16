@@ -2,11 +2,11 @@ import { React, NestedViewList, View, BackButton, Card, Swiper, Button, Page, st
 
 import { host } from '../../config';
 import request from 'superagent';
-import { alert } from '../lib/higherOrderComponent';
+import { modal } from '../lib/higherOrderComponent';
 import JobTitle from './JobTitle';
 import _ from 'lodash';
 
-export default store.cursor(['profile', 'oauthToken'], alert(class extends Page {
+export default store.cursor(['profile', 'oauthToken'], modal(class extends Page {
   state = {
     limit: 10,
     status: '',
