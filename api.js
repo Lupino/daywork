@@ -120,6 +120,16 @@ export default function(app, daywork) {
                            });
   });
 
+  app.get(apiPrefix + '/jobs/:jobId/payment/:userId', requireLogin(), (req, res) => {
+    let jobId = req.job.jobId;
+    let userId = req.user.userId;
+    if (!req.isOwnerJob || userId === req.currentUser.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.getPayment(jobId, userId,
+                       (err, payment) => sendJsonResponse(res, err, { payment: payment }));
+  });
+
   app.get(apiPrefix + '/users/:userId/records', (req, res) => {
     let page = Number(req.query.page) || 0;
     let limit = Number(req.query.limit) || 10;
@@ -265,6 +275,16 @@ export default function(app, daywork) {
         return daywork.cancelRecord(recId, next);
       }
     ], (err, rec) => sendJsonResponse(res, err, { record: rec }));
+  });
+
+  app.post(apiPrefix + 'jobs/:jobId/payOffline', requireLogin(), (req, res) => {
+    if (!req.isOwner) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    let id = req.body.id;
+    let money = req.body.money;
+    daywork.payOffline(id, money,
+                       (err, result) => sendJsonResponse(res, err, { result: result }));
   });
 
   app.post(apiPrefix + '/signup', (req, res) => {
