@@ -6,7 +6,8 @@ router(require,
     route('sub'),
     route('newJob'),
     route('jobs',
-      route('jobDetail', '/jobs/:jobId')
+      route('jobDetail', '/jobs/:jobId'),
+      route('payment', '/jobs/:jobId/payment/:userId')
     ),
     route('signup'),
     route('signin'),

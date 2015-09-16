@@ -15,15 +15,16 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
     workers: [],
     tab: 0,
     inActiveBtns: {},
+    needUpdatedSalary: false,
     records: []
   }
   loadJob() {
     let jobId = Number(this.context.router.getCurrentParams().jobId);
-    let job = this.props.getJobFromParent(jobId);
-    if (job && job.jobId) {
-      this.setState({ job: job });
-      return;
-    }
+    // let job = this.props.getJobFromParent(jobId);
+    // if (job && job.jobId) {
+    //   this.setState({ job: job });
+    //   return;
+    // }
     request.get(host + '/api/jobs/' + jobId, (err, res) => {
       if (err) {
         return this.props.alert('网络错误');
@@ -46,6 +47,7 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
         return this.props.alert(rsp.msg || rsp.err);
       }
       this.setState(rsp);
+      this.setState({ needUpdatedSalary: false });
     });
   }
   loadRecords() {
@@ -69,11 +71,11 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
   }
   handleAddRecord(userId) {
     let recordNumber = Number(this.refs['worker-' + userId].getDOMNode().value.trim());
-    let accesToken = this.props.oauthToken.get('accessToken');
+    let accessToken = this.props.oauthToken.get('accessToken');
 
     this.setInActiveButton(userId, true);
     request.post(host + '/api/jobs/' + this.state.job.jobId + '/addRecord',
-                 { recordNumber: recordNumber, userId: userId, access_token: accesToken }, (err, res) => {
+                 { recordNumber: recordNumber, userId: userId, access_token: accessToken }, (err, res) => {
                    if (err) {
                      this.setInActiveButton(userId, false);
                      return this.props.alert('网络错误');
@@ -87,7 +89,7 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
                    let rec = rsp.record;
                    rec.user = worker.user;
                    let recs = [rec].concat(this.state.records);
-                   this.setState({ records: recs });
+                   this.setState({ records: recs, needUpdatedSalary: true });
                  });
   }
   handleCancelRecord(recordId) {
@@ -113,6 +115,9 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
                    });
                    this.setState({ records: recs });
                  });
+  }
+  handlePayment(userId) {
+    this.router().transitionTo('payment', { jobId: this.state.job.jobId, userId: userId });
   }
   componentDidMount() {
     this.loadJob();
@@ -184,7 +189,7 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
             onTap={ () => this.setState({ tab: 1 }) }
             filled={this.state.tab === 1}> 记录 </Button>
           <Button
-            onTap={ () => this.setState({ tab: 2 }) }
+            onTap={ () => { if (this.state.needUpdatedSalary) { this.loadWorkers(); } this.setState({ tab: 2 }); } }
             filled={this.state.tab === 2}> 工资 </Button>
           <Button
             onTap={ () => this.setState({ tab: 3 }) }
@@ -249,7 +254,32 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
       );
     });
 
-    let tabs = [workers, records, null, null];
+    let salarys = this.state.workers.map(worker => {
+      let user = worker.user || {};
+      let avatarImgUrl = avatarIcon;
+      if (user.avatar) {
+        avatarImgUrl = host + '/upload/' + user.avatar.key;
+      }
+      let totalSalary = worker.totalSalary + ' RMB';
+      let unpaid = '待发工资: ' + worker.unpaid + ' RMB';
+      let paid = '已发工资: ' + ( worker.paidOffline + worker.paidOnline ) + ' RMB';
+      return (
+        <List.Item key={'worker-' + worker.userId}
+          title={<RecordTitle name={user.realName} salary={totalSalary}/>}
+          before={<img src={avatarImgUrl} style={styles.listIcon} />}
+          after={
+            <Button chromeless
+              onTap={ this.handlePayment.bind(this, worker.userId) }
+              > 支付 </Button>
+            }
+          >
+          {unpaid}
+          {paid}
+        </List.Item>
+      );
+    });
+
+    let tabs = [workers, records, salarys, null];
     let tab = tabs[this.state.tab];
     let tabTitles = ['工人', '记录', '工资', '请求'];
     let tabTitle = tabTitles[this.state.tab];
@@ -270,7 +300,7 @@ export default store.cursor(['profile', 'oauthToken'], alert(class extends React
         marginTop: 10,
         textAlign: 'center'
       }} wrap>
-        正在努力加载...
+        正在努力加载中...
       </Container>
     );
   }
