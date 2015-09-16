@@ -1,16 +1,11 @@
-import { React, Page, NestedViewList, View, BackButton, List, Input, Router, Modal, Title, store } from 'reapp-kit';
+import { React, Page, NestedViewList, View, BackButton, List, Input, Router, Title, store } from 'reapp-kit';
 import request from 'superagent';
 import { host } from '../../config';
+import { modal } from '../lib/higherOrderComponent';
 
 var {Link} = Router;
 
 class Settings extends Page {
-  state = {
-    logOutModal: false
-  }
-  toggleModal(type) {
-    this.setState({logOutModal: type});
-  }
   handleChange(key, value) {
     if (value === undefined) {
       return;
@@ -20,9 +15,11 @@ class Settings extends Page {
     this.action.updateSettings(settings);
   }
   handleLogOut() {
-    this.action.delOauthToken();
-    request.post(host + '/api/logOut',
-                 () => this.router().transitionTo('signin'));
+    this.props.confirm('确定退出当前账号?', () => {
+      this.action.delOauthToken();
+      request.post(host + '/api/logOut',
+                   () => this.router().transitionTo('signin'));
+    });
   }
   render() {
     const backButton =
@@ -37,12 +34,6 @@ class Settings extends Page {
             backButton,
             '设置'
           ]}>
-            {this.state.logOutModal && <Modal
-              title="确定退出当前账号吗？"
-              type={this.state.logOutModal}
-              onConfirm={this.handleLogOut}
-              onClose={this.toggleModal.bind(this, false)} />}
-
             <Title> 提醒 </Title>
             <List>
               <List.Item>
@@ -78,7 +69,7 @@ class Settings extends Page {
             <List>
               <List.Item
                 title="退出当前账号"
-                onTap={this.toggleModal.bind(this, 'confirm')}
+                onTap={this.handleLogOut}
                 icon
                 nopad
               />
@@ -91,4 +82,4 @@ class Settings extends Page {
   }
 }
 
-export default store.cursor(['settings'], Settings);
+export default store.cursor(['settings'], modal(Settings));

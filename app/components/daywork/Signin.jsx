@@ -1,28 +1,19 @@
-import { React, View, Container, List, Input, Button, Router, Modal } from 'reapp-kit';
+import { React, View, Container, List, Input, Button, Router } from 'reapp-kit';
 import request from 'superagent';
 import { host } from '../../config';
+import { modal } from '../lib/higherOrderComponent';
 
 let { Link } = Router;
 
-export default class extends React.Component {
-  state = {
-    modal: false,
-    msg: ''
-  }
-  toggleModal(type, msg) {
-    this.setState({ modal: type, msg: msg });
-  }
-  alert(msg) {
-    this.toggleModal('alert', msg);
-  }
+export default modal(class extends React.Component {
   handleSignin() {
     let phoneNumber = this.refs.phoneNumber.getDOMNode().value.trim();
     let passwd = this.refs.passwd.getDOMNode().value.trim();
     if (!phoneNumber.match(/\d{11}/)) {
-      return this.alert('请填写正确的手机号码');
+      return this.props.alert('请填写正确的手机号码');
     }
     if (!passwd) {
-      return this.alert('请填写密码');
+      return this.props.alert('请填写密码');
     }
     request.post(host + '/auth', {
       type: 'access_token',
@@ -30,21 +21,21 @@ export default class extends React.Component {
       passwd: passwd
     }, (err, res) => {
       if (err) {
-        return this.alert('登录失败');
+        return this.props.alert('登录失败');
       }
       let rsp = res.body;
       if (rsp.err) {
-        return this.alert(rsp.msg || rsp.err);
+        return this.props.alert(rsp.msg || rsp.err);
       }
       this.action.setOauthToken(rsp);
       request.get(host + '/api/users/me?access_token=' + rsp.accessToken,
                   (err, res) => {
                     if (err) {
-                      return this.alert('登录失败');
+                      return this.props.alert('登录失败');
                     }
                     let rsp = res.body;
                     if (rsp.err) {
-                      return this.alert(rsp.msg || rsp.err);
+                      return this.props.alert(rsp.msg || rsp.err);
                     }
                     this.action.setProfile(rsp.user);
                   });
@@ -54,10 +45,6 @@ export default class extends React.Component {
   render() {
     return (
       <View {...this.props} title="登录">
-        {this.state.modal && <Modal
-          title="提示"
-          type={this.state.modal}
-          onClose={this.toggleModal.bind(this, false)}>{this.state.msg} </Modal>}
         <List>
           <List.Item before="账号">
             <Input ref="phoneNumber" type="text" placeholder="电话号码" />
@@ -80,4 +67,4 @@ export default class extends React.Component {
       </View>
     );
   }
-}
+});

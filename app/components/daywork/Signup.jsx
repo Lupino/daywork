@@ -1,20 +1,13 @@
-import { React, View, List, Input, Button, Modal, Router, Container } from 'reapp-kit';
+import { React, View, List, Input, Button, Router, Container } from 'reapp-kit';
 import request from 'superagent';
 import { host } from '../../config';
+import { modal } from '../lib/higherOrderComponent';
 let { Link } = Router;
 
-export default class extends React.Component {
+export default modal(class extends React.Component {
   state = {
-    modal: false,
-    msg: '',
     btnActive: true,
     btnCutDown: ''
-  }
-  toggleModal(type, msg) {
-    this.setState({ modal: type, msg: msg });
-  }
-  alert(msg) {
-    this.toggleModal('alert', msg);
   }
   cutdown(timeout) {
     timeout = timeout - 1;
@@ -28,16 +21,16 @@ export default class extends React.Component {
   handleSendSmsCode() {
     let phoneNumber = this.refs.phoneNumber.getDOMNode().value.trim();
     if (!phoneNumber.match(/\d{11}/)) {
-      return this.alert('请填写正确的手机号码');
+      return this.props.alert('请填写正确的手机号码');
     }
     this.cutdown(120);
     request.post(host + '/api/sendSmsCode', { phoneNumber: phoneNumber }, (err, res) => {
       if (err) {
-        return this.alert('验证码发送失败');
+        return this.props.alert('验证码发送失败');
       }
       let rsp = res.body;
       if (rsp.err) {
-        return this.alert(rsp.msg || rsp.err);
+        return this.props.alert(rsp.msg || rsp.err);
       }
     });
   }
@@ -48,19 +41,19 @@ export default class extends React.Component {
     let realName = this.refs.realName.getDOMNode().value.trim();
 
     if (!phoneNumber.match(/\d{11}/)) {
-      return this.alert('请填写正确的手机号码');
+      return this.props.alert('请填写正确的手机号码');
     }
 
     if (!smsCode) {
-      return this.alert('请填写手机验证码');
+      return this.props.alert('请填写手机验证码');
     }
 
     if (!realName) {
-      return this.alert('请填写您的姓名');
+      return this.props.alert('请填写您的姓名');
     }
 
     if (!passwd) {
-      return this.alert('请填写密码');
+      return this.props.alert('请填写密码');
     }
 
     request.post(host + '/api/signup', {
@@ -70,14 +63,14 @@ export default class extends React.Component {
       passwd: passwd
     }, (err, res) => {
       if (err) {
-        return this.alert('新用户注册失败');
+        return this.props.alert('新用户注册失败');
       }
       let rsp = res.body;
       if (rsp.err) {
         if (rsp.msg && /phoneNumber/.exec(rsp.msg)) {
-          return this.alert('手机号码: ' + phoneNumber + ' 已经被注册了');
+          return this.props.alert('手机号码: ' + phoneNumber + ' 已经被注册了');
         }
-        return this.alert(rsp.msg || rsp.err);
+        return this.props.alert(rsp.msg || rsp.err);
       }
       this.router().transitionTo('daywork');
     });
@@ -85,10 +78,6 @@ export default class extends React.Component {
   render() {
     return (
       <View {...this.props} title="新用户注册">
-        {this.state.modal && <Modal
-          title="提示"
-          type={this.state.modal}
-          onClose={this.toggleModal.bind(this, false)}>{this.state.msg} </Modal>}
         <List>
           <List.Item before="账号">
             <Input ref="phoneNumber" type="text" placeholder="电话号码" />
@@ -123,4 +112,4 @@ export default class extends React.Component {
       </View>
     );
   }
-}
+});
