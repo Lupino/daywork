@@ -7,6 +7,7 @@ let { Link } = Router;
 export default modal(class extends React.Component {
   state = {
     btnActive: true,
+    btnRegActive: true,
     btnCutDown: ''
   }
   cutdown(timeout) {
@@ -56,6 +57,7 @@ export default modal(class extends React.Component {
       return this.props.alert('请填写密码');
     }
 
+    this.setState({ btnRegActive: false });
     request.post(host + '/api/signup', {
       phoneNumber: phoneNumber,
       smsCode: smsCode,
@@ -63,10 +65,12 @@ export default modal(class extends React.Component {
       passwd: passwd
     }, (err, res) => {
       if (err) {
+        this.setState({ btnRegActive: true });
         return this.props.alert('新用户注册失败');
       }
       let rsp = res.body;
       if (rsp.err) {
+        this.setState({ btnRegActive: true });
         if (rsp.msg && /phoneNumber/.exec(rsp.msg)) {
           return this.props.alert('手机号码: ' + phoneNumber + ' 已经被注册了');
         }
@@ -102,7 +106,7 @@ export default modal(class extends React.Component {
           </List.Item>
         </List>
         <br />
-        <Button onTap={this.handleSignup}> 注册 </Button>
+        <Button onTap={this.handleSignup} inactive={!this.state.btnRegActive}> 注册 </Button>
         <Container style={{
           marginTop: 10,
           textAlign: 'center'

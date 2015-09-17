@@ -6,6 +6,9 @@ import { modal } from '../lib/higherOrderComponent';
 let { Link } = Router;
 
 export default modal(class extends React.Component {
+  state = {
+    btnActive: true
+  }
   handleSignin() {
     let phoneNumber = this.refs.phoneNumber.getDOMNode().value.trim();
     let passwd = this.refs.passwd.getDOMNode().value.trim();
@@ -15,26 +18,31 @@ export default modal(class extends React.Component {
     if (!passwd) {
       return this.props.alert('请填写密码');
     }
+    this.setState({ btnActive: false });
     request.post(host + '/auth', {
       type: 'access_token',
       userName: phoneNumber,
       passwd: passwd
     }, (err, res) => {
       if (err) {
+        this.setState({ btnActive: true });
         return this.props.alert('登录失败');
       }
       let rsp = res.body;
       if (rsp.err) {
+        this.setState({ btnActive: true });
         return this.props.alert(rsp.msg || rsp.err);
       }
       this.action.setOauthToken(rsp);
       request.get(host + '/api/users/me?access_token=' + rsp.accessToken,
                   (err, res) => {
                     if (err) {
+                      this.setState({ btnActive: true });
                       return this.props.alert('登录失败');
                     }
                     let rsp = res.body;
                     if (rsp.err) {
+                      this.setState({ btnActive: true });
                       return this.props.alert(rsp.msg || rsp.err);
                     }
                     this.action.setProfile(rsp.user);
@@ -57,7 +65,7 @@ export default modal(class extends React.Component {
           </List.Item>
         </List>
         <br />
-        <Button onTap={this.handleSignin}> 登录 </Button>
+        <Button onTap={this.handleSignin} inactive={!this.state.btnActive}> 登录 </Button>
         <Container style={{
           marginTop: 10,
           textAlign: 'center'

@@ -7,6 +7,7 @@ let { Link } = Router;
 export default modal(class extends React.Component {
   state = {
     btnActive: true,
+    btnResetActive: true,
     btnCutDown: ''
   }
   cutdown(timeout) {
@@ -51,11 +52,13 @@ export default modal(class extends React.Component {
       return this.props.alert('请填写密码');
     }
 
+    this.setState({ btnResetActive: false });
     request.post(host + '/api/resetPasswd', {
       phoneNumber: phoneNumber,
       smsCode: smsCode,
       passwd: passwd
     }, (err, res) => {
+      this.setState({ btnResetActive: true });
       if (err) {
         return this.props.alert('重置密码失败');
       }
@@ -88,7 +91,7 @@ export default modal(class extends React.Component {
           </List.Item>
         </List>
         <br />
-        <Button onTap={this.handleResetPassword}> 重置密码 </Button>
+        <Button onTap={this.handleResetPassword} inactive={!this.state.btnResetActive}> 重置密码 </Button>
         <Container style={{
           marginTop: 10,
           textAlign: 'center'
