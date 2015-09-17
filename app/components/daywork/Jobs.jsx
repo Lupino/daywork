@@ -8,19 +8,22 @@ import _ from 'lodash';
 
 export default store.cursor(['profile', 'oauthToken'], modal(class extends Page {
   state = {
-    limit: 10,
     status: '',
     noswiping: false,
+    loadMoreButton: true,
+    currentPage: 0,
     jobs: []
+  }
+  handleLoadMore(page) {
+    this.loadJobs(page);
   }
   loadJobs(page) {
     page = page || 0;
     let profile = this.props.profile;
     let userId = profile.get('userId');
-    let limit = this.state.limit;
     let status = this.state.status;
 
-    request.get(host + '/api/users/' + userId + '/jobs?page=' + page +'&limit=' + limit + '&status=' + status,
+    request.get(host + '/api/users/' + userId + '/jobs?page=' + page + '&status=' + status,
                 (err, res) => {
                   if (err) {
                     return this.props.alert('网络错误');
@@ -29,11 +32,17 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends Page 
                   if (rsp.err) {
                     return this.props.alert(rsp.msg || rsp.err);
                   }
-                  this.setState(rsp);
+                  let jobs = this.state.jobs.concat(_.clone(rsp.jobs));
+                  jobs = _.uniq(jobs, 'jobId');
+                  this.setState({ jobs });
+                  if (rsp.jobs.length < 10) {
+                    this.setState({ loadMoreButton: false });
+                  }
+                  this.setState({ currentPage: page });
                 });
   }
   handleGetJob(jobId) {
-    let job = _.filter(this.state.jobs, (job) => job.jobId === jobId)[0];
+    return _.filter(this.state.jobs, (job) => job.jobId === jobId)[0];
   }
   handleDeleteJob(jobId) {
     let token = {
@@ -128,6 +137,14 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends Page 
 
     });
 
+    let button = null;
+    if (this.state.loadMoreButton) {
+      let page = this.state.currentPage + 1;
+      button = <Button
+        onTap={this.handleLoadMore.bind(this, page)}>
+        加载更多... </Button>;
+    }
+
     return (
       <View {...this.props}>
         <NestedViewList {...viewListProps}>
@@ -135,9 +152,8 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends Page 
             backButton,
             '我发布的职位'
           ]}>
-            <div>
-              {cards}
-            </div>
+            {cards}
+            {button}
           </View>
           {child}
         </NestedViewList>
