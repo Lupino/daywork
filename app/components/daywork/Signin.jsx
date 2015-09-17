@@ -70,6 +70,7 @@ export default modal(class extends React.Component {
           marginTop: 10,
           textAlign: 'center'
         }} wrap>
+          <Link to="signup"> 我是新用户？ </Link>
           <Link to="problem"> 登录遇到问题？ </Link>
         </Container>
       </View>
