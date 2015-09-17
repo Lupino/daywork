@@ -4,9 +4,10 @@ import { sendJsonResponse } from './lib/util';
 import async from 'async';
 import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
+import { hashedPassword } from './lib/daywork';
 
 export default function(app, daywork) {
-  let  { requireLogin, hashedPassword } = daywork;
+  let  { requireLogin } = daywork;
 
   app.get(apiPrefix + '/users/me', requireLogin(),
           (req, res) => sendJsonResponse(res, null, { user: req.currentUser }));
