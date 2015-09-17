@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER Li Meng Jun "lmjubuntu@gmail.com"
 
 RUN apt-get update && \
-    apt-get install -y --force-yes nodejs npm && \
+    apt-get install -y --force-yes nodejs npm libkrb5-dev && \
     ln -s /usr/bin/nodejs /usr/bin/node
 
 ENV TZ Asia/Shanghai
