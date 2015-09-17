@@ -204,7 +204,6 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
 
     let card = (
       <Card key={'job-' + job.jobId}
-        onClick={() => this.router().transitionTo('jobDetail', { jobId: job.jobId })}
         styles={ { self: { background: bColor } } }
         title={<JobTitle salary={salary} name={job.title} />}>
         <div key="summary">
