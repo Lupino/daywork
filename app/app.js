@@ -5,6 +5,7 @@ router(require,
   route('daywork', '/',
     route('sub'),
     route('newJob'),
+    route('jobInfo', '/info/:jobId'),
     route('jobs',
       route('jobDetail', '/jobs/:jobId'),
       route('payment', '/jobs/:jobId/payment/:userId')

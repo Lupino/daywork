@@ -1,5 +1,5 @@
 import { Reapp, React, NestedViewList, View, List, Router, Bar, Badge, Icon,
-  store, action, Immutable } from 'reapp-kit';
+  store, action, Immutable, Button, Card } from 'reapp-kit';
 import trendIcon from 'reapp-kit/icons/timer.svg';
 import discoverIcon from 'reapp-kit/icons/paper-plane.svg';
 import peopleIcon from '../../assets/silhouette121.svg';
@@ -10,6 +10,9 @@ import addIcon from 'reapp-kit/icons/add.svg';
 import squareIcon from 'reapp-kit/icons/square.svg';
 import avatarIcon from '../../assets/profile5.png';
 import { host } from '../config';
+import request from 'superagent';
+import _ from 'lodash';
+import JobTitle from './daywork/JobTitle';
 
 var {Link} = Router;
 
@@ -100,12 +103,44 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
     if (pathname.match(/profile|settings|salary|newJob|jobs/)) {
       barIndex = 2;
     }
+    if (pathname.match(/info/)) {
+      barIndex = 1;
+    }
     this.state = {
-      barIndex: barIndex
+      barIndex: barIndex,
+      loadMoreButton: true,
+      currentPage: 0,
+      jobs: []
     };
+  }
+  handleLoadMore(page) {
+    this.loadJobs(page);
+  }
+  loadJobs(page) {
+    page = page || 0;
+    request.get(host + '/api/jobs?page=' + page + '&status=Publish',
+                (err, res) => {
+                  if (err) {
+                    return this.props.alert('网络错误');
+                  }
+                  let rsp = res.body;
+                  if (rsp.err) {
+                    return this.props.alert(rsp.msg || rsp.err);
+                  }
+                  let jobs = this.state.jobs.concat(_.clone(rsp.jobs));
+                  jobs = _.uniq(jobs, 'jobId');
+                  this.setState({ jobs });
+                  if (rsp.jobs.length < 10) {
+                    this.setState({ loadMoreButton: false });
+                  }
+                  this.setState({ currentPage: page });
+                });
   }
   handleBarActive(index) {
     this.setState({barIndex: index});
+  }
+  componentDidMount() {
+    this.loadJobs();
   }
   renderBar() {
     var bar = (
@@ -157,27 +192,54 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
       </View>
     );
   }
+  renderJobItem(job) {
+    let salary = job.salary + ' RMB / ';
+    if (job.payMethod === 'Daily') {
+      salary += '天';
+    } else {
+      salary += '时';
+    }
+
+    let requiredPeople = '人数不限';
+
+    if (job.requiredPeople > 0) {
+      requiredPeople = '需要 ' + job.requiredPeople + ' 人';
+    }
+
+    return (
+      <Card key={'job-' + job.jobId}
+        onClick={() => this.router().transitionTo('jobInfo', { jobId: job.jobId })}
+        title={<JobTitle salary={salary} name={job.title} />}>
+        <div key="summary">
+          <p>
+            {job.summary}
+          </p>
+        </div>
+        <div key="requiredPeople">
+          <p>
+            {requiredPeople}
+          </p>
+        </div>
+      </Card>
+    );
+
+  }
   renderDiscoverView() {
+    let button = null;
+    if (this.state.loadMoreButton) {
+      let page = this.state.currentPage + 1;
+      button = <Button
+        onTap={this.handleLoadMore.bind(this, page)}>
+        加载更多... </Button>;
+    }
+
+    let jobs = this.state.jobs.map(this.renderJobItem);
+
+
     return (
       <View>
-        <List>
-          <List.Item
-            title="红旗山隧道普通工人"
-            before={<img src={avatarIcon} style={styles.listIcon} />}
-            titleAfter={<span>100 元/天</span>}
-            wrapper={<Link to="sub" />}
-            icon
-            nopad
-          />
-          <List.Item
-            title="红旗山隧道技术工人"
-            before={<img src={avatarIcon} style={styles.listIcon} />}
-            titleAfter={<span>100 元/天</span>}
-            wrapper={<Link to="sub" />}
-            icon
-            nopad
-          />
-        </List>
+        {jobs}
+        {button}
       </View>
     );
   }
