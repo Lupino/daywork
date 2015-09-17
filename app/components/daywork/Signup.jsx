@@ -66,7 +66,7 @@ export default modal(class extends React.Component {
     }, (err, res) => {
       if (err) {
         this.setState({ btnRegActive: true });
-        return this.props.alert('新用户注册失败');
+        return this.props.alert('注册失败');
       }
       let rsp = res.body;
       if (rsp.err) {
@@ -76,7 +76,45 @@ export default modal(class extends React.Component {
         }
         return this.props.alert(rsp.msg || rsp.err);
       }
-      this.router().transitionTo('signin');
+      this.props.alert('注册完成', () => {
+        this.doSignin(phoneNumber, passwd, (err) => {
+          if (err) {
+            this.props.alert(err, () => {
+              this.router().transitionTo('signin');
+            });
+          } else {
+            this.router().transitionTo('daywork');
+          }
+        });
+      });
+    });
+  }
+  doSignin(phoneNumber, passwd, callback) {
+    request.post(host + '/auth', {
+      type: 'access_token',
+      userName: phoneNumber,
+      passwd: passwd
+    }, (err, res) => {
+      if (err) {
+        return callback('登录失败');
+      }
+      let rsp = res.body;
+      if (rsp.err) {
+        return callback(rsp.msg || rsp.err);
+      }
+      this.action.setOauthToken(rsp);
+      request.get(host + '/api/users/me?access_token=' + rsp.accessToken,
+                  (err, res) => {
+                    if (err) {
+                      return callback('登录失败');
+                    }
+                    let rsp = res.body;
+                    if (rsp.err) {
+                      return callback(rsp.msg || rsp.err);
+                    }
+                    this.action.setProfile(rsp.user);
+                    callback();
+                  });
     });
   }
   render() {
