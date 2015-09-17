@@ -46,8 +46,8 @@ export default modal(class extends React.Component {
                       return this.props.alert(rsp.msg || rsp.err);
                     }
                     this.action.setProfile(rsp.user);
+                    this.router().transitionTo('daywork');
                   });
-      this.router().transitionTo('daywork');
     });
   }
   render() {
