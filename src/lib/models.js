@@ -1,11 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 import { mongod } from '../config';
-import autoIncrement from 'mongoose-auto-increment';
+import { initialize, plugin as autoIncrPlugin } from './plugins';
 
 let { Mixed } = Schema.Types;
 
 mongoose.connect(mongod);
-autoIncrement.initialize(mongoose.connection);
+initialize(mongoose.connection);
 
 var UserSchema = new Schema({
   userName: { type: String, index: { unique: true } },
@@ -24,7 +24,7 @@ var UserSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-UserSchema.plugin(autoIncrement.plugin, { model: 'User', field: 'userId' });
+UserSchema.plugin(autoIncrPlugin, { model: 'User', field: 'userId' });
 
 export var User = mongoose.model('User', UserSchema);
 
@@ -63,7 +63,7 @@ var JobSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-JobSchema.plugin(autoIncrement.plugin, { model: 'Job', field: 'jobId' });
+JobSchema.plugin(autoIncrPlugin, { model: 'Job', field: 'jobId' });
 
 export var Job = mongoose.model('Job', JobSchema);
 
@@ -77,7 +77,7 @@ var WorkRecordSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-WorkRecordSchema.plugin(autoIncrement.plugin, { model: 'WorkRecord', field: 'recordId' });
+WorkRecordSchema.plugin(autoIncrPlugin, { model: 'WorkRecord', field: 'recordId' });
 
 export var WorkRecord = mongoose.model('WorkRecord', WorkRecordSchema);
 
@@ -90,7 +90,7 @@ var PaidRecordSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-PaidRecordSchema.plugin(autoIncrement.plugin, { model: 'PaidRecord', field: 'recordId' });
+PaidRecordSchema.plugin(autoIncrPlugin, { model: 'PaidRecord', field: 'recordId' });
 
 export var PaidRecord = mongoose.model('PaidRecord', PaidRecordSchema);
 
@@ -107,7 +107,7 @@ var MyJobSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-MyJobSchema.plugin(autoIncrement.plugin, { model: 'MyJob', field: 'id' });
+MyJobSchema.plugin(autoIncrPlugin, { model: 'MyJob', field: 'id' });
 
 export var MyJob = mongoose.model('MyJob', MyJobSchema);
 
@@ -117,7 +117,7 @@ var FileSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-FileSchema.plugin(autoIncrement.plugin, { model: 'File', field: 'id' });
+FileSchema.plugin(autoIncrPlugin, { model: 'File', field: 'id' });
 
 export var File = mongoose.model('File', FileSchema);
 
@@ -128,6 +128,6 @@ var MessageSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-MessageSchema.plugin(autoIncrement.plugin, { model: 'Message', field: 'msgId' });
+MessageSchema.plugin(autoIncrPlugin, { model: 'Message', field: 'msgId' });
 
 export var Message = mongoose.model('Message', MessageSchema);
