@@ -3,6 +3,7 @@ import formidable from 'formidable';
 import { sendJsonResponse } from './lib/util';
 import async from 'async';
 import _ from 'lodash';
+import { requestSmsCode, verifySmsCode } from './lib/leancloud';
 
 export default function(app, daywork) {
   let  { requireLogin, hashedPassword } = daywork;
@@ -289,11 +290,16 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/signup', (req, res) => {
     let user = req.body;
-    daywork.createUser(user, (err, user) => {
-      if (user && user.userId) {
-        req.session.currentUser = user;
+    verifySmsCode(user.smsCode, user.phoneNumber, (err) => {
+      if (err) {
+        return sendJsonResponse(res, err);
       }
-      sendJsonResponse(res, err, { user: user });
+      daywork.createUser(user, (err, user) => {
+        if (user && user.userId) {
+          req.session.currentUser = user;
+        }
+        sendJsonResponse(res, err, { user: user });
+      });
     });
   });
 
@@ -305,27 +311,31 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/sendSmsCode', (req, res) => {
-    sendJsonResponse(res, null, { result: 'success' });
+    requestSmsCode(req.body.phoneNumber,
+                   (err) => sendJsonResponse(res, err, { result: 'success' }));
   });
 
   app.post(apiPrefix + '/resetPasswd', (req, res) => {
     let pwds = req.body;
-    if (pwds.phoneNumber && pwds.smsCode) {
-      if (pwds.smsCode !== '9988') {
-        return sendJsonResponse(res, '请填写正确的短信验证码');
+    async.waterfall([
+      (next) => {
+        if (pwds.phoneNumber && pwds.smsCode) {
+          verifySmsCode(pwds.smsCode, pwds.phoneNumber, next);
+        } else {
+          if (!req.currentUser) {
+            return next('Unauthorized');
+          }
+          pwds.phoneNumber = req.currentUser.phoneNumber;
+          var oldHash = hashedPassword(pwds.oldPasswd);
+          if (oldHash != req.currentUser.passwd) {
+            return next('旧密码输入错误');
+          }
+        }
+      },
+      (next) => {
+        daywork.changePasswd(pwds, next);
       }
-    } else {
-      if (!req.currentUser) {
-        return sendJsonResponse(res, 'Unauthorized');
-      }
-      pwds.phoneNumber = req.currentUser.phoneNumber;
-      var oldHash = hashedPassword(pwds.oldPasswd);
-      if (oldHash != req.currentUser.passwd) {
-        return sendJsonResponse(res, '旧密码输入错误');
-      }
-    }
-    daywork.changePasswd(pwds, (err) =>
-                         sendJsonResponse(res, err, { result: 'success' }));
+    ], (err) => sendJsonResponse(res, err, { result: 'success' }));
   });
 
   app.post(apiPrefix + '/updateProfile', requireLogin(), (req, res) => {
