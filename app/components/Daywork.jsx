@@ -183,32 +183,6 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
   renderTrendingView() {
     return (
       <View>
-        <List>
-          <List.Item
-            title="红旗山隧道"
-            before={<img src={avatarIcon} style={styles.listIcon} />}
-            titleAfter={<div><span>1 天</span><span>100 元</span></div>}
-            wrapper={<Link to="sub" />}
-            icon
-            nopad
-          />
-          <List.Item
-            title="红旗山隧道"
-            before={<img src={avatarIcon} style={styles.listIcon} />}
-            titleAfter={<div><span>0.5 天</span><span>50 元</span></div>}
-            wrapper={<Link to="sub" />}
-            icon
-            nopad
-          />
-          <List.Item
-            title="红旗山隧道"
-            before={<img src={avatarIcon} style={styles.listIcon} />}
-            titleAfter={<div><span>1 天</span><span>100 元</span></div>}
-            wrapper={<Link to="sub" />}
-            icon
-            nopad
-          />
-        </List>
       </View>
     );
   }
