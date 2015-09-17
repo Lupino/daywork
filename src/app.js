@@ -12,6 +12,7 @@ import Daywork from './lib/daywork';
 import expressCommon from './lib/express_common';
 import api from './api';
 import cors from 'cors';
+import fs from 'fs';
 
 var MongoStore = mongoStoreLib(session);
 
@@ -47,8 +48,15 @@ expressCommon(app, daywork);
 
 api(app, daywork);
 
-app.get('/', (req, res) => {
-  res.send('Daywork.');
+app.get('/*', (req, res) => {
+  fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
+    if (err) {
+      res.status(404).send('Cannot GET ' + req.url);
+    } else {
+      res.header('Content-Type', 'text/html; charset=UTF-8');
+      res.send(content);
+    }
+  });
 });
 
 if ('development' === app.get('env')) {
