@@ -8,7 +8,8 @@
   "reapp": "0.8",
   "scripts": {
     "test": "",
-    "start": "babel-node app"
+    "build": "babel -d build src;reapp-build",
+    "start": "babel-node src/app.js"
   },
   "dependencies": {
     "async": "^1.4.2",
