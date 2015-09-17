@@ -13,6 +13,7 @@ import { host } from '../config';
 import request from 'superagent';
 import _ from 'lodash';
 import JobTitle from './daywork/JobTitle';
+import { modal } from './lib/higherOrderComponent';
 
 var {Link} = Router;
 
@@ -95,7 +96,7 @@ action('updateSettings', (data) => {
   });
 });
 
-const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Component {
+const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends React.Component {
   constructor(props) {
     super(props);
     var pathname = window.location.pathname;
@@ -110,6 +111,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
       barIndex: barIndex,
       loadMoreButton: true,
       currentPage: 0,
+      profile: props.profile.toJSON(),
       jobs: []
     };
   }
@@ -136,10 +138,28 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
                   this.setState({ currentPage: page });
                 });
   }
+  loadProfile() {
+    let accessToken = this.props.oauthToken.get('accessToken');
+    request.get(host + '/api/users/me?access_token=' + accessToken,
+                (err, res) => {
+                  if (err) {
+                    return this.props.alert('网络错误');
+                  }
+                  let rsp = res.body;
+                  if (rsp.err) {
+                    return this.props.alert(rsp.msg || rsp.err, () => {
+                      this.router().transitionTo('signin');
+                    });
+                  }
+                  this.action.setProfile(rsp.user);
+                  this.setState({ profile: rsp.user });
+                });
+  }
   handleBarActive(index) {
     this.setState({barIndex: index});
   }
   componentDidMount() {
+    this.loadProfile();
     this.loadJobs();
   }
   renderBar() {
@@ -331,7 +351,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], class extends React.Comp
       </NestedViewList>
     );
   }
-});
+}));
 
 var styles = {
   listIcon: {
