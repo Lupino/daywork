@@ -34,7 +34,7 @@ export default class extends Object {
           sex: user.sex,
           intro: user.intro,
           phoneNumber: user.phoneNumber,
-          phoneVerified: false,
+          phoneVerified: user.phoneVerified || false,
           passwd: hashedPassword(user.passwd),
           avatar: user.avatar || ''
         });

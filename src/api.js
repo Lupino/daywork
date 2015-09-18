@@ -295,6 +295,7 @@ export default function(app, daywork) {
       if (err) {
         return sendJsonResponse(res, err);
       }
+      user.phoneVerified = true;
       daywork.createUser(user, (err, user) => {
         if (user && user.userId) {
           req.session.currentUser = user;
