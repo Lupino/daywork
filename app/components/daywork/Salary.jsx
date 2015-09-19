@@ -1,14 +1,14 @@
-import { React, Page, NestedViewList, View, BackButton, List, Router } from 'reapp-kit';
+import { React, Page, NestedViewList, View, BackButton, List, store } from 'reapp-kit';
 
-var {Link} = Router;
-
-export default class extends Page {
+export default store.cursor(['profile'], class extends Page {
   render() {
     const backButton =
       <BackButton onTap={() => this.router().transitionTo('daywork')}> 我 </BackButton>;
 
     var child = this.hasChildRoute() && this.createChildRouteHandler() || null;
     var viewListProps = this.routedViewListProps();
+
+    let profile = this.props.profile.toJSON();
 
     return (
       <View {...this.props}>
@@ -20,22 +20,12 @@ export default class extends Page {
             <List>
               <List.Item
                 title="已支付"
-                titleAfter={<span>1000 元</span>}
-                wrapper={<Link to="sub1" />}
-                icon
+                titleAfter={(profile.paidOffline + profile.paidOnline) + ' 元'}
                 nopad
               />
               <List.Item
                 title="待支付"
-                titleAfter={<span>4000 元</span>}
-                wrapper={<Link to="sub1" />}
-                icon
-                nopad
-              />
-              <List.Item
-                title="提现"
-                wrapper={<Link to="sub1" />}
-                icon
+                titleAfter={profile.unpaid + ' 元'}
                 nopad
               />
             </List>
@@ -45,5 +35,4 @@ export default class extends Page {
       </View>
     );
   }
-}
-
+});

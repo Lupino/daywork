@@ -232,6 +232,9 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     });
     this.setState({ jobs });
   }
+  updateProfile(profile) {
+    this.setState({ profile });
+  }
   componentDidMount() {
     this.loadProfile();
     this.loadJobs();
@@ -328,17 +331,17 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     );
   }
   renderMeView() {
-    var badge = <Badge> 5 </Badge>;
+    let profile = this.state.profile;
     let avatarImgUrl = avatarIcon;
-    if (this.props.profile.get('avatar')) {
-      avatarImgUrl = host + '/upload/' + this.props.profile.getIn(['avatar', 'key']);
+    if (profile.avatar) {
+      avatarImgUrl = host + '/upload/' + profile.avatar.key;
     }
     return (
       <View>
         <List>
           <List.Item
-            title={this.props.profile.get('realName')}
-            titleSub={'手机号: ' + this.props.profile.get('phoneNumber')}
+            title={profile.realName}
+            titleSub={'手机号: ' + profile.phoneNumber}
             before={<img src={avatarImgUrl} style={styles.avatar} />}
             wrapper={<Link to="profile" />}
             icon
@@ -348,9 +351,9 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
         <br />
         <List>
           <List.Item
-            title="我的工资"
+            title="余额"
             before={<Icon file={dollarsIcon} size={20} />}
-            titleAfter={<span>5000 元</span>}
+            titleAfter={profile.remainMoney + ' 元'}
             wrapper={<Link to="salary" />}
             icon
             nopad
@@ -379,7 +382,6 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
           <List.Item
             title="设置"
             before={<Icon file={gearIcon} size={20} />}
-            titleAfter={badge}
             wrapper={<Link to="settings" />}
             icon
             nopad
@@ -410,7 +412,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
             </NestedViewList>
         </View>
 
-        {this.props.child()}
+        {this.props.child({ updateParentProfile: this.updateProfile })}
       </NestedViewList>
     );
   }

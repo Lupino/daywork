@@ -113,6 +113,7 @@ export default modal(class extends React.Component {
                       return callback(rsp.msg || rsp.err);
                     }
                     this.action.setProfile(rsp.user);
+                    this.props.updateParentProfile(rsp.user);
                     callback();
                   });
     });
