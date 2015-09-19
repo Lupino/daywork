@@ -156,6 +156,31 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
   handlePayment(userId) {
     this.router().transitionTo('payment', { jobId: this.state.job.jobId, userId: userId });
   }
+  handleJoin(userId) {
+    let accessToken = this.props.oauthToken.get('accessToken');
+
+    this.setInActiveButton(userId, true);
+    request.post(host + '/api/jobs/' + this.state.job.jobId + '/assignWorker',
+                 { userId: userId, access_token: accessToken }, (err, res) => {
+                   if (err) {
+                     this.setInActiveButton(userId, false);
+                     return this.props.alert('网络错误');
+                   }
+                   let rsp = res.body;
+                   if (rsp.err) {
+                     this.setInActiveButton(userId, false);
+                     return this.props.alert(rsp.msg || rsp.err);
+                   }
+                   let workers = this.state.workers.map(worker => {
+                     if (worker.userId === userId) {
+                       worker.status = 'Join';
+                     }
+                     return worker;
+                   });
+                   this.setState({ workers });
+                 });
+
+  }
   componentDidMount() {
     this.loadJob();
     this.loadWorkers();
@@ -234,7 +259,8 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
       </Card>
     );
 
-    let workers = this.state.workers.map(worker => {
+    let workers = this.state.workers.filter(worker => worker.status === 'Join')
+      .map(worker => {
       let user = worker.user || {};
       let avatarImgUrl = avatarIcon;
       if (user.avatar) {
@@ -290,7 +316,8 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
       );
     });
 
-    let salarys = this.state.workers.map(worker => {
+    let salarys = this.state.workers.filter(worker => worker.status !== 'Request')
+      .map(worker => {
       let user = worker.user || {};
       let avatarImgUrl = avatarIcon;
       if (user.avatar) {
@@ -315,8 +342,30 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
       );
     });
 
+    let requests = this.state.workers.filter(worker => worker.status === 'Request')
+      .map(worker => {
+      let user = worker.user || {};
+      let avatarImgUrl = avatarIcon;
+      if (user.avatar) {
+        avatarImgUrl = host + '/upload/' + user.avatar.key;
+      }
+      return (
+        <List.Item key={'worker-' + worker.userId}
+          title={user.realName}
+          before={<img src={avatarImgUrl} style={styles.listIcon} />}
+          after={
+              <Button
+                inactive={!!this.state.inActiveBtns['worker-' + worker.userId]}
+                onTap={this.handleJoin.bind(this, worker.userId)}
+                chromeless> 加入 </Button>
+            }
+          >
+        </List.Item>
+      );
+    });
 
-    let tabs = [workers, records, salarys, null];
+
+    let tabs = [workers, records, salarys, requests];
     let tab = tabs[this.state.tab];
     let tabTitles = ['工人', '记录', '工资', '请求'];
     let tabTitle = tabTitles[this.state.tab];
