@@ -108,6 +108,16 @@ export default function(app, daywork) {
                       });
   });
 
+  app.get(apiPrefix + '/users/:userId/works/:jobId', (req, res) => {
+    let userId = req.params.userId;
+    let jobId = req.params.jobId;
+
+    daywork.getWork({ userId, jobId },
+                    (err, work) => {
+                      sendJsonResponse(res, err, { work });
+                    });
+  });
+
   app.get(apiPrefix + '/jobs/:jobId/records', (req, res) => {
     let page = Number(req.query.page) || 0;
     let limit = Number(req.query.limit) || 10;

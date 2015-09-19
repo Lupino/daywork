@@ -358,8 +358,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
           <List.Item
             title="我的工作"
             before={<Icon file={workingIcon} size={20} />}
-            titleAfter={badge}
-            wrapper={<Link to="sub" />}
+            wrapper={<Link to="works" />}
             icon
             nopad
           />

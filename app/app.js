@@ -11,6 +11,9 @@ router(require,
       route('editJob', '/jobs/:jobId/edit'),
       route('payment', '/jobs/:jobId/payment/:userId')
     ),
+    route('works',
+      route('workDetail', '/works/:userId/:jobId')
+    ),
     route('signup'),
     route('signin'),
     route('problem'),

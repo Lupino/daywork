@@ -233,9 +233,25 @@ export default class extends Object {
     Job.findOneAndUpdate({ jobId }, updated, (err, job) => callback(err, job));
   }
 
-  getJob(jobId, callback) {
+  getJob(jobId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
     let query = { jobId: jobId, status: { $nin: [ 'Deleted' ] } };
-    Job.findOne(query, (err, job) => callback(err, job));
+    Job.findOne(query, (err, job) => {
+      if (err) return callback(err);
+      if (!options.user) {
+        return callback(null, job);
+      }
+      job = job.toJSON();
+      this.getUser(job.userId, (err, user) => {
+        if (err) return callback(err);
+        job.user = user;
+        callback(null, job);
+      })
+    });
   }
 
   getJobs(query, options, callback) {
@@ -379,6 +395,18 @@ export default class extends Object {
         });
 
         callback(null, myJobs);
+      });
+    });
+  }
+
+  getWork({userId, jobId}, callback) {
+    MyJob.findOne({ userId, jobId }, (err, work) => {
+      if (err) return callback(err);
+      work = work.toJSON();
+      this.getJob(jobId, { user: true }, (err, job) => {
+        if (err) return callback(err);
+        work.job = job;
+        callback(null, work);
       });
     });
   }
