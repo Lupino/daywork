@@ -52,6 +52,8 @@ export default store.cursor(['oauthToken'], modal(class extends React.Component 
       if (rsp.err) {
         return this.props.alert(rsp.msg || rsp.err);
       }
+      let jobId = rsp.job.jobId;
+      this.router().transitionTo('jobDetail', { jobId });
     });
   }
   render() {
