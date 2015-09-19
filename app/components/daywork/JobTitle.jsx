@@ -1,4 +1,5 @@
 import React from 'react';
+import { prettyTime } from '../lib/util';
 
 export default class extends React.Component {
   render() {
@@ -7,6 +8,10 @@ export default class extends React.Component {
         <div style={styles.name}>{this.props.name}</div>
         &nbsp;
         <div style={styles.salary}>{this.props.salary}</div>
+        &nbsp;
+        <div style={styles.time}>
+          {this.props.time && prettyTime(this.props.time)}
+        </div>
       </div>
     );
   }
@@ -26,5 +31,13 @@ const styles = {
     color: '#999',
     fontWeight: 300,
     fontSize: '14px'
+  },
+
+  time: {
+    color: '#999',
+    fontWeight: 300,
+    fontSize: '14px',
+    right: 18,
+    position: 'absolute'
   }
 };

@@ -1,5 +1,5 @@
 import { Reapp, React, NestedViewList, View, List, Router, Bar, Badge, Icon,
-  store, action, Immutable, Button, Card } from 'reapp-kit';
+  store, action, Immutable, Button, ButtonGroup, Card } from 'reapp-kit';
 import trendIcon from 'reapp-kit/icons/timer.svg';
 import discoverIcon from 'reapp-kit/icons/paper-plane.svg';
 import peopleIcon from '../../assets/silhouette121.svg';
@@ -7,6 +7,9 @@ import gearIcon from 'reapp-kit/icons/gear.svg';
 import workingIcon from '../../assets/working9.svg';
 import dollarsIcon from 'reapp-kit/icons/dollars.svg';
 import addIcon from 'reapp-kit/icons/add.svg';
+import eyeIcon from 'reapp-kit/icons/eye.svg';
+import heartIcon from 'reapp-kit/icons/heart.svg';
+import phoneIcon from 'reapp-kit/icons/phone.svg';
 import squareIcon from 'reapp-kit/icons/square.svg';
 import avatarIcon from '../../assets/profile5.png';
 import { host } from '../config';
@@ -120,7 +123,8 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
   }
   loadJobs(page) {
     page = page || 0;
-    request.get(host + '/api/jobs?page=' + page + '&status=Publish',
+    let accessToken = this.props.oauthToken.get('accessToken');
+    request.get(host + '/api/jobs?page=' + page + '&status=Publish&access_token=' + accessToken,
                 (err, res) => {
                   if (err) {
                     return this.props.alert('网络错误');
@@ -157,6 +161,76 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
   }
   handleBarActive(index) {
     this.setState({barIndex: index});
+  }
+  handleInfo(jobId) {
+    this.router().transitionTo('jobInfo', { jobId: jobId });
+  }
+  handleShowPhoneNumber(phoneNumber) {
+    this.props.alert('电话：' + phoneNumber);
+  }
+  handleRequestJob(jobId) {
+    let accessToken = this.props.oauthToken.get('accessToken');
+    let userId = this.state.profile.userId;
+    let data = {
+      access_token: accessToken,
+      jobId
+    };
+
+    this.updateRequestButton(jobId, true);
+    request.post(host + '/api/users/' + userId + '/requestJob', data,
+                (err, res) => {
+                  if (err) {
+                    this.updateRequestButton(jobId, false);
+                    return this.props.alert('网络错误');
+                  }
+                  let rsp = res.body;
+                  if (rsp.err) {
+                    this.updateRequestButton(jobId, false);
+                    return this.props.alert(rsp.msg || rsp.err);
+                  }
+                });
+  }
+  updateRequestButton(jobId, requested) {
+    let jobs = this.state.jobs.map(job => {
+      if (job.jobId === jobId) {
+        job.requested = requested;
+      }
+      return job;
+    });
+    this.setState({ jobs });
+  }
+
+  handleFavorite(jobId, favorite) {
+    let accessToken = this.props.oauthToken.get('accessToken');
+    let data = {
+      access_token: accessToken
+    };
+
+    let uri = favorite ? 'favorite' : 'unfavorite';
+
+    this.updateFavoriteButton(jobId, favorite);
+    request.post(host + '/api/jobs/' + jobId + '/' + uri, data,
+                (err, res) => {
+                  if (err) {
+                    this.updateFavoriteButton(jobId, !favorite);
+                    return this.props.alert('网络错误');
+                  }
+                  let rsp = res.body;
+                  if (rsp.err) {
+                    this.updateFavoriteButton(jobId, !favorite);
+                    return this.props.alert(rsp.msg || rsp.err);
+                  }
+                });
+
+  }
+  updateFavoriteButton(jobId, favorited) {
+    let jobs = this.state.jobs.map(job => {
+      if (job.jobId === jobId) {
+        job.favorited = favorited;
+      }
+      return job;
+    });
+    this.setState({ jobs });
   }
   componentDidMount() {
     this.loadProfile();
@@ -200,10 +274,11 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
       requiredPeople = '需要 ' + job.requiredPeople + ' 人';
     }
 
+    let user = job.user || {};
+
     return (
       <Card key={'job-' + job.jobId}
-        onClick={() => this.router().transitionTo('jobInfo', { jobId: job.jobId })}
-        title={<JobTitle salary={salary} name={job.title} />}>
+        title={<JobTitle salary={salary} name={job.title} time={job.createdAt} />}>
         <div key="summary">
           <p>
             {job.summary}
@@ -214,6 +289,21 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
             {requiredPeople}
           </p>
         </div>
+        <hr />
+        <ButtonGroup>
+          <Button chromeless onTap={this.handleFavorite.bind(this, job.jobId, !job.favorited)}>
+            <Icon file={heartIcon} color={job.favorited ? 'red' : 'gray'} />
+          </Button>
+          <Button chromeless onTap={this.handleInfo.bind(this, job.jobId)}>
+            <Icon file={eyeIcon} />
+          </Button>
+          <Button chromeless onTap={this.handleShowPhoneNumber.bind(this, user.phoneNumber)}>
+            <Icon file={phoneIcon} />
+          </Button>
+          <Button chromeless onTap={this.handleRequestJob.bind(this, job.jobId)} inactive={job.userId === this.state.profile.userId || job.requested ? true : false}>
+            <Icon file={addIcon} />
+          </Button>
+        </ButtonGroup>
       </Card>
     );
 
