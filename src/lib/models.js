@@ -131,3 +131,13 @@ var MessageSchema = new Schema({
 MessageSchema.plugin(autoIncrPlugin, { model: 'Message', field: 'msgId' });
 
 export var Message = mongoose.model('Message', MessageSchema);
+
+var FavoriteSchema = new Schema({
+  userId: Number,
+  jobId: Number,
+  createdAt: { type: Date, default: Date.now }
+});
+
+FavoriteSchema.plugin(autoIncrPlugin, { model: 'Favorite', field: 'id' });
+
+export var Favorite = mongoose.model('Favorite', FavoriteSchema);

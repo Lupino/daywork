@@ -4,7 +4,7 @@ import { parse as urlParse } from 'url';
 import _ from 'lodash';
 import fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { User, File, OauthToken, Job, MyJob, WorkRecord, Sequence, PaidRecord } from './models';
+import { User, File, OauthToken, Job, MyJob, WorkRecord, Sequence, PaidRecord, Favorite } from './models';
 import { sendJsonResponse } from './util';
 
 var passwordSalt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9';
@@ -684,4 +684,22 @@ export default class extends Object {
     });
   }
 
+  favorite(userId, jobId, callback) {
+    let query = { userId: userId, jobId: jobId };
+    Favorite.findOne(query, (err, favorte) => {
+      if (err) {
+        return callback(err);
+      }
+      if (favorte) {
+        return callback(null, favorte);
+      }
+      favorte = new Favorite(query);
+      favorte.save((err, favorte) => callback(err, favorte));
+    });
+  }
+
+  unfavorite(userId, jobId, callback) {
+    let query = { userId: userId, jobId: jobId };
+    Favorite.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
+  }
 }

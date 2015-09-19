@@ -234,6 +234,20 @@ export default function(app, daywork) {
     });
   });
 
+  app.post(apiPrefix + '/jobs/:jobId/favorite', requireLogin(), (req, res) => {
+    let userId = req.currentUser.userId;
+    let jobId = req.job.jobId;
+    daywork.favorite(userId, jobId,
+                     (err, fav) => sendJsonResponse(res, err, fav));
+  });
+
+  app.post(apiPrefix + '/jobs/:jobId/unfavorite', requireLogin(), (req, res) => {
+    let userId = req.currentUser.userId;
+    let jobId = req.job.jobId;
+    daywork.unfavorite(userId, jobId,
+                       (err, fav) => sendJsonResponse(res, err, fav));
+  });
+
   app.post(apiPrefix + '/jobs/:jobId/addRecord', requireLogin(), (req, res) => {
     if (!req.isOwner) {
       return sendJsonResponse(res, 403, 'no permission.');
