@@ -388,9 +388,10 @@ export default class extends Object {
           return callback(err);
         }
 
-        myJobs = _.zipWith(myJobs, jobs, (myJob, job) => {
+        let jobMap = _.zipObject(jobs.map(job => [job.jobId, job]));
+        myJobs = myJobs.map((myJob) => {
           myJob = myJob.toJSON();
-          myJob.job = job.toJSON();
+          myJob.job = jobMap[myJob.jobId];
           return myJob;
         });
 
@@ -437,9 +438,10 @@ export default class extends Object {
           return callback(err);
         }
 
-        myJobs = _.zipWith(myJobs, users, (myJob, user) => {
+        let userMap = _.zipObject(users.map(user => [user.userId, user]));
+        myJobs = myJobs.map(myJob => {
           myJob = myJob.toJSON();
-          myJob.user = user.toJSON();
+          myJob.user = userMap[myJob.userId];
           return myJob;
         });
 
