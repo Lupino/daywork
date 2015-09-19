@@ -19,7 +19,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, 'User: ' + userId + ' is not found.');
       }
       req.user = user;
-      req.isOwner = req.currentUser && req.currentUser.userId === userId;
+      req.isOwner = req.currentUser && req.currentUser.userId === user.userId;
       next();
     });
   });
