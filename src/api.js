@@ -242,7 +242,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, 'User: ' + userId + ' is not exists.');
       }
       daywork.assignMyJob(userId, jobId,
-                          (err, myJob) => sendJsonResponse(res, err, myJob));
+                          (err, myJob) => sendJsonResponse(res, err, { worker: myJob }));
     });
   });
 
