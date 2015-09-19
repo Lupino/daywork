@@ -190,6 +190,9 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
     const backButton =
       <BackButton onTap={() => this.router().transitionTo('jobs')} />;
 
+    const editButton = <Button chromeless
+      onTap={() => this.router().transitionTo('editJob', { jobId: job.jobId })}>编辑</Button>;
+
     let job = this.state.job;
     let body;
     if (job.jobId) {
@@ -201,7 +204,8 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
     return (
       <View {...this.props} title={[
         backButton,
-        '职位详情'
+        '职位详情',
+        editButton
       ]}>
         {body}
       </View>

@@ -8,6 +8,7 @@ router(require,
     route('jobInfo', '/info/:jobId'),
     route('jobs',
       route('jobDetail', '/jobs/:jobId'),
+      route('editJob', '/jobs/:jobId/edit'),
       route('payment', '/jobs/:jobId/payment/:userId')
     ),
     route('signup'),
