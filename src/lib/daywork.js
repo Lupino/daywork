@@ -220,6 +220,19 @@ export default class extends Object {
     Job.findOneAndUpdate(query, {status: 'Deleted'}, (err, job) => callback(err, job));
   }
 
+  updateJob(jobId, job, callback) {
+    let updated = {};
+    ['title', 'summary', 'status'].forEach(key => {
+      if (job[key]) {
+        updated[key] = job[key];
+      }
+    });
+    if (updated.status && (updated.status !== 'Draft' || updated.status !== 'Publish')) {
+      delete updated.status;
+    }
+    Job.findOneAndUpdate({ jobId }, updated, (err, job) => callback(err, job));
+  }
+
   getJob(jobId, callback) {
     let query = { jobId: jobId, status: { $nin: [ 'Deleted' ] } };
     Job.findOne(query, (err, job) => callback(err, job));

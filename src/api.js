@@ -193,6 +193,15 @@ export default function(app, daywork) {
     }
   });
 
+  app.post(apiPrefix + '/jobs/:jobId/update', requireLogin(), (req, res) => {
+    if (req.isOwner) {
+      daywork.updateJob(req.job.jobId, req.body,
+                        (err, job) => sendJsonResponse(res, err, { job: job }));
+    } else {
+      sendJsonResponse(res, 403, 'no permission');
+    }
+  });
+
   app.post(apiPrefix + '/jobs/:jobId/assignWorker', requireLogin(), (req, res) => {
     if (!req.isOwner) {
       return sendJsonResponse(res, 403, 'no permission.');
