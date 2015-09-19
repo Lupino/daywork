@@ -202,6 +202,26 @@ export default function(app, daywork) {
     }
   });
 
+  app.post(apiPrefix + '/users/:userId/requestJob', requireLogin(), (req, res) => {
+    if (!req.isOwner) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    let userId = req.currentUser.userId;
+    let jobId = Number(req.body.jobId);
+
+    daywork.getJob(jobId, (err, job) => {
+      if (!job) {
+        return sendJsonResponse(res, 404, 'Job not found.');
+      }
+      if (job.userId === userId) {
+        return sendJsonResponse(res, 403, 'You can\'t assign job for your self.');
+      }
+
+      daywork.requestMyJob(jobId, userId,
+                           (err, myJob) => sendJsonResponse(res, err, { work: myJob }));
+    });
+  });
+
   app.post(apiPrefix + '/jobs/:jobId/assignWorker', requireLogin(), (req, res) => {
     if (!req.isOwner) {
       return sendJsonResponse(res, 403, 'no permission.');
