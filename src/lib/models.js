@@ -97,7 +97,7 @@ export var PaidRecord = mongoose.model('PaidRecord', PaidRecordSchema);
 var MyJobSchema = new Schema({
   jobId: { type: Number, index: true },
   userId: { type: Number, index: true },
-  status: { type: String, default: 'Join' }, // Join | Leave | Finish
+  status: { type: String, default: 'Request' }, // Request | Join | Leave
   unpaid: { type: Number, default: 0 },
   paidOnline: { type: Number, default: 0 },
   paidOffline: { type: Number, default: 0 },

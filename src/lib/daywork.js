@@ -237,7 +237,7 @@ export default class extends Object {
     Job.find(query, null, options, callback);
   }
 
-  assignMyJob(userId, jobId, callback) {
+  requestMyJob(jobId, userId, callback) {
     let query = { userId: userId, jobId: jobId };
     MyJob.findOne(query, (err, myJob) => {
       if (err) {
@@ -247,6 +247,23 @@ export default class extends Object {
         return callback(null, myJob);
       }
       myJob = new MyJob(query);
+      myJob.save((err, myJob) => callback(err, myJob));
+    });
+  }
+
+  assignMyJob(userId, jobId, callback) {
+    let query = { userId: userId, jobId: jobId };
+    MyJob.findOne(query, (err, myJob) => {
+      if (err) {
+        return callback(err);
+      }
+      if (!myJob) {
+        myJob = new MyJob(query);
+        myJob.status = 'Join';
+      }
+      if (myJob.status === 'Request') {
+        myJob.status = 'Join';
+      }
       myJob.save((err, myJob) => callback(err, myJob));
     });
   }
