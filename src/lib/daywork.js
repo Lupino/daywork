@@ -233,8 +233,62 @@ export default class extends Object {
     if (!options.sort) {
       options.sort = 'field -createdAt';
     }
+    let filled = options.filled || null;
+    if (options.filled) {
+      delete options.filled;
+    }
     query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
-    Job.find(query, null, options, callback);
+    Job.find(query, null, options, (err, jobs) => {
+      if (err) {
+        return callback(err);
+      }
+      if (!filled) {
+        return callback(null, jobs);
+      }
+      async.parallel({
+        users(done) {
+          if (!filled.user) return done();
+          let userIds = _.uniq(jobs.map(job => job.userId));
+          User.find({ userId: { $in: userIds } }, (err, users) => done(err, users));
+        },
+        favs(done) {
+          if (!filled.favorited) return done();
+          let userId = filled.favorited;
+          let jobIds = _.uniq(_.compact(jobs.map(job => job.jobId)));
+          Favorite.find({ userId: userId, jobId: { $in: jobIds } }, (err, favs) => done(err, favs));
+        },
+        reqs(done) {
+          if (!filled.requested) return done();
+          let userId = filled.requested;
+          let jobIds = _.uniq(_.compact(jobs.map(job => job.jobId)));
+          MyJob.find({ userId: userId, jobId: { $in: jobIds } }, (err, myJobs) => done(err, myJobs));
+        }
+      }, (err, result) => {
+        if (err) {
+          return callback(err);
+        }
+        result.users = result.users || [];
+        result.favs = result.favs || [];
+        result.reqs = result.reqs || [];
+        let userMap = _.zipObject(result.users.map(user => [user.userId, user]));
+        let favMap = _.zipObject(result.favs.map(fav => [fav.jobId, true]));
+        let reqMap = _.zipObject(result.reqs.map(req => [req.jobId, true]));
+        jobs = jobs.map((job) => {
+          job = job.toJSON();
+          if (filled.user) {
+            job.user = userMap[job.userId];
+          }
+          if (filled.favorited) {
+            job.favorited = favMap[job.jobId];
+          }
+          if (filled.requested) {
+            job.requested = reqMap[job.jobId];
+          }
+          return job;
+        });
+        callback(null, jobs);
+      });
+    });
   }
 
   requestMyJob(jobId, userId, callback) {

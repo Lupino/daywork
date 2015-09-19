@@ -80,8 +80,12 @@ export default function(app, daywork) {
     if (userId) {
       query.userId = userId;
     }
+    let filled = { user: true };
+    if (req.currentUser) {
+      filled.favorited = filled.requested = req.currentUser.userId;
+    }
     daywork.getJobs(query,
-                    { limit: limit, skip: skip },
+                    { limit: limit, skip: skip, filled: filled },
                     (err, jobs) => {
                       sendJsonResponse(res, err, { jobs: jobs });
                     });
