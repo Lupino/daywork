@@ -227,7 +227,7 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
 
-    let userId = Number(req.param('userId'));
+    let userId = Number(req.body.userId);
     let jobId = req.job.jobId;
 
     if (req.currentUser.userId === userId) {
@@ -247,7 +247,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/jobs/:jobId/workerLeave', requireLogin(), (req, res) => {
-    let userId = Number(req.param('userId')) || req.currentUser.userId;
+    let userId = Number(req.body.userId) || req.currentUser.userId;
     let jobId = req.job.jobId;
 
     if (req.currentUser.userId !== userId && !req.isOwner) {
