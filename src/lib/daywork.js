@@ -574,6 +574,7 @@ export default class extends Object {
       options = {};
     }
 
+    let self = this;
     WorkRecord.findOne({ recordId: recordId },
                        (err, record) => {
                          if (err) return callback(err);
@@ -581,11 +582,11 @@ export default class extends Object {
                          async.parallel({
                            user(done) {
                              if (!options.user) return done();
-                             this.getUser(userId, done);
+                             self.getUser(userId, done);
                            },
                            job(done) {
                              if (!options.job) return done();
-                             this.getJob(jobId, { user: true }, done);
+                             self.getJob(jobId, { user: true }, done);
                            }
                          }, (err, result) => {
                            if (err) return callback(err);
@@ -851,6 +852,8 @@ export default class extends Object {
       options.sort = 'field -createdAt';
     }
 
+    let self = this;
+
     Message.find({ userId }, null, options, (err, messages) => {
       async.map(messages, (msg, done) => {
         let { message } = msg;
@@ -859,24 +862,24 @@ export default class extends Object {
           addRecord(done) {
             if (type !== 'addRecord') return done();
             let { recordId } = content;
-            this.getRecord(recordId, { job: true }, done);
+            self.getRecord(recordId, { job: true }, done);
           },
           cancelRecord(done) {
             if (type !== 'cancelRecord') return done();
             let { recordId } = content;
-            this.getRecord(recordId, { job: true }, done);
+            self.getRecord(recordId, { job: true }, done);
           },
           paidRecord(done) {
             if (type !== 'paidRecord') return done();
             let { recordId } = content;
             PaidRecord.findOne({ recordId }, (err, prec) => {
               if (err) return done(err);
-              this.getJob(prec.jobId, { user: true }, (err, job) => {
+              self.getJob(prec.jobId, { user: true }, (err, job) => {
                 if (err) return done(err);
                 prec = prec.toJSON();
                 prec.job = job;
                 done(null, prec);
-              })
+              });
             });
           },
           requestJob(done) {
@@ -884,17 +887,17 @@ export default class extends Object {
             let { jobId, userId } = content;
             async.parallel({
               job(done) {
-                this.getJob(jobId, done);
+                self.getJob(jobId, done);
               },
               user(done) {
-                this.getUser(userId, done);
+                self.getUser(userId, done);
               }
             }, done);
           },
           joinJob(done) {
             if (type !== 'joinJob') return done();
             let { jobId } = content;
-            this.getJob(jobId, { user: true }, done);
+            self.getJob(jobId, { user: true }, done);
           }
         }, (err, result) => {
           if (err) {
