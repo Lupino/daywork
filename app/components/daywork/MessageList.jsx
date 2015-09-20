@@ -52,7 +52,7 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
     }
 
     return (
-      <View>
+      <View key="messages-view">
         <div>
           {messages}
         </div>

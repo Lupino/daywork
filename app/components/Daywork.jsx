@@ -115,6 +115,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
       barIndex: barIndex,
       loadMoreButton: true,
       currentPage: 0,
+      isLogIn: false,
       profile: props.profile.toJSON(),
       jobs: []
     };
@@ -152,12 +153,16 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
                   }
                   let rsp = res.body;
                   if (rsp.err) {
-                    return this.props.alert(rsp.msg || rsp.err, () => {
+                    return this.props.alert('需要登录才能查看', () => {
                       this.router().transitionTo('signin');
                     });
                   }
-                  this.action.setProfile(rsp.user);
-                  this.setState({ profile: rsp.user });
+                  let profile = rsp.user;
+                  let jobs = [];
+                  let isLogIn = true;
+                  this.action.setProfile(profile);
+                  this.setState({ profile, jobs, isLogIn });
+                  this.loadJobs();
                 });
   }
   handleBarActive(index) {
@@ -234,11 +239,16 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     this.setState({ jobs });
   }
   updateProfile(profile) {
-    this.setState({ profile });
+    let jobs = [];
+    let isLogIn = true;
+    this.action.setProfile(profile);
+    this.setState({ profile, jobs, isLogIn });
+    this.loadJobs();
   }
   componentDidMount() {
-    this.loadProfile();
-    this.loadJobs();
+    if (!window.location.pathname.match(/signin|signup/)) {
+      this.loadProfile();
+    }
   }
   renderBar() {
     var bar = (
@@ -259,6 +269,9 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     return bar;
   }
   renderTrendingView() {
+    if (!this.state.isLogIn) {
+      return <View></View>;
+    }
     return <MessageList />;
   }
   renderJobItem(job) {
@@ -310,6 +323,9 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
 
   }
   renderDiscoverView() {
+    if (!this.state.isLogIn) {
+      return <View></View>;
+    }
     let button = null;
     if (this.state.loadMoreButton) {
       let page = this.state.currentPage + 1;
@@ -320,22 +336,24 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
 
     let jobs = this.state.jobs.map(this.renderJobItem);
 
-
     return (
-      <View>
+      <View key="discover-view">
         {jobs}
         {button}
       </View>
     );
   }
   renderMeView() {
+    if (!this.state.isLogIn) {
+      return <View></View>;
+    }
     let profile = this.state.profile;
     let avatarImgUrl = avatarIcon;
     if (profile.avatar) {
       avatarImgUrl = host + '/upload/' + profile.avatar.key;
     }
     return (
-      <View>
+      <View key="me-view">
         <List>
           <List.Item
             title={profile.realName}

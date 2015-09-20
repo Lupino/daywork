@@ -45,7 +45,6 @@ export default modal(class extends React.Component {
                       this.setState({ btnActive: true });
                       return this.props.alert(rsp.msg || rsp.err);
                     }
-                    this.action.setProfile(rsp.user);
                     this.props.updateParentProfile(rsp.user);
                     this.router().transitionTo('daywork');
                   });
