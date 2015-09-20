@@ -14,6 +14,7 @@ router(require,
     route('works',
       route('workDetail', '/works/:userId/:jobId')
     ),
+    route('workDetail1', '/works1/:userId/:jobId'),
     route('signup'),
     route('signin'),
     route('problem'),

@@ -1,4 +1,4 @@
-import { Reapp, React, NestedViewList, View, List, Router, Bar, Badge, Icon,
+import { Reapp, React, NestedViewList, View, List, Router, Bar, Icon,
   store, action, Immutable, Button, ButtonGroup, Card } from 'reapp-kit';
 import trendIcon from 'reapp-kit/icons/timer.svg';
 import discoverIcon from 'reapp-kit/icons/paper-plane.svg';
@@ -16,6 +16,7 @@ import { host } from '../config';
 import request from 'superagent';
 import _ from 'lodash';
 import JobTitle from './daywork/JobTitle';
+import MessageList from './daywork/MessageList';
 import { modal } from './lib/higherOrderComponent';
 
 var {Link} = Router;
@@ -258,10 +259,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     return bar;
   }
   renderTrendingView() {
-    return (
-      <View>
-      </View>
-    );
+    return <MessageList />;
   }
   renderJobItem(job) {
     let salary = job.salary + ' RMB / ';
