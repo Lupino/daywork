@@ -22,6 +22,7 @@
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "formidable": "^1.0.17",
+    "gearmanode": "^0.9.0",
     "leanengine": "^0.1.6",
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",

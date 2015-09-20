@@ -108,6 +108,23 @@ export default function(app, daywork) {
                       });
   });
 
+  app.get(apiPrefix + '/users/:userId/messages', requireLogin(), (req, res) => {
+    if (!req.isOwner) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    let userId = req.user.userId;
+    let skip = limit * page;
+
+    daywork.getMessages(userId, { limit, skip },
+                        (err, messages) => sendJsonResponse(res, err, { messages }));
+
+  });
+
   app.get(apiPrefix + '/users/:userId/works/:jobId', (req, res) => {
     let userId = req.params.userId;
     let jobId = req.params.jobId;

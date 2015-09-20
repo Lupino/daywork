@@ -18,7 +18,7 @@ var MongoStore = mongoStoreLib(session);
 
 var app = express();
 
-let daywork = new Daywork(config);
+let daywork = new Daywork();
 
 app.set('port', config.port || process.env.PORT || 3000);
 app.set('host', config.host || process.env.HOST || '127.0.0.1');

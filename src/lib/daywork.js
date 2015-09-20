@@ -4,8 +4,16 @@ import { parse as urlParse } from 'url';
 import _ from 'lodash';
 import fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { User, File, OauthToken, Job, MyJob, WorkRecord, Sequence, PaidRecord, Favorite } from './models';
+import { User, File, OauthToken, Job, MyJob, WorkRecord, Sequence, PaidRecord, Favorite, Message } from './models';
 import { sendJsonResponse } from './util';
+import { uploadPath } from '../config';
+import {
+  wrapperAddRecordCallback,
+  wrapperCancelRecordCallback,
+  wrapperPaidRecordCallback,
+  wrapperRequestJobCallback,
+  wrapperJoinJobCallback
+} from './message_client';
 
 var passwordSalt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9';
 
@@ -14,10 +22,6 @@ export function hashedPassword(rawPassword) {
 }
 
 export default class extends Object {
-  constructor(config) {
-    super(config);
-    this.config = config;
-  }
 
   createUser(user, callback) {
     async.waterfall([
@@ -77,7 +81,7 @@ export default class extends Object {
       if (fileObj) {
         return callback(null, fileObj);
       }
-      fs.rename(file.path, this.config.uploadPath + '/' + file.hash, (err) => {
+      fs.rename(file.path, uploadPath + '/' + file.hash, (err) => {
         if (err) {
           return callback(err);
         }
@@ -250,7 +254,7 @@ export default class extends Object {
         if (err) return callback(err);
         job.user = user;
         callback(null, job);
-      })
+      });
     });
   }
 
@@ -322,6 +326,7 @@ export default class extends Object {
 
   requestMyJob(jobId, userId, callback) {
     let query = { userId: userId, jobId: jobId };
+    callback = wrapperRequestJobCallback(callback);
     MyJob.findOne(query, (err, myJob) => {
       if (err) {
         return callback(err);
@@ -336,6 +341,7 @@ export default class extends Object {
 
   assignMyJob(userId, jobId, callback) {
     let query = { userId: userId, jobId: jobId };
+    callback = wrapperJoinJobCallback(callback);
     MyJob.findOne(query, (err, myJob) => {
       if (err) {
         return callback(err);
@@ -467,6 +473,7 @@ export default class extends Object {
   }
 
   addRecord(record, callback) {
+    callback = wrapperAddRecordCallback(callback);
     async.waterfall([
       (next) => {
         MyJob.findOne({ jobId: record.jobId, userId: record.userId },
@@ -522,6 +529,7 @@ export default class extends Object {
       recordId: recordId,
       status: 'Unpaid'
     };
+    callback = wrapperCancelRecordCallback(callback);
     async.waterfall([
       (next) => WorkRecord.findOne(query, (err, rec) => next(err, rec)),
       (rec, next) => {
@@ -560,9 +568,33 @@ export default class extends Object {
                                 (err, record) => callback(err, record));
   }
 
-  getRecord(recordId, callback) {
+  getRecord(recordId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
     WorkRecord.findOne({ recordId: recordId },
-                       (err, record) => callback(err, record));
+                       (err, record) => {
+                         if (err) return callback(err);
+                         let { userId, jobId } = record;
+                         async.parallel({
+                           user(done) {
+                             if (!options.user) return done();
+                             this.getUser(userId, done);
+                           },
+                           job(done) {
+                             if (!options.job) return done();
+                             this.getJob(jobId, { user: true }, done);
+                           }
+                         }, (err, result) => {
+                           if (err) return callback(err);
+                           record = record.toJSON();
+                           record.user = result.user;
+                           record.job = result.job;
+                           callback(null, record);
+                         });
+                       });
   }
 
   getRecordByUser(userId, options, callback) {
@@ -649,6 +681,7 @@ export default class extends Object {
 
   payOffline(id, money, callback) {
     let context = {};
+    callback = wrapperPaidRecordCallback(callback);
     function errRecover() {
       let myJob = context.myJob;
       async.waterfall([
@@ -798,5 +831,75 @@ export default class extends Object {
   unfavorite(userId, jobId, callback) {
     let query = { userId: userId, jobId: jobId };
     Favorite.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
+  }
+
+  addMessage({ userId, message, createdAt }, callback) {
+    let msg = new Message({ userId, message, createdAt });
+    msg.save((err, msg) => callback(err, msg));
+  }
+  getMessages(userId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    if (!options.sort) {
+      options.sort = 'field -createdAt';
+    }
+
+    Message.find({ userId }, null, options, (err, messages) => {
+      async.map(messages, (msg, done) => {
+        let { message } = msg;
+        let { content, type } = message;
+        async.parallel({
+          addRecord(done) {
+            if (type !== 'addRecord') return done();
+            let { recordId } = content;
+            this.getRecord(recordId, { job: true }, done);
+          },
+          cancelRecord(done) {
+            if (type !== 'cancelRecord') return done();
+            let { recordId } = content;
+            this.getRecord(recordId, { job: true }, done);
+          },
+          paidRecord(done) {
+            if (type !== 'paidRecord') return done();
+            let { recordId } = content;
+            PaidRecord.findOne({ recordId }, (err, prec) => {
+              if (err) return done(err);
+              this.getJob(prec.jobId, { user: true }, (err, job) => {
+                if (err) return done(err);
+                prec = prec.toJSON();
+                prec.job = job;
+                done(null, prec);
+              })
+            });
+          },
+          requestJob(done) {
+            if (type !== 'requestJob') return done();
+            let { jobId, userId } = content;
+            async.parallel({
+              job(done) {
+                this.getJob(jobId, done);
+              },
+              user(done) {
+                this.getUser(userId, done);
+              }
+            }, done);
+          },
+          joinJob(done) {
+            if (type !== 'joinJob') return done();
+            let { jobId } = content;
+            this.getJob(jobId, { user: true }, done);
+          }
+        }, (err, result) => {
+          if (err) {
+            return done(err);
+          }
+          msg.message[type] = result[type];
+          done(null, msg);
+        });
+      }, callback);
+    });
   }
 }

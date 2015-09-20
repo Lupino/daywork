@@ -123,7 +123,6 @@ export var File = mongoose.model('File', FileSchema);
 
 var MessageSchema = new Schema({
   userId: Number,
-  who: Number,
   message: Mixed,
   createdAt: { type: Date, default: Date.now }
 });

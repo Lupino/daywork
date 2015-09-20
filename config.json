@@ -4,8 +4,6 @@
   "host": "127.0.0.1",
   "apiPrefix": "/api",
   "uploadPath": "public/upload",
-  "appId": "",
-  "appKey": "",
-  "masterKey": "",
+  "gearmanHost": { "host": "localhost" },
   "port": 3000
 }
