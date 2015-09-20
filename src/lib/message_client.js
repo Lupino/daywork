@@ -15,7 +15,7 @@ export function wrapperAddRecordCallback(callback) {
   return (err, record) => {
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('addRecord', { recordId, userId });
+      submitJob('daywork.addRecord', { recordId, userId });
     }
     callback(err, record);
   };
@@ -25,7 +25,7 @@ export function wrapperCancelRecordCallback(callback) {
   return (err, record) => {
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('cancelRecord', { recordId, userId });
+      submitJob('daywork.cancelRecord', { recordId, userId });
     }
     callback(err, record);
   };
@@ -36,7 +36,7 @@ export function wrapperPaidRecordCallback(callback) {
     if (!err) {
       let { paidRecord } = result;
       let { recordId, userId } = paidRecord;
-      submitJob('paidRecord', { recordId, userId });
+      submitJob('daywork.paidRecord', { recordId, userId });
     }
     callback(err, result);
   };
@@ -46,7 +46,7 @@ export function wrapperRequestJobCallback(callback) {
   return (err, myJob) => {
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('requestJob', { userId, jobId });
+      submitJob('daywork.requestJob', { userId, jobId });
     }
     callback(err, myJob);
   };
@@ -56,7 +56,7 @@ export function wrapperJoinJobCallback(callback) {
   return (err, myJob) => {
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('joinJob', { userId, jobId });
+      submitJob('daywork.joinJob', { userId, jobId });
     }
     callback(err, myJob);
   };

@@ -33,7 +33,7 @@ function report(job) {
   };
 }
 
-worker.addFunction('addRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'addRecord',
     content: { recordId }
@@ -41,7 +41,7 @@ worker.addFunction('addRecord', wrapperCallback(({ userId, recordId, createdAt, 
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('cancelRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'cancelRecord',
     content: { recordId }
@@ -49,7 +49,7 @@ worker.addFunction('cancelRecord', wrapperCallback(({ userId, recordId, createdA
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('paidRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'paidRecord',
     content: { recordId }
@@ -57,7 +57,7 @@ worker.addFunction('paidRecord', wrapperCallback(({ userId, recordId, createdAt,
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('requestJob', wrapperCallback(({ jobId, userId, createdAt, job }) => {
+worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, createdAt, job }) => {
   let message = {
     type: 'requestJob',
     content: { userId, jobId }
@@ -68,7 +68,7 @@ worker.addFunction('requestJob', wrapperCallback(({ jobId, userId, createdAt, jo
   ], report(job));
 }));
 
-worker.addFunction('joinJob', wrapperCallback(({ userId, jobId, createdAt, job }) => {
+worker.addFunction('daywork.joinJob', wrapperCallback(({ userId, jobId, createdAt, job }) => {
   let message = {
     type: 'joinJob',
     content: { jobId }
