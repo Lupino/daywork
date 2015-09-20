@@ -20,7 +20,7 @@ function wrapperCallback(callback) {
     }
     payload.job = job;
     callback(payload);
-  }
+  };
 }
 
 function report(job) {
@@ -30,48 +30,48 @@ function report(job) {
     } else {
       job.workComplete('ok');
     }
-  }
+  };
 }
 
-worker.addFunction('addRecord', wrapperCallback({ userId, recordId, createdAt, job } => {
+worker.addFunction('addRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'addRecord',
     content: { recordId }
-  }
+  };
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('cancelRecord', wrapperCallback({ userId, recordId, createdAt, job } => {
+worker.addFunction('cancelRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'cancelRecord',
     content: { recordId }
-  }
+  };
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('paidRecord', wrapperCallback({ userId, recordId, createdAt, job } => {
+worker.addFunction('paidRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
   let message = {
     type: 'paidRecord',
     content: { recordId }
-  }
+  };
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
 
-worker.addFunction('requestJob', wrapperCallback({ jobId, userId, createdAt, job } => {
+worker.addFunction('requestJob', wrapperCallback(({ jobId, userId, createdAt, job }) => {
   let message = {
     type: 'requestJob',
     content: { userId, jobId }
-  }
+  };
   async.waterfall([
     (next) => daywork.getJob(jobId, next),
     ({ userId }, next) => daywork.addMessage({ userId, message, createdAt }, next)
   ], report(job));
 }));
 
-worker.addFunction('joinJob', wrapperCallback({ userId, jobId, createdAt, job } => {
+worker.addFunction('joinJob', wrapperCallback(({ userId, jobId, createdAt, job }) => {
   let message = {
     type: 'joinJob',
     content: { jobId }
-  }
+  };
   daywork.addMessage({ userId, message, createdAt }, report(job));
 }));
