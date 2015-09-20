@@ -144,12 +144,7 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
                    if (rsp.err) {
                      return this.props.alert(rsp.msg || rsp.err);
                    }
-                   let recs = this.state.records.map((record) => {
-                     if (record.recordId === recordId) {
-                       record.status = 'Cancel';
-                     }
-                     return record;
-                   });
+                   let recs = this.state.records.filter(record => record.recordId !== recordId);
                    this.setState({ records: recs });
                  });
   }

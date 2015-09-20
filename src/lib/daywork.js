@@ -533,10 +533,10 @@ export default class extends Object {
     async.waterfall([
       (next) => WorkRecord.findOne(query, (err, rec) => next(err, rec)),
       (rec, next) => {
-        if (rec.status === 'Unpaid') {
+        if (rec.status !== 'Unpaid') {
           return next('该记录以被支付了');
         }
-        if (new Date() - rec.createdAt < 30 * 60 * 1000) {
+        if (new Date() - rec.createdAt > 30 * 60 * 1000) {
           return next('无法取消超过 30 分钟的记录');
         }
         async.parallel([
@@ -613,6 +613,8 @@ export default class extends Object {
     if (options.jobId) {
       query.jobId = options.jobId;
       delete options.jobId;
+    } else {
+      query.status = { $nin: [ 'Cancel' ] };
     }
     if (!options.sort) {
       options.sort = 'field -createdAt';
@@ -650,6 +652,8 @@ export default class extends Object {
     if (options.status) {
       query.status = options.status;
       delete options.status;
+    } else {
+      query.status = { $nin: [ 'Cancel' ] };
     }
     if (options.userId) {
       query.userId = options.userId;

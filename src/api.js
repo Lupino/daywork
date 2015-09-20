@@ -344,12 +344,7 @@ export default function(app, daywork) {
     }
     async.waterfall([
       (next) => daywork.getRecord(recId, next),
-      (record, next) => {
-        if (record.userId != req.currentUser.userId) {
-          return sendJsonResponse(res, 403, 'no permission.');
-        }
-        return daywork.cancelRecord(recId, next);
-      }
+      (record, next) => daywork.cancelRecord(recId, next)
     ], (err, rec) => sendJsonResponse(res, err, { record: rec }));
   });
 
