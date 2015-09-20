@@ -9,7 +9,8 @@
   "scripts": {
     "test": "",
     "build": "babel -d build src;reapp-build",
-    "start": "babel-node src/app.js"
+    "start": "babel-node src/app.js",
+    "worker": "babel-node src/lib/message_worker.js"
   },
   "dependencies": {
     "async": "^1.4.2",
