@@ -24,7 +24,7 @@ var UserSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-UserSchema.plugin(autoIncrPlugin, { model: 'User', field: 'userId' });
+UserSchema.plugin(autoIncrPlugin, { model: 'User', field: 'userId', startAt: 1 });
 
 export var User = mongoose.model('User', UserSchema);
 
@@ -63,7 +63,7 @@ var JobSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-JobSchema.plugin(autoIncrPlugin, { model: 'Job', field: 'jobId' });
+JobSchema.plugin(autoIncrPlugin, { model: 'Job', field: 'jobId', startAt: 1 });
 
 export var Job = mongoose.model('Job', JobSchema);
 
@@ -77,7 +77,7 @@ var WorkRecordSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-WorkRecordSchema.plugin(autoIncrPlugin, { model: 'WorkRecord', field: 'recordId' });
+WorkRecordSchema.plugin(autoIncrPlugin, { model: 'WorkRecord', field: 'recordId', startAt: 1 });
 
 export var WorkRecord = mongoose.model('WorkRecord', WorkRecordSchema);
 
@@ -90,7 +90,7 @@ var PaidRecordSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-PaidRecordSchema.plugin(autoIncrPlugin, { model: 'PaidRecord', field: 'recordId' });
+PaidRecordSchema.plugin(autoIncrPlugin, { model: 'PaidRecord', field: 'recordId', startAt: 1 });
 
 export var PaidRecord = mongoose.model('PaidRecord', PaidRecordSchema);
 
@@ -107,7 +107,7 @@ var MyJobSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-MyJobSchema.plugin(autoIncrPlugin, { model: 'MyJob', field: 'id' });
+MyJobSchema.plugin(autoIncrPlugin, { model: 'MyJob', field: 'id', startAt: 1 });
 
 export var MyJob = mongoose.model('MyJob', MyJobSchema);
 
@@ -117,7 +117,7 @@ var FileSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-FileSchema.plugin(autoIncrPlugin, { model: 'File', field: 'id' });
+FileSchema.plugin(autoIncrPlugin, { model: 'File', field: 'id', startAt: 1 });
 
 export var File = mongoose.model('File', FileSchema);
 
@@ -127,7 +127,7 @@ var MessageSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-MessageSchema.plugin(autoIncrPlugin, { model: 'Message', field: 'msgId' });
+MessageSchema.plugin(autoIncrPlugin, { model: 'Message', field: 'msgId', startAt: 1 });
 
 export var Message = mongoose.model('Message', MessageSchema);
 
@@ -137,6 +137,6 @@ var FavoriteSchema = new Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-FavoriteSchema.plugin(autoIncrPlugin, { model: 'Favorite', field: 'id' });
+FavoriteSchema.plugin(autoIncrPlugin, { model: 'Favorite', field: 'id', startAt: 1 });
 
 export var Favorite = mongoose.model('Favorite', FavoriteSchema);
