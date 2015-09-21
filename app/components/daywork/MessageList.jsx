@@ -10,6 +10,7 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
   state = {
     messages: [],
     loadMoreButton: true,
+    update: 0,
     currentPage: 0
   }
   handleLoadMore(page) {
@@ -37,8 +38,19 @@ export default store.cursor(['profile', 'oauthToken'], modal(class extends React
                   this.setState({ currentPage: page });
                 });
   }
+  reloadMessages() {
+    this.setState({ messages: [] });
+    this.loadMessages();
+  }
   componentDidMount() {
     this.loadMessages();
+  }
+  componentDidUpdate() {
+    if (this.state.update !== this.props.update) {
+      let update = this.props.update;
+      this.setState({ update });
+      this.reloadMessages();
+    }
   }
   render() {
     let messages = this.state.messages.map((message) =>

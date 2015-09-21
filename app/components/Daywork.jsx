@@ -115,6 +115,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
       barIndex: barIndex,
       loadMoreButton: true,
       currentPage: 0,
+      update: 0,
       isLogIn: false,
       profile: props.profile.toJSON(),
       jobs: []
@@ -241,8 +242,9 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
   updateProfile(profile) {
     let jobs = [];
     let isLogIn = true;
+    let update = this.state.update + 1;
     this.action.setProfile(profile);
-    this.setState({ profile, jobs, isLogIn });
+    this.setState({ profile, jobs, isLogIn, update });
     this.loadJobs();
   }
   componentDidMount() {
@@ -272,7 +274,7 @@ const Daywork = store.cursor(['profile', 'oauthToken'], modal(class extends Reac
     if (!this.state.isLogIn) {
       return <View></View>;
     }
-    return <MessageList />;
+    return <MessageList update={this.state.update} />;
   }
   renderJobItem(job) {
     let salary = job.salary + ' RMB / ';
