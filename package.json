@@ -8,6 +8,7 @@
   "scripts": {
     "test": "",
     "start": "babel-node server.js",
+    "lint": "eslint .",
     "worker": "babel-node src/lib/message_worker.js"
   },
   "dependencies": {
