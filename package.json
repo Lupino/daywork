@@ -4,11 +4,9 @@
   "repository": "",
   "description": "",
   "version": "1.0.0",
-  "main": "./app/app.js",
-  "reapp": "0.8",
+  "main": "./src/app.js",
   "scripts": {
     "test": "",
-    "build": "babel -d build src;reapp-build",
     "start": "babel-node src/app.js",
     "worker": "babel-node src/lib/message_worker.js"
   },
