@@ -1,7 +1,9 @@
+BABEL=node_modules/.bin/babel
+
 all: dist
 
 backend:
-	babel -d dist src
+	$(BABEL) -d dist src
 
 front:
 	mkdir -p dist/public
