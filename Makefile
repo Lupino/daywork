@@ -1,4 +1,5 @@
 BABEL=node_modules/.bin/babel
+WEBPACK=node_modules/.bin/webpack --config=webpack.production.config.js
 
 all: dist
 
@@ -6,7 +7,8 @@ backend:
 	$(BABEL) -d dist src
 
 front:
-	mkdir -p dist/public
+	$(WEBPACK)
+	cp index.html dist/public
 
 dist: backend front
 	mkdir -p dist/public/upload
