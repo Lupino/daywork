@@ -1,11 +1,9 @@
 import express from 'express';
-import http from 'http';
 import path from 'path';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import errorHandler from 'errorhandler';
 import mongoStoreLib from 'connect-mongo';
 import config from './config';
 import Daywork from './lib/daywork';
@@ -16,7 +14,7 @@ import fs from 'fs';
 
 var MongoStore = mongoStoreLib(session);
 
-var app = express();
+export var app = express();
 
 let daywork = new Daywork();
 
@@ -57,14 +55,4 @@ app.get('/*', (req, res) => {
       res.send(content);
     }
   });
-});
-
-if ('development' === app.get('env')) {
-  app.use(errorHandler());
-}
-
-http.createServer(app).listen(app.get('port'), function() {
-  /*eslint-disable no-console */
-  console.log('Express server listening on port ' + (app.get('port')));
-  /*eslint-enable no-console */
 });

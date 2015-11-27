@@ -4,10 +4,10 @@
   "repository": "",
   "description": "",
   "version": "1.0.0",
-  "main": "./app.js",
+  "main": "./server.js",
   "scripts": {
     "test": "",
-    "start": "node app.js",
+    "start": "node server.js",
     "worker": "node lib/message_worker.js"
   },
   "dependencies": {
