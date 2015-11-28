@@ -37,7 +37,7 @@ function setup(app) {
   app.use(daywork.auth('/auth'));
   expressCommon(app, daywork);
   api(app, daywork);
-  app.use(errorhandler());
+  app.use(errorHandler());
 }
 
 var server = new WebpackDevServer(webpack(config), {
