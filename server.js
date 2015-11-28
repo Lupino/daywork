@@ -1,29 +1,53 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
-import http from 'http';
+import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
+import config from './webpack.config';
 import errorHandler from 'errorhandler';
-import { app } from './src/app';
-app.use(errorHandler());
 
-http.createServer(app).listen(3001, function() {
-  /*eslint-disable no-console */
-  console.log('Express server listening on port ' + (app.get('port')));
-  /*eslint-enable no-console */
-});
+import express from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+import methodOverride from 'method-override';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import mongoStoreLib from 'connect-mongo';
+import appConfig from './src/config';
+import Daywork from './src/lib/daywork';
+import expressCommon from './src/lib/express_common';
+import api from './src/api';
 
-new WebpackDevServer(webpack(config), {
+function setup(app) {
+  let MongoStore = mongoStoreLib(session);
+  let daywork = new Daywork();
+
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+  app.use(bodyParser.json());
+  app.use(methodOverride());
+  app.use(cookieParser());
+  app.use(session({
+    secret: appConfig.cookieSecret,
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoStore({
+      url: appConfig.mongod
+    })
+  }));
+
+  app.use(daywork.auth('/auth'));
+  expressCommon(app, daywork);
+  api(app, daywork);
+  app.use(errorhandler());
+}
+
+var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
   historyApiFallback: true,
-  proxy: {
-    '/api/*': 'http://localhost:3001',
-    '/auth*': 'http://localhost:3001'
-  }
-}).listen(3000, 'localhost', function (err, result) {
-  if (err) {
-    console.log(err);
-  }
-
-  console.log('Listening at localhost:3000');
+  setup: setup,
+  contentBase: 'www'
+}).listen(3000, 'localhost', () => {
+  /*eslint-disable no-console */
+  console.log('Express server listening on port 3000');
+  /*eslint-enable no-console */
 });
