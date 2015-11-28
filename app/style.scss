@@ -1,0 +1,24 @@
+@import "~react-toolbox/lib/commons";
+
+.app-bar {
+  height: 60px;
+}
+
+.app-bar-text {
+    text-align: center;
+    position: absolute;
+    width: 80px;
+    left: 50%;
+    margin-top: 20px;
+    margin-left: -40px;
+}
+
+.container {
+    margin: 70px 10px 0 10px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.card {
+  margin-bottom: 10px;
+}

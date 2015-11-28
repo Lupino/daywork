@@ -8,7 +8,7 @@ backend:
 
 front:
 	$(WEBPACK)
-	@cp www/* dist/public
+	@cp -a www/* dist/public
 
 dist: backend front
 	mkdir -p dist/public/upload
