@@ -22,19 +22,19 @@ export default class App extends Component {
     return (
       <div>
         <AppBar fixed flat className={style['app-bar']}>
-         <Button icon='list' floating mini
+          <Button icon='list' floating mini ripple
             onClick={this.handleToggle}
-            onTouchStart={this.handleToggle} />
-            <div className={style['app-bar-text']}> 每日工作 </div>
+          />
+          <div className={style['app-bar-text']}> 每日工作 </div>
           <Navigation />
         </AppBar>
         <Drawer active={this.state.active} onOverlayClick={this.handleToggle}>
-            <MenuItem value='signup' icon='account-box' caption='注册/登录' />
-            <MenuItem value='message' icon='message' caption='消息' />
-            <MenuItem value='settings' icon='settings' caption='设置' />
-            <MenuItem value='help' icon='help' caption='帮助' />
-            <MenuDivider />
-            <MenuItem value='关于' icon='info' caption='关于' />
+          <MenuItem value='signup' icon='account_box' caption='注册/登录' />
+          <MenuItem value='message' icon='message' caption='消息' />
+          <MenuItem value='settings' icon='settings' caption='设置' />
+          <MenuItem value='help' icon='help' caption='帮助' />
+          <MenuDivider />
+          <MenuItem value='关于' icon='info' caption='关于' />
         </Drawer>
         <div className={style.container}>
           <Card
