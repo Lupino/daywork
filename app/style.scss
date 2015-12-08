@@ -22,3 +22,22 @@
 .card {
   margin-bottom: 10px;
 }
+
+.drawer-menu {
+  width: 100%;
+}
+
+.phone-validate-code, .password {
+  position: relative;
+
+  .send-phone-validate-code, .eye {
+    position: absolute;
+    right: 0;
+    top: 19px;
+  }
+}
+
+.filled {
+  width: 100%;
+  margin-bottom: 10px;
+}
