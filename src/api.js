@@ -108,16 +108,13 @@ export default function(app, daywork) {
                       });
   });
 
-  app.get(apiPrefix + '/users/:userId/messages', requireLogin(), (req, res) => {
-    if (!req.isOwner) {
-      return sendJsonResponse(res, 403, 'no permission.');
-    }
+  app.get(apiPrefix + '/messages', requireLogin(), (req, res) => {
     let page = Number(req.query.page) || 0;
     let limit = Number(req.query.limit) || 10;
     if (limit > 50) {
       limit = 50;
     }
-    let userId = req.user.userId;
+    let userId = req.currentUser.userId;
     let skip = limit * page;
 
     daywork.getMessages(userId, { limit, skip },
@@ -229,10 +226,7 @@ export default function(app, daywork) {
     }
   });
 
-  app.post(apiPrefix + '/users/:userId/requestJob', requireLogin(), (req, res) => {
-    if (!req.isOwner) {
-      return sendJsonResponse(res, 403, 'no permission.');
-    }
+  app.post(apiPrefix + '/requestJob', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let jobId = Number(req.body.jobId);
 
@@ -241,7 +235,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, 404, 'Job not found.');
       }
       if (job.userId === userId) {
-        return sendJsonResponse(res, 403, 'You can\'t assign job for your self.');
+        return sendJsonResponse(res, 403, 'You can\'t request job for yourself.');
       }
 
       daywork.requestMyJob(jobId, userId,
@@ -258,7 +252,7 @@ export default function(app, daywork) {
     let jobId = req.job.jobId;
 
     if (req.currentUser.userId === userId) {
-      return sendJsonResponse(res, 403, 'You can\'t assign job for your self.');
+      return sendJsonResponse(res, 403, 'You can\'t assign job for yourself.');
     }
 
     daywork.getUser(userId, (err, user) => {
@@ -317,7 +311,7 @@ export default function(app, daywork) {
     let jobId = req.job.jobId;
 
     if (req.currentUser.userId === userId) {
-      return sendJsonResponse(res, 403, 'You can\'t add work record for your self.');
+      return sendJsonResponse(res, 403, 'You can\'t add work record for yourself.');
     }
 
     daywork.getUser(userId, (err, user) => {
