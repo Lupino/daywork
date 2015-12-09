@@ -46,14 +46,14 @@ export default class Signin extends Component {
         notify('登录失败');
         return;
       }
-      getProfile(token.accessToken, (err, { user }) => {
+      store.set('token', token);
+      getProfile((err, { user }) => {
         if (err) {
           notify('拉取用户数据失败');
           return;
         }
         this.props.onLogin(true);
         this.props.onLoadedProfile(user);
-        store.set('token', token);
         store.set('profile', user);
         notify('登录成功');
         history.push('/');

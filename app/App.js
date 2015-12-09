@@ -50,19 +50,18 @@ export default class App extends Component {
   }
 
   loadProfile = () => {
-    const token = store.get('token');
-    if (token && token.accessToken) {
-      getProfile(token.accessToken, (err, { user }) => {
-        if (!err && user && user.userId) {
-          store.set('profile', user);
-          this.setState({ profile: user, logIn: true });
-        }
-      })
-    }
+    getProfile((err, { user }) => {
+      if (!err && user && user.userId) {
+        store.set('profile', user);
+        this.setState({ profile: user, logIn: true });
+      }
+    });
   }
+
   componentDidMount = () => {
     this.loadProfile();
   }
+
   render() {
     const { drawerActive, snackbarActive, snackbarLabel, logIn } = this.state;
     let child = cloneElement(this.props.children, {

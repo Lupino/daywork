@@ -1,4 +1,4 @@
-import request from 'superagent';
+import request from './request';
 import { getUri, wapperCallback } from './utils';
 
 export function sendSmsCode(phoneNumber, callback) {

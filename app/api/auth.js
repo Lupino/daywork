@@ -1,4 +1,4 @@
-import request from 'superagent';
+import request from './request';
 import { getUri, wapperCallback } from './utils';
 
 export function signin ({ userName, passwd, type }, callback) {
@@ -20,11 +20,6 @@ export function resetPassword({ phoneNumber, smsCode, passwd }, callback) {
                wapperCallback(callback));
 }
 
-export function logOut(token, callback) {
-  if (typeof token === 'function') {
-    callback = token;
-    token = '';
-  }
-  request.post(getUri('/api/logOut'), { access_token: token },
-               wapperCallback(callback));
+export function logOut(callback) {
+  request.post(getUri('/api/logOut'), wapperCallback(callback));
 }

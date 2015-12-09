@@ -79,14 +79,14 @@ export default class Signup extends Component {
           history.push('signin');
           return;
         }
-        getProfile(token.accessToken, (err, { user }) => {
+        store.set('token', token);
+        getProfile((err, { user }) => {
           if (err) {
             history.push('signin');
             return;
           }
           this.props.onLogin(true);
           this.props.onLoadedProfile(user);
-          store.set('token', token);
           store.set('profile', user);
           notify('注册并登录成功');
           history.push('/');

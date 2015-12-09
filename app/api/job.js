@@ -1,103 +1,96 @@
-import request from 'superagent';
+import request from './request';
 import { getUri, wapperCallback } from './utils';
 
-export function requestJob({ jobId, token }, callback) {
-  request.post(getUri(`/api/requestJob`), {jobId, access_token: token},
-               wapperCallback(callback));
+export function requestJob({ jobId }, callback) {
+  request.post(getUri(`/api/requestJob`), {jobId}, wapperCallback(callback));
 }
 
-export function getJob({ jobId, token }, callback) {
-  request.get(getUri(`/api/jobs/${jobId}`, {access_token: token}),
-              wapperCallback(callback));
+export function getJob({ jobId }, callback) {
+  request.get(getUri(`/api/jobs/${jobId}`), wapperCallback(callback));
 }
 
-export function getJobWorkers({ jobId, token, status, page, limit }, callback) {
-  let url = getUri(`/api/jobs/${jobId}/workers`,
-                   {access_token: token, status, page, limit});
+export function getJobWorkers({ jobId, status, page, limit }, callback) {
+  let url = getUri(`/api/jobs/${jobId}/workers`, {status, page, limit});
   request.get(url, wapperCallback(callback));
 }
 
-export function getJobs({ status, userId, page, limit, token }, callback) {
-  let url = getUri('/api/jobs/', { access_token: token, status, userId, page, limit });
+export function getJobs({ status, userId, page, limit }, callback) {
+  let url = getUri('/api/jobs/', { status, userId, page, limit });
   request.get(url, wapperCallback(callback));
 }
 
-export function getJobRecords({jobId, userId, status, page, limit, token}) {
-  let url = getUri(`/api/jobs/${jobId}/records`,
-                   {access_token: token, userId, page, limit, status});
+export function getJobRecords({jobId, userId, status, page, limit}) {
+  let url = getUri(`/api/jobs/${jobId}/records`, {userId, page, limit, status});
   request.get(url, wapperCallback(callback));
 }
 
-export function getJobPayment({ jobId, userId, token}, callback) {
-  let url = getUri(`/api/jobs/${jobId}/payment/${userId}`, {access_token: token});
+export function getJobPayment({ jobId, userId}, callback) {
+  let url = getUri(`/api/jobs/${jobId}/payment/${userId}`);
   request.get(url, wapperCallback(callback));
 }
 
-export function createJob({ title, summary, payMethod, requiredPeople, status, token }, callback) {
+export function createJob({ title, summary, payMethod, requiredPeople, status }, callback) {
   request.post(getUri('/api/jobs/create'),
-               { title, summary, payMethod, requiredPeople, status, access_token: token },
+               { title, summary, payMethod, requiredPeople, status },
                wapperCallback(callback));
 }
 
-export function  publishJob({ jobId, token }, callback) {
-  request.post(getUri(`/api/jobs/${jobId}/publish`), {access_token: token},
+export function  publishJob({ jobId }, callback) {
+  request.post(getUri(`/api/jobs/${jobId}/publish`), wapperCallback(callback));
+}
+
+export function  finishJob({ jobId }, callback) {
+  request.post(getUri(`/api/jobs/${jobId}/finish`), wapperCallback(callback));
+}
+
+export function deleteJob({ jobId }, callback) {
+  request.post(getUri(`/api/jobs/${jobId}/delete`),
                wapperCallback(callback));
 }
 
-export function  finishJob({ jobId, token }, callback) {
-  request.post(getUri(`/api/jobs/${jobId}/finish`), {access_token: token},
-               wapperCallback(callback));
-}
-
-export function deleteJob({ jobId, token }, callback) {
-  request.post(getUri(`/api/jobs/${jobId}/delete`), {access_token: token},
-               wapperCallback(callback));
-}
-
-export function updateJob({ jobId, title, summary, status, token }, callback) {
+export function updateJob({ jobId, title, summary, status }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/update`),
-               { access_token: token, title, summary, status },
+               { title, summary, status },
                wapperCallback(callback));
 }
 
-export function assignWorker({ jobId, userId, token }, callback) {
+export function assignWorker({ jobId, userId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/assignWorker`),
-               { access_token: token, userId },
+               { userId },
                wapperCallback(callback));
 }
 
-export function workerLeave({ jobId, userId, token }, callback) {
+export function workerLeave({ jobId, userId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/workerLeave`),
-               { access_token: token, userId },
+               { userId },
                wapperCallback(callback));
 }
 
-export function favorite({ jobId, token }, callback) {
+export function favorite({ jobId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/favorite`),
-               { access_token: token, userId },
+               { userId },
                wapperCallback(callback));
 }
 
-export function unfavorite({ jobId, token }, callback) {
+export function unfavorite({ jobId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/unfavorite`),
-               { access_token: token, userId },
+               { userId },
                wapperCallback(callback));
 }
 
 export function addRecord({ jobId, userId, recordNumber }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/addRecord`),
-               { access_token: token, userId, recordNumber },
+               { userId, recordNumber },
                wapperCallback(callback));
 }
 
 export function cancelRecord({ jobId, recordId }, callback) {
-  request.post(getUri(`/api/jobs/${jobId}/cancelRecord`),
-               { access_token: token, recordId },
+  request.post(getUri(`/api/jobs/${jobId}/cancelRecord`), { recordId },
                wapperCallback(callback));
 }
 
-export function payOffline({ jobId, id, money, token }, callback) {
+export function payOffline({ jobId, id, money }, callback) {
     request.post(getUri(`/api/jobs/${jobId}/payOffline`),
-                 { access_token: token, id, money },
+                 { id, money },
                  wapperCallback(callback));
 }
