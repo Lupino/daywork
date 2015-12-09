@@ -7,16 +7,12 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import mongoStoreLib from 'connect-mongo';
 import appConfig from './src/config';
 import Daywork from './src/lib/daywork';
 import expressCommon from './src/lib/express_common';
 import api from './src/api';
 
 function setup(app) {
-  let MongoStore = mongoStoreLib(session);
   let daywork = new Daywork();
 
   app.use(bodyParser.urlencoded({
@@ -24,15 +20,6 @@ function setup(app) {
   }));
   app.use(bodyParser.json());
   app.use(methodOverride());
-  app.use(cookieParser());
-  app.use(session({
-    secret: appConfig.cookieSecret,
-    resave: true,
-    saveUninitialized: true,
-    store: new MongoStore({
-      url: appConfig.mongod
-    })
-  }));
 
   app.use(daywork.auth('/auth'));
   expressCommon(app, daywork);
