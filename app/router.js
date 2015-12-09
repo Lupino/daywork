@@ -8,6 +8,8 @@ import Settings from './Settings';
 import Message from './Message';
 import Help from './Help';
 import Default from './Default';
+import Problem from './Problem';
+import ResetPassword from './ResetPassword';
 
 var router = module.exports = (
   <Router>
@@ -18,6 +20,8 @@ var router = module.exports = (
       <Route path="/signup" component={Signup} />
       <Route path="/settings" component={Settings} />
       <Route path="/message" component={Message} />
+      <Route path="/problem" component={Problem} />
+      <Route path="/reset_password" component={ResetPassword} />
       <Route path="/help" component={Help} />
     </Route>
   </Router>

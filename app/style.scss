@@ -7,10 +7,10 @@
 .app-bar-text {
     text-align: center;
     position: absolute;
-    width: 80px;
+    width: 140px;
     left: 50%;
     margin-top: 20px;
-    margin-left: -40px;
+    margin-left: -70px;
 }
 
 .container {
@@ -25,16 +25,6 @@
 
 .drawer-menu {
   width: 100%;
-}
-
-.phone-validate-code, .password {
-  position: relative;
-
-  .send-phone-validate-code, .eye {
-    position: absolute;
-    right: 0;
-    top: 19px;
-  }
 }
 
 .filled {

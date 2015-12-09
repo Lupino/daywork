@@ -1,0 +1,11 @@
+@import "~react-toolbox/lib/commons";
+
+.button-input-group {
+  position: relative;
+
+  .input-button {
+    position: absolute;
+    right: 0;
+    top: 19px;
+  }
+}

@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
-import { Input, Button, Navigation } from 'react-toolbox';
+import { Input, Button, Link, Navigation } from 'react-toolbox';
 import PasswordInput from './modules/input/PasswordInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
-import { sendSmsCode, signup, signinForToken, getProfile } from './api';
+import { sendSmsCode, resetPassword } from './api';
 import store from './modules/store';
 const { object } = React.PropTypes;
 
-export default class Signup extends Component {
+export default class ResetPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       phoneNumber: '',
       smsCode: '',
-      realName: '',
       passwd: '',
-      sendTimeout: 0,
       checkError: {}
     };
   }
@@ -26,6 +24,7 @@ export default class Signup extends Component {
 
   handleSendSMSCode = () => {
     const { phoneNumber } = this.state;
+    let checkError = {};
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请输入正确的手机号码';
       this.setState({ checkError })
@@ -36,12 +35,11 @@ export default class Signup extends Component {
     });
   }
 
-  handleSignup = () => {
+  handleResetPassword = () => {
     let checkError = {};
     let hasError = false;
-    const { phoneNumber, smsCode, realName, passwd } = this.state;
+    const { phoneNumber, smsCode, passwd } = this.state;
     const { history } = this.context;
-    const { notify } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -49,11 +47,6 @@ export default class Signup extends Component {
 
     if (!smsCode || smsCode.length != 6) {
       checkError.smsCode = '请输入正确短信验证码';
-      hasError = true;
-    }
-
-    if (!realName) {
-      checkError.realName = '请填写您的姓名';
       hasError = true;
     }
 
@@ -66,39 +59,23 @@ export default class Signup extends Component {
       this.setState({ checkError });
       return;
     }
-
-    signup({ phoneNumber, smsCode, realName, passwd }, (err) => {
+    resetPassword({ phoneNumber, smsCode, passwd }, (err) => {
       if (err) {
-        if (/phoneNumber/.exec(err)) {
-          checkError.phoneNumber = `手机号码: ${phoneNumber} 已经被注册了`;
-        }
+        alert(err);
         return;
       }
-      signinForToken({ userName: phoneNumber, passwd }, (err, token) => {
-        if (err) {
-          history.push('signin');
-          return;
-        }
-        getProfile(token.accessToken, (err, { user }) => {
-          if (err) {
-            history.push('signin');
-            return;
-          }
-          this.props.onLogin(true);
-          this.props.onLoadedProfile(user);
-          store.set('token', token);
-          store.set('profile', user);
-          notify('注册并登录成功');
-          history.push('/');
-        });
-      });
+      this.props.onLogin(false);
+      this.props.onLoadedProfile({});
+      store.remove('token');
+      store.remove('profile');
+      history.push('signin');
     });
   }
 
   render() {
-    const { sendTimeout, phoneNumber, smsCode, realName, passwd, checkError } = this.state;
+    const { phoneNumber, passwd, smsCode, checkError } = this.state;
     const links = [
-      { href: '#/signin', label: '我是老用户?' }
+      { href: '#/signin', label: '我想起密码了?' },
     ];
     return (
       <section>
@@ -122,15 +99,6 @@ export default class Signup extends Component {
           error={checkError.smsCode}
           />
 
-        <Input
-          type='text'
-          label='姓名'
-          name='realName'
-          value={realName}
-          onChange={this.handleChange.bind(this, 'realName')}
-          error={checkError.realName}
-          />
-
         <PasswordInput
           label='密码'
           name='passwd'
@@ -138,15 +106,14 @@ export default class Signup extends Component {
           onChange={this.handleChange.bind(this, 'passwd')}
           error={checkError.passwd}
           />
-        <Button label='注册' raised primary floating className={style.filled} onClick={this.handleSignup} / >
+        <Button label='重置密码' raised primary floating className={style.filled} onClick={this.handleResetPassword} / >
         <Navigation type='horizontal' routes={links} />
       </section>
     );
   }
 }
 
-Signup.title = '注册';
-
-Signup.contextTypes = {
+ResetPassword.title = '重置密码';
+ResetPassword.contextTypes = {
   history: object
 }
