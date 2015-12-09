@@ -2,7 +2,7 @@ import request from 'superagent';
 import { getUri, wapperCallback } from './utils';
 
 export function signin ({ userName, passwd, type }, callback) {
-  request.post(getUri('/auth', { type, userName, passwd }),
+  request.post(getUri('/auth'), { type, userName, passwd },
                wapperCallback(callback));
 }
 

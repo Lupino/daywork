@@ -1,4 +1,4 @@
-export { signup, signin, signinForToken, resetPasswd, logOut } from './auth';
+export { signup, signin, signinForToken, resetPassword, logOut } from './auth';
 export {
   getProfile,
   getUser,
