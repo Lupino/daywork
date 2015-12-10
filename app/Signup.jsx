@@ -86,7 +86,7 @@ export default class Signup extends Component {
             return;
           }
           this.props.onLogin(true);
-          this.props.onLoadedProfile(user);
+          this.props.onProfileLoaded(user);
           store.set('profile', user);
           notify('注册并登录成功');
           history.push('/');

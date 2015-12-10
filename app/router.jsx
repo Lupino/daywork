@@ -10,6 +10,7 @@ import Help from './Help';
 import Default from './Default';
 import Problem from './Problem';
 import ResetPassword from './ResetPassword';
+import Profile from './Profile';
 
 var router = module.exports = (
   <Router>
@@ -23,6 +24,7 @@ var router = module.exports = (
       <Route path="/problem" component={Problem} />
       <Route path="/reset_password" component={ResetPassword} />
       <Route path="/help" component={Help} />
+      <Route path="/profile" component={Profile} />
     </Route>
   </Router>
 );

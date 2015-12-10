@@ -18,6 +18,7 @@ function setup(app) {
   app.use(bodyParser.urlencoded({
     extended: false
   }));
+  app.use(express.static(path.join(__dirname, 'www')));
   app.use(bodyParser.json());
   app.use(methodOverride());
 

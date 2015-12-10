@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Button } from 'react-toolbox';
 import style from './style';
 
-export default class Signup extends Component {
+export default class SMSCodeInput extends Component {
   constructor(props) {
     super(props);
     this.state = {

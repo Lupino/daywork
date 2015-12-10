@@ -33,8 +33,17 @@ export default class App extends Component {
     this.setState({ logIn });
   }
 
-  handleLoadedProfile = (profile) => {
+  handleProfileLoaded = (profile) => {
     this.setState({ profile });
+  }
+
+  handleProfileUpdated = (name, value) => {
+    const { profile } = this.state;
+    this.setState({ profile: {...profile, [name]: value} })
+  }
+
+  handleGetProfile = () => {
+    return this.state.profile;
   }
 
   handleSnackbarClick = () => {
@@ -66,7 +75,9 @@ export default class App extends Component {
     const { drawerActive, snackbarActive, snackbarLabel, logIn } = this.state;
     let child = cloneElement(this.props.children, {
       onLogin: this.handleLogIn,
-      onLoadedProfile: this.handleLoadedProfile,
+      onProfileLoaded: this.handleProfileLoaded,
+      onProfileUpdated: this.handleProfileUpdated,
+      getProfile: this.handleGetProfile,
       notify: this.handleShowSnackbar
     });
     return (
