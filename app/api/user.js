@@ -34,8 +34,8 @@ export function updateProfile({ ...profile }, callback) {
                wapperCallback(callback));
 }
 
-export function updateAvatar({ file }, callback) {
+export function updateAvatar(file, callback) {
   let req = request.post(getUri('/api/updateAvatar'));
-  req.attach('avatar', file);
+  req.attach('avatar', file, file.name);
   req.end(wapperCallback(callback));
 }
