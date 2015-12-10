@@ -3,7 +3,7 @@
   "cookieSecret": "yabby-chknonlaedfasdwe",
   "host": "127.0.0.1",
   "apiPrefix": "/api",
-  "uploadPath": "public/upload",
+  "uploadPath": "www/upload",
   "gearmanHost": { "host": "localhost" },
   "port": 3000
 }
