@@ -29,9 +29,9 @@ export function getJobPayment({ jobId, userId}, callback) {
   request.get(url, wapperCallback(callback));
 }
 
-export function createJob({ title, summary, payMethod, requiredPeople, status }, callback) {
+export function createJob({ title, summary, payMethod, salary, requiredPeople, status, image }, callback) {
   request.post(getUri('/api/jobs/create'),
-               { title, summary, payMethod, requiredPeople, status },
+               { title, summary, payMethod, salary, requiredPeople, status, image },
                wapperCallback(callback));
 }
 

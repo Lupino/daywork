@@ -60,6 +60,7 @@ var JobSchema = new Schema({
   payMethod: { type: String, default: 'Daily' }, // Daily | Hourly
   requiredPeople: Number,
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
+  image: Mixed,
   createdAt: { type: Date, default: Date.now }
 });
 

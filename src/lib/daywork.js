@@ -204,7 +204,8 @@ export default class extends Object {
       salary: job.salary,
       payMethod: job.payMethod,
       requiredPeople: job.requiredPeople,
-      status: job.status
+      status: job.status,
+      image: job.image
     });
     jobObj.save((err, jobObj) => callback(err, jobObj));
   }
@@ -226,7 +227,7 @@ export default class extends Object {
 
   updateJob(jobId, job, callback) {
     let updated = {};
-    ['title', 'summary', 'status'].forEach(key => {
+    ['title', 'summary', 'status', 'image'].forEach(key => {
       if (job[key]) {
         updated[key] = job[key];
       }
