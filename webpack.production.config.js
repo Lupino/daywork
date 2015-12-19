@@ -10,6 +10,7 @@ module.exports = {
       'react',
       'react-toolbox',
       'react-router',
+      'react-dropzone',
       'classnames',
       'history',
       'superagent'
