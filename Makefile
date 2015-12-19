@@ -1,5 +1,4 @@
 BABEL=node_modules/.bin/babel
-WEBPACK=node_modules/.bin/webpack --config=webpack.production.config.js
 
 all: dist
 
@@ -7,7 +6,7 @@ backend:
 	$(BABEL) -d dist src
 
 front:
-	$(WEBPACK)
+	npm run build
 	@cp -a www/* dist/public
 
 dist: backend front

@@ -5,11 +5,21 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: './app/index'
+    app: './app/index',
+    vendors: [
+      'react',
+      'react-toolbox',
+      'react-router',
+      'classnames',
+      'history',
+      'superagent'
+    ] // And other vendors
   },
   output: {
     path: path.join(__dirname, 'dist/public/static'),
-    filename: 'bundle.js',
+    filename: '[name].js',
+    chunkFilename: '[id].bundle.js',
+    sourceMapFilename: '{file}.map',
     publicPath: '/static/'
   },
   resolve: {
@@ -20,7 +30,12 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('react-toolbox.css', { allChunks: true }),
+    new ExtractTextPlugin('[name].css', { allChunks: true }),
+    new webpack.optimize.UglifyJsPlugin({
+      // include: /\.min\.js$|vendors.js$/,
+      minimize: true
+    }),
+    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
   ],
   module: {
     loaders: [

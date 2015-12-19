@@ -6,14 +6,24 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   context: __dirname,
   devtool: 'eval',
-  entry: [
-    'webpack-dev-server/client?http://localhost:3000',
+  entry: {
+    app: ['webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    './app/index'
-  ],
+    './app/index'],
+    vendors: [
+      'react',
+      'react-toolbox',
+      'react-router',
+      'classnames',
+      'history',
+      'superagent'
+    ] // And other vendors
+  },
   output: {
     path: path.join(__dirname, 'dist/public/static'),
-    filename: 'bundle.js',
+    filename: '[name].js',
+    chunkFilename: '[id].bundle.js',
+    sourceMapFilename: '{file}.map',
     publicPath: '/static/'
   },
   resolve: {
@@ -24,7 +34,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('react-toolbox.css', { allChunks: true }),
+    new ExtractTextPlugin('[name].css', { allChunks: true }),
+    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
     new webpack.HotModuleReplacementPlugin()
   ],
   module: {
