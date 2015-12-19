@@ -11,6 +11,7 @@ import Default from './Default';
 import Problem from './Problem';
 import ResetPassword from './ResetPassword';
 import Profile from './Profile';
+import NewJob from './NewJob';
 
 var router = module.exports = (
   <Router>
@@ -25,6 +26,7 @@ var router = module.exports = (
       <Route path="/reset_password" component={ResetPassword} />
       <Route path="/help" component={Help} />
       <Route path="/profile" component={Profile} />
+      <Route path="/new_job" component={NewJob} />
     </Route>
   </Router>
 );

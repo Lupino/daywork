@@ -96,6 +96,7 @@ export default class App extends Component {
             <MenuItem value='/' icon='home' caption='首页' />
             { logIn ? <MenuItem value='profile' icon='account_box' caption='账户信息' /> :
             <MenuItem value='signin' icon='account_box' caption='注册/登录' />}
+            <MenuItem value='new_job' icon='add' caption='发布新职位' />
             <MenuItem value='message' icon='message' caption='消息' />
             <MenuItem value='settings' icon='settings' caption='设置' />
             <MenuItem value='help' icon='help' caption='帮助' />
