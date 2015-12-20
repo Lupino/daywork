@@ -1,11 +1,16 @@
 import React, { Component, cloneElement } from 'react';
-import { AppBar, Navigation, Button, Drawer, Menu, MenuItem, MenuDivider, Snackbar } from 'react-toolbox';
+import {
+  AppBar,
+  Navigation,
+  Button,
+  Drawer,
+  Menu, MenuItem, MenuDivider,
+  Snackbar, Dialog
+} from 'react-toolbox';
 import style from './style';
 import { Link } from 'react-router';
 import { getProfile } from './api';
 import store from './modules/store';
-
-const { object } = React.PropTypes;
 
 export default class App extends Component {
   constructor(props) {
@@ -15,7 +20,12 @@ export default class App extends Component {
       profile: {},
       drawerActive: false,
       snackbarActive: false,
-      snackbarLabel: ''
+      snackbarLabel: '',
+      snackbarCallback: null,
+      diaTitle: '',
+      diaActive: false,
+      diaActions: [],
+      diaChildren: null
     };
   }
 
@@ -24,7 +34,7 @@ export default class App extends Component {
   }
 
   handleMenuSelect = (menuValue) => {
-    const { history } = this.context;
+    const { history } = this.props;
     history.push(menuValue);
     this.setState({ drawerActive: false });
   }
@@ -47,15 +57,85 @@ export default class App extends Component {
   }
 
   handleSnackbarClick = () => {
-    this.setState({ snackbarActive: false });
+    const { snackbarCallback } = this.state;
+    if ( snackbarCallback ) {
+      snackbarCallback();
+    }
+    this.setState({ snackbarActive: false, snackbarCallback: null });
   };
 
   handleSnackbarTimeout = () => {
-    this.setState({ snackbarActive: false });
+    const { snackbarCallback } = this.state;
+    if ( snackbarCallback ) {
+      snackbarCallback();
+    }
+    this.setState({ snackbarActive: false, snackbarCallback: null });
   };
 
-  handleShowSnackbar = (snackbarLabel) => {
-    this.setState({ snackbarActive: true, snackbarLabel })
+  handleShowSnackbar = (snackbarLabel, snackbarCallback) => {
+    this.setState({ snackbarActive: true, snackbarLabel, snackbarCallback })
+  }
+
+  handleDiaClose = () => {
+    this.setState( { diaActive: false } );
+  }
+
+  handleDiaAlert = ({ message, title }, callback) => {
+    const diaActive = true;
+    const diaActions = [
+      {
+        label: '确定',
+        raised: true,
+        onClick: () => {
+          callback && callback();
+          this.handleDiaClose();
+        }
+      }
+    ];
+    const diaChildren = <p> {message} </p>;
+    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
+  }
+
+  handleDiaConfirm = ({ message, title, onConfirm, onCancel }, callback) => {
+    const diaActive = true;
+    const diaActions = [
+      {
+        label: '确定',
+        raised: true,
+        onClick: () => {
+          onConfirm && onConfirm();
+          callback && callback(true);
+          this.handleDiaClose();
+        }
+      },
+      {
+        label: '取消',
+        raised: true,
+        onClick: () => {
+          onCancel && onCancel();
+          callback && callback(false);
+          this.handleDiaClose();
+        }
+      }
+    ];
+    const diaChildren = <p> {message} </p>;
+    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
+  }
+
+  handleDialog = ({ title, children, actions }) => {
+    const diaActive = true;
+    const diaActions = actions.map(( action ) => {
+      const _onClick = action.onClick;
+      action.onClick = () => {
+        const ret = _onClick ? _onClick.apply(null, arguments) : null;
+        if (ret !== false) {
+          this.handleDiaClose();
+        }
+      }
+      return action;
+    });
+    const diaChildren = children;
+    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
   }
 
   loadProfile = () => {
@@ -73,12 +153,16 @@ export default class App extends Component {
 
   render() {
     const { drawerActive, snackbarActive, snackbarLabel, logIn } = this.state;
+    const { diaTitle, diaActive, diaActions, diaChildren } = this.state;
     let child = cloneElement(this.props.children, {
       onLogin: this.handleLogIn,
       onProfileLoaded: this.handleProfileLoaded,
       onProfileUpdated: this.handleProfileUpdated,
       getProfile: this.handleGetProfile,
-      notify: this.handleShowSnackbar
+      notify: this.handleShowSnackbar,
+      alert: this.handleDiaAlert,
+      confirm: this.handleDiaConfirm,
+      dialog: this.handleDialog
     });
     return (
       <div>
@@ -117,11 +201,10 @@ export default class App extends Component {
           onTimeout={this.handleSnackbarTimeout}
           type='cancel'
         />
+        <Dialog actions={diaActions} active={diaActive} title={diaTitle || '提示'}>
+          {diaChildren}
+        </Dialog>
       </div>
     );
   }
-}
-
-App.contextTypes = {
-  history: object
 }
