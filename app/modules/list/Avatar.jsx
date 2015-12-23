@@ -10,6 +10,7 @@ class Avatar extends React.Component {
   static propTypes = {
     avatar: React.PropTypes.string,
     caption: React.PropTypes.string.isRequired,
+    children: React.PropTypes.any,
     className: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     onDrop: React.PropTypes.func,
@@ -30,12 +31,6 @@ class Avatar extends React.Component {
     }
   };
 
-  handleMouseDown = (event) => {
-    if (this.refs.ripple && !this.props.disabled) {
-      this.refs.ripple.start(event);
-    }
-  };
-
   renderContent () {
     const className = ClassNames(style.item, {
       [style.disabled]: this.props.disabled,
@@ -45,12 +40,13 @@ class Avatar extends React.Component {
     return (
       <span className={className}>
         <Dropzone onDrop={this.handleDrop} className={_style.dropzone}>
-          <span className={_style.caption}> {this.props.caption} </span>
-          <div className={`${_style.avatar}`}>
-            <img src={this.props.avatar} />
-          </div>
+          <span>
+            <span className={_style.caption}> {this.props.caption} </span>
+            <div className={`${_style.avatar}`}>
+              <img src={this.props.avatar} />
+            </div>
+          </span>
         </Dropzone>
-        {this.props.ripple ? <Ripple ref='ripple' className={style.ripple} spread={2} /> : null}
         {this.props.rightIcon ? <FontIcon className={`${style.icon} ${style.right}`} value={this.props.rightIcon} /> : null}
       </span>
     );
@@ -60,9 +56,13 @@ class Avatar extends React.Component {
     return (
       <li className={style['list-item']} onMouseDown={this.handleMouseDown}>
         {this.renderContent()}
+        {this.props.children}
       </li>
     );
   }
 }
 
-export default Avatar;
+export default Ripple({
+  className: style.ripple,
+  centered: false
+})(Avatar);

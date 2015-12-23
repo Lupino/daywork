@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { List, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox';
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox';
 import Avatar from './modules/list/Avatar';
-import ListItem from './modules/list/ListItem';
 import ButtonInput from './modules/input/ButtonInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
@@ -180,10 +179,10 @@ export default class Profile extends Component {
           <ListItem
             ripple={true}
             caption='姓名'
-            legend={profile.realName}
             rightIcon={getArrow('realName')}
-            onClick={this.handleShowInput.bind(this, 'realName')}
-          />
+            onClick={this.handleShowInput.bind(this, 'realName')}>
+            <span className={style['legend-right']}> {profile.realName} </span>
+          </ListItem>
           <ListInput
             caption='姓名'
             value={profile.realName}
@@ -194,10 +193,10 @@ export default class Profile extends Component {
           <ListItem
             ripple={true}
             caption='性别'
-            legend={profile.sex === 'M'?'男':'女'}
             rightIcon={getArrow('sex')}
-            onClick={this.handleShowInput.bind(this, 'sex')}
-          />
+            onClick={this.handleShowInput.bind(this, 'sex')}>
+            <span className={style['legend-right']}> {profile.sex === 'M'?'男':'女'} </span>
+          </ListItem>
           <ListSex
             value={profile.sex}
             show={show('sex')}
@@ -207,8 +206,9 @@ export default class Profile extends Component {
           <ListItem
             ripple={true}
             caption='手机'
-            legend={profile.phoneNumber}
-          />
+          >
+            <span className={style['legend-right']}> {profile.phoneNumber} </span>
+          </ListItem>
         </List>
       </section>
     );
