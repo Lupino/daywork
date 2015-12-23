@@ -4,7 +4,6 @@ import PasswordInput from './modules/input/PasswordInput';
 import style from './style';
 import { signinForToken, getProfile } from './api';
 import store from './modules/store';
-const { object } = React.PropTypes;
 
 export default class Signin extends Component {
   constructor(props) {
@@ -24,8 +23,7 @@ export default class Signin extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, passwd } = this.state;
-    const { history } = this.context;
-    const { notify } = this.props;
+    const { notify, history } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -47,11 +45,12 @@ export default class Signin extends Component {
         return;
       }
       store.set('token', token);
-      getProfile((err, { user }) => {
+      getProfile((err, rsp) => {
         if (err) {
           notify('拉取用户数据失败');
           return;
         }
+        const user = rsp.user;
         this.props.onLogin(true);
         this.props.onProfileLoaded(user);
         store.set('profile', user);
@@ -94,6 +93,3 @@ export default class Signin extends Component {
 }
 
 Signin.title = '登录';
-Signin.contextTypes = {
-  history: object
-}

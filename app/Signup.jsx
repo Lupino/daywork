@@ -5,7 +5,6 @@ import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
 import { sendSmsCode, signup, signinForToken, getProfile } from './api';
 import store from './modules/store';
-const { object } = React.PropTypes;
 
 export default class Signup extends Component {
   constructor(props) {
@@ -40,8 +39,7 @@ export default class Signup extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, smsCode, realName, passwd } = this.state;
-    const { history } = this.context;
-    const { notify } = this.props;
+    const { notify, history } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -80,11 +78,12 @@ export default class Signup extends Component {
           return;
         }
         store.set('token', token);
-        getProfile((err, { user }) => {
+        getProfile((err, rsp) => {
           if (err) {
             history.push('signin');
             return;
           }
+          const user = rsp.user;
           this.props.onLogin(true);
           this.props.onProfileLoaded(user);
           store.set('profile', user);
@@ -146,7 +145,3 @@ export default class Signup extends Component {
 }
 
 Signup.title = '注册';
-
-Signup.contextTypes = {
-  history: object
-}

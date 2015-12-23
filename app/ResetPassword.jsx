@@ -5,7 +5,6 @@ import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
 import { sendSmsCode, resetPassword } from './api';
 import store from './modules/store';
-const { object } = React.PropTypes;
 
 export default class ResetPassword extends Component {
   constructor(props) {
@@ -39,7 +38,7 @@ export default class ResetPassword extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, smsCode, passwd } = this.state;
-    const { history } = this.context;
+    const { history } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -114,6 +113,3 @@ export default class ResetPassword extends Component {
 }
 
 ResetPassword.title = '重置密码';
-ResetPassword.contextTypes = {
-  history: object
-}

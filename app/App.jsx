@@ -8,7 +8,6 @@ import {
   Snackbar, Dialog
 } from 'react-toolbox';
 import style from './style';
-import { Link } from 'react-router';
 import { getProfile } from './api';
 import store from './modules/store';
 
@@ -139,8 +138,9 @@ export default class App extends Component {
   }
 
   loadProfile = () => {
-    getProfile((err, { user }) => {
-      if (!err && user && user.userId) {
+    getProfile((err, rsp) => {
+      if (!err && rsp && rsp.user && rsp.user.userId) {
+        const user = rsp.user;
         store.set('profile', user);
         this.setState({ profile: user, logIn: true });
       }
@@ -164,6 +164,14 @@ export default class App extends Component {
       confirm: this.handleDiaConfirm,
       dialog: this.handleDialog
     });
+
+    let menus = [];
+    if (logIn) {
+      menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
+      menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
+    } else {
+      menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
+    }
     return (
       <div>
         <AppBar fixed flat className={style['app-bar']}>
@@ -178,9 +186,7 @@ export default class App extends Component {
             className={style['drawer-menu']}
             onSelect={this.handleMenuSelect}>
             <MenuItem value='/' icon='home' caption='首页' />
-            { logIn ? <MenuItem value='profile' icon='account_box' caption='账户信息' /> :
-            <MenuItem value='signin' icon='account_box' caption='注册/登录' />}
-            <MenuItem value='new_job' icon='add' caption='发布新职位' />
+            { menus }
             <MenuItem value='message' icon='message' caption='消息' />
             <MenuItem value='settings' icon='settings' caption='设置' />
             <MenuItem value='help' icon='help' caption='帮助' />
