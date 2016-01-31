@@ -15,4 +15,8 @@
   [data-react-toolbox='card'] {
     width: 100%;
   }
+
+  [data-react-toolbox=dialog] {
+    width: 90%;
+  }
 }
