@@ -24,7 +24,7 @@ export function getJobs({ status, userId, page, limit }, callback) {
   request.get(url, wapperCallback(callback));
 }
 
-export function getJobRecords({jobId, userId, status, page, limit}) {
+export function getJobRecords({jobId, userId, status, page, limit}, callback) {
   let url = getUri(`/api/jobs/${jobId}/records`, {userId, page, limit, status});
   request.get(url, wapperCallback(callback));
 }
