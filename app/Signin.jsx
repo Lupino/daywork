@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Link, Navigation } from 'react-toolbox';
 import PasswordInput from './modules/input/PasswordInput';
 import style from './style';
@@ -23,7 +23,8 @@ export default class Signin extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, passwd } = this.state;
-    const { notify, history } = this.props;
+    const { router } = this.context;
+    const { notify } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -55,7 +56,7 @@ export default class Signin extends Component {
         this.props.onProfileLoaded(user);
         store.set('profile', user);
         notify('登录成功');
-        history.push('/');
+        router.push('/');
       });
     });
   };
@@ -93,3 +94,6 @@ export default class Signin extends Component {
 }
 
 Signin.title = '登录';
+Signin.contextTypes = {
+  router: PropTypes.object
+}

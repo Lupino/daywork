@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Navigation } from 'react-toolbox';
 import PasswordInput from './modules/input/PasswordInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
@@ -39,7 +39,8 @@ export default class Signup extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, smsCode, realName, passwd } = this.state;
-    const { notify, history } = this.props;
+    const { router } = this.context;
+    const { notify } = this.props;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -74,13 +75,13 @@ export default class Signup extends Component {
       }
       signinForToken({ userName: phoneNumber, passwd }, (err, token) => {
         if (err) {
-          history.push('signin');
+          router.push('signin');
           return;
         }
         store.set('token', token);
         getProfile((err, rsp) => {
           if (err) {
-            history.push('signin');
+            router.push('signin');
             return;
           }
           const user = rsp.user;
@@ -88,7 +89,7 @@ export default class Signup extends Component {
           this.props.onProfileLoaded(user);
           store.set('profile', user);
           notify('注册并登录成功');
-          history.push('/');
+          router.push('/');
         });
       });
     });
@@ -145,3 +146,6 @@ export default class Signup extends Component {
 }
 
 Signup.title = '注册';
+Signup.contextTypes = {
+  router: PropTypes.object
+}

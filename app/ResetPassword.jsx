@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Link, Navigation } from 'react-toolbox';
 import PasswordInput from './modules/input/PasswordInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
@@ -38,7 +38,7 @@ export default class ResetPassword extends Component {
     let checkError = {};
     let hasError = false;
     const { phoneNumber, smsCode, passwd } = this.state;
-    const { history } = this.props;
+    const { router } = this.context;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -67,7 +67,7 @@ export default class ResetPassword extends Component {
       this.props.onLoadedProfile({});
       store.remove('token');
       store.remove('profile');
-      history.push('signin');
+      router.push('signin');
     });
   };
 
@@ -113,3 +113,6 @@ export default class ResetPassword extends Component {
 }
 
 ResetPassword.title = '重置密码';
+ResetPassword.contextTypes = {
+  router: PropTypes.object
+}

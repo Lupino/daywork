@@ -1,4 +1,4 @@
-import React, { Component, cloneElement } from 'react';
+import React, { Component, cloneElement, PropTypes } from 'react';
 import {
   AppBar,
   Navigation,
@@ -33,8 +33,8 @@ export default class App extends Component {
   };
 
   handleMenuSelect = (menuValue) => {
-    const { history } = this.props;
-    history.push(menuValue);
+    const { router } = this.context;
+    router.push(menuValue);
     this.setState({ drawerActive: false });
   };
 
@@ -213,4 +213,8 @@ export default class App extends Component {
       </div>
     );
   }
+}
+
+App.contextTypes = {
+  router: PropTypes.object
 }
