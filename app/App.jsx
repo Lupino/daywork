@@ -169,6 +169,7 @@ export default class App extends Component {
     if (logIn) {
       menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
       menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
+      menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);
     } else {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }

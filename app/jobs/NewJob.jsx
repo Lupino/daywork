@@ -4,8 +4,8 @@ import { Input, Button, Switch,
 } from 'react-toolbox';
 import Dropzone from 'react-dropzone';
 
-import style from './style';
-import { createJob, upload } from './api';
+import style from '../style';
+import { createJob, upload } from '../api';
 
 export default class NewJob extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ export default class NewJob extends Component {
   }
   handleInputChange = (name, value) => {
     this.setState({ [name]: value });
-  }
+  };
   handleSave = () => {
     const { notify } = this.props;
     const {title, summary, salary, requiredPeople} = this.state;
@@ -51,7 +51,7 @@ export default class NewJob extends Component {
       }
       notify('成功添加新职位');
     });
-  }
+  };
   handleDrop = (files) => {
     const { notify } = this.props;
     upload(files, (err, files) => {
@@ -60,7 +60,7 @@ export default class NewJob extends Component {
       }
       this.setState({ image: files[0] });
     });
-  }
+  };
   render() {
     const { title, summary, salary, payMethod, requiredPeople, status, image, errors } = this.state;
     return (
@@ -108,7 +108,7 @@ export default class NewJob extends Component {
           </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>
-              { image && image.key ? <img src={`/upload/${image.key}`} /> : '点击此处添加一张图片'}
+              { image && image.key ? <img src={`/upload/${image.key}`} /> : <p>点击此处添加一张图片</p>}
             </Dropzone>
           </li>
         </List>

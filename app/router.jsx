@@ -11,7 +11,12 @@ import Default from './Default';
 import Problem from './Problem';
 import ResetPassword from './ResetPassword';
 import Profile from './Profile';
-import NewJob from './NewJob';
+import NewJob from './jobs/NewJob';
+import EditJob from './jobs/EditJob';
+import Jobs from './jobs/Jobs';
+import Job from './jobs/Job';
+import Worker from './jobs/Worker';
+import Request from './jobs/Request';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -27,6 +32,11 @@ var router = module.exports = (
       <Route path="/help" component={Help} />
       <Route path="/profile" component={Profile} />
       <Route path="/new_job" component={NewJob} />
+      <Route path="/edit_job/:jobId" component={EditJob} />
+      <Route path="/jobs" component={Jobs} />
+      <Route path="/jobs/:jobId" component={Job} />
+      <Route path="/jobs/:jobId/workers/:userId" component={Worker} />
+      <Route path="/jobs/:jobId/workers/:userId/request" component={Worker} />
     </Route>
   </Router>
 );
