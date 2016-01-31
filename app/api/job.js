@@ -73,13 +73,11 @@ export function workerLeave({ jobId, userId }, callback) {
 
 export function favorite({ jobId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/favorite`),
-               { userId },
                wapperCallback(callback));
 }
 
 export function unfavorite({ jobId }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/unfavorite`),
-               { userId },
                wapperCallback(callback));
 }
 
