@@ -21,7 +21,7 @@ export default class Signup extends Component {
 
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
-  }
+  };
 
   handleSendSMSCode = () => {
     const { phoneNumber } = this.state;
@@ -33,7 +33,7 @@ export default class Signup extends Component {
     sendSmsCode(phoneNumber, (err) => {
       if (err) alert('验证码发送失败');
     });
-  }
+  };
 
   handleSignup = () => {
     let checkError = {};
@@ -92,7 +92,7 @@ export default class Signup extends Component {
         });
       });
     });
-  }
+  };
 
   render() {
     const { sendTimeout, phoneNumber, smsCode, realName, passwd, checkError } = this.state;

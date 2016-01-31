@@ -17,7 +17,7 @@ export default class Signin extends Component {
 
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
-  }
+  };
 
   handleSignin = () => {
     let checkError = {};
@@ -58,7 +58,7 @@ export default class Signin extends Component {
         history.push('/');
       });
     });
-  }
+  };
 
   render() {
     const { phoneNumber, passwd, checkError } = this.state;

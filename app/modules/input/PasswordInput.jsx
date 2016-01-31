@@ -15,7 +15,7 @@ export default class PasswordInput extends Component {
 
   handleTogglePassword = () => {
     this.setState({ showPasswd: !this.state.showPasswd });
-  }
+  };
 
   handlePasswdChange = (value) => {
     let { passwdShadow, passwd, showPasswd } = this.state;
@@ -33,7 +33,7 @@ export default class PasswordInput extends Component {
     if (this.props.onChange) {
       this.props.onChange(passwd);
     }
-  }
+  };
 
   render() {
     const { passwd, passwdShadow, showPasswd } = this.state;

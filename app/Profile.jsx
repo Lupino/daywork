@@ -16,13 +16,13 @@ class ListInput extends Component {
 
   handleChange = (value) => {
     this.setState({value});
-  }
+  };
 
   handleClick = () => {
     if (this.props.onClick) {
       this.props.onClick(this.state.value);
     }
-  }
+  };
 
   renderConent() {
     const { show, caption } = this.props;
@@ -65,7 +65,7 @@ class ListSex extends Component {
     if (this.props.onChange) {
       this.props.onChange(sex);
     }
-  }
+  };
 
   renderConent() {
     const { value, show } = this.props;
@@ -121,7 +121,7 @@ export default class Profile extends Component {
       showInput = '';
     }
     this.setState({ showInput })
-  }
+  };
 
   handleUpdate = (name, value) => {
     const { notify } = this.props;
@@ -132,7 +132,7 @@ export default class Profile extends Component {
         notify('更新失败');
       }
     })
-  }
+  };
 
   handleDrop = (files) => {
     const { notify } = this.props;
@@ -143,7 +143,7 @@ export default class Profile extends Component {
       }
       this.props.onProfileUpdated('avatar', file);
     });
-  }
+  };
 
   render() {
     const profile = this.props.getProfile();

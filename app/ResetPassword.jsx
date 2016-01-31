@@ -19,7 +19,7 @@ export default class ResetPassword extends Component {
 
   handleChange = (name, value) => {
     this.setState({...this.state, [name]: value});
-  }
+  };
 
   handleSendSMSCode = () => {
     const { phoneNumber } = this.state;
@@ -32,7 +32,7 @@ export default class ResetPassword extends Component {
     sendSmsCode(phoneNumber, (err) => {
       if (err) alert('验证码发送失败');
     });
-  }
+  };
 
   handleResetPassword = () => {
     let checkError = {};
@@ -69,7 +69,7 @@ export default class ResetPassword extends Component {
       store.remove('profile');
       history.push('signin');
     });
-  }
+  };
 
   render() {
     const { phoneNumber, passwd, smsCode, checkError } = this.state;

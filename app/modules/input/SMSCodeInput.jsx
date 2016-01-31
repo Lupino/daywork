@@ -31,7 +31,7 @@ export default class SMSCodeInput extends Component {
       }, 1000)
     }
     countdown();
-  }
+  };
 
   render() {
     const { reClickTimeout } = this.state;

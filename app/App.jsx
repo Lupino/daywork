@@ -30,30 +30,30 @@ export default class App extends Component {
 
   handleToggle = () => {
     this.setState({drawerActive: !this.state.drawerActive});
-  }
+  };
 
   handleMenuSelect = (menuValue) => {
     const { history } = this.props;
     history.push(menuValue);
     this.setState({ drawerActive: false });
-  }
+  };
 
   handleLogIn = (logIn) => {
     this.setState({ logIn });
-  }
+  };
 
   handleProfileLoaded = (profile) => {
     this.setState({ profile });
-  }
+  };
 
   handleProfileUpdated = (name, value) => {
     const { profile } = this.state;
     this.setState({ profile: {...profile, [name]: value} })
-  }
+  };
 
   handleGetProfile = () => {
     return this.state.profile;
-  }
+  };
 
   handleSnackbarClick = () => {
     const { snackbarCallback } = this.state;
@@ -73,11 +73,11 @@ export default class App extends Component {
 
   handleShowSnackbar = (snackbarLabel, snackbarCallback) => {
     this.setState({ snackbarActive: true, snackbarLabel, snackbarCallback })
-  }
+  };
 
   handleDiaClose = () => {
     this.setState( { diaActive: false } );
-  }
+  };
 
   handleDiaAlert = ({ message, title }, callback) => {
     const diaActive = true;
@@ -93,7 +93,7 @@ export default class App extends Component {
     ];
     const diaChildren = <p> {message} </p>;
     this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  }
+  };
 
   handleDiaConfirm = ({ message, title, onConfirm, onCancel }, callback) => {
     const diaActive = true;
@@ -119,7 +119,7 @@ export default class App extends Component {
     ];
     const diaChildren = <p> {message} </p>;
     this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  }
+  };
 
   handleDialog = ({ title, children, actions }) => {
     const diaActive = true;
@@ -135,7 +135,7 @@ export default class App extends Component {
     });
     const diaChildren = children;
     this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  }
+  };
 
   loadProfile = () => {
     getProfile((err, rsp) => {
@@ -145,11 +145,11 @@ export default class App extends Component {
         this.setState({ profile: user, logIn: true });
       }
     });
-  }
+  };
 
   componentDidMount = () => {
     this.loadProfile();
-  }
+  };
 
   render() {
     const { drawerActive, snackbarActive, snackbarLabel, logIn } = this.state;

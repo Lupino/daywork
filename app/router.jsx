@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './App';
 import About from './About';
 import Signin from './Signin';
@@ -14,7 +14,7 @@ import Profile from './Profile';
 import NewJob from './NewJob';
 
 var router = module.exports = (
-  <Router>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Default}/>
       <Route path="/about" component={About} />
