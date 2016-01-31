@@ -428,6 +428,18 @@ export default class extends Object {
     });
   }
 
+  getWorker({userId, jobId}, callback) {
+    MyJob.findOne({ userId, jobId }, (err, worker) => {
+      if (err) return callback(err);
+      worker = worker.toJSON();
+      this.getUser(userId, (err, user) => {
+        if (err) return callback(err);
+        worker.user = user;
+        callback(null, worker);
+      });
+    });
+  }
+
   getJobWorkers(jobId, options, callback) {
     if (typeof options === 'function') {
       callback = options;

@@ -41,6 +41,19 @@ export default function(app, daywork) {
                           });
   });
 
+  app.get(apiPrefix + '/jobs/:jobId/workers/:userId', (req, res) => {
+    let userId = req.params.userId;
+    let jobId = req.params.jobId;
+
+    daywork.getWorker({ userId, jobId },
+                    (err, worker) => {
+                      if (worker) {
+                        worker.job = req.job;
+                      }
+                      sendJsonResponse(res, err, { worker });
+                    });
+  });
+
   app.get(apiPrefix + '/users/:userId/jobs', (req, res) => {
     let page = Number(req.query.page) || 0;
     let limit = Number(req.query.limit) || 10;

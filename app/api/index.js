@@ -13,6 +13,7 @@ export {
 export {
   requestJob,
   getJob,
+  getJobWorker,
   getJobWorkers,
   getJobRecords,
   getJobPayment,

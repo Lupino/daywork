@@ -9,6 +9,11 @@ export function getJob({ jobId }, callback) {
   request.get(getUri(`/api/jobs/${jobId}`), wapperCallback(callback));
 }
 
+export function getJobWorker({ jobId, userId }, callback) {
+  let url = getUri(`/api/jobs/${jobId}/workers/${userId}`);
+  request.get(url, wapperCallback(callback));
+}
+
 export function getJobWorkers({ jobId, status, page, limit }, callback) {
   let url = getUri(`/api/jobs/${jobId}/workers`, {status, page, limit});
   request.get(url, wapperCallback(callback));
