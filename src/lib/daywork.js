@@ -21,6 +21,15 @@ export function hashedPassword(rawPassword) {
   return crypto.createHmac('sha1', passwordSalt).update(rawPassword).digest('hex');
 }
 
+function toMap(data) {
+  let map = {};
+  const len = data.length;
+  for (let i = 0; i < len ; i ++) {
+    map[data[i][0]] = data[i][1];
+  }
+  return map;
+}
+
 export default class extends Object {
 
   createUser(user, callback) {
@@ -304,9 +313,9 @@ export default class extends Object {
         result.users = result.users || [];
         result.favs = result.favs || [];
         result.reqs = result.reqs || [];
-        let userMap = _.zipObject(result.users.map(user => [user.userId, user]));
-        let favMap = _.zipObject(result.favs.map(fav => [fav.jobId, true]));
-        let reqMap = _.zipObject(result.reqs.map(req => [req.jobId, true]));
+        let userMap = toMap(result.users.map(user => [user.userId, user]));
+        let favMap = toMap(result.favs.map(fav => [fav.jobId, true]));
+        let reqMap = toMap(result.reqs.map(req => [req.jobId, true]));
         jobs = jobs.map((job) => {
           job = job.toJSON();
           if (filled.user) {
@@ -395,7 +404,7 @@ export default class extends Object {
           return callback(err);
         }
 
-        let jobMap = _.zipObject(jobs.map(job => [job.jobId, job]));
+        let jobMap = toMap(jobs.map(job => [job.jobId, job]));
         myJobs = myJobs.map((myJob) => {
           myJob = myJob.toJSON();
           myJob.job = jobMap[myJob.jobId];
@@ -445,7 +454,8 @@ export default class extends Object {
           return callback(err);
         }
 
-        let userMap = _.zipObject(users.map(user => [user.userId, user]));
+        let userMap = toMap(users.map(user => [user.userId, user]));
+
         myJobs = myJobs.map(myJob => {
           myJob = myJob.toJSON();
           myJob.user = userMap[myJob.userId];
