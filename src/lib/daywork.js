@@ -404,14 +404,21 @@ export default class extends Object {
           return callback(err);
         }
 
-        let jobMap = toMap(jobs.map(job => [job.jobId, job]));
-        myJobs = myJobs.map((myJob) => {
-          myJob = myJob.toJSON();
-          myJob.job = jobMap[myJob.jobId];
-          return myJob;
+        const userIds = _.uniq(jobs.map(({ userId }) => userId));
+        User.find({ userId: { $in: userIds } }, (err, users) => {
+          if (err) {
+            return callback(err);
+          }
+          const jobMap = toMap(jobs.map(job => [job.jobId, job.toJSON()]));
+          const userMap = toMap(users.map(user => [user.userId, user.toJSON()]));
+          myJobs = myJobs.map((myJob) => {
+            myJob = myJob.toJSON();
+            myJob.job = jobMap[myJob.jobId];
+            myJob.job.user = userMap[myJob.job.userId];
+            return myJob;
+          });
+          callback(null, myJobs);
         });
-
-        callback(null, myJobs);
       });
     });
   }
