@@ -265,4 +265,4 @@ export default class Worker extends Component {
   }
 }
 
-Worker.title = '职工详情';
+Worker.title = '工资详情';
