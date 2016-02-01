@@ -3,6 +3,7 @@ import { CardActions, Button } from 'react-toolbox';
 import { getUserJobs, deleteJob, publishJob } from '../api';
 import JobItem from './JobItem';
 import style from '../style';
+import lodash from 'lodash';
 
 export default class Jobs extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class Jobs extends Component {
       currentPage: 0,
       limit: 10,
       status: '',
+      loadMoreButton: false,
       loaded: false
     }
   }
@@ -22,7 +24,11 @@ export default class Jobs extends Component {
     this.setState({ loaded: false });
     getUserJobs({page, limit, status}, (err, rsp) => {
       if (err) return window.alert(err);
-      this.setState({jobs: rsp.jobs, currentPage: Number(page), loaded: true});
+      let { jobs } = this.state;
+      jobs = jobs.concat(lodash.clone(rsp.jobs));
+      jobs = lodash.uniq(jobs, 'jobId');
+      const loadMoreButton = rsp.jobs.length > limit;
+      this.setState({jobs, loadMoreButton, currentPage: Number(page), loaded: true});
     });
   };
 
@@ -90,10 +96,20 @@ export default class Jobs extends Component {
 
   render() {
     const jobs = this.state.jobs.map((job) => this.renderJob(job));
+    const { loadMoreButton, currentPage } = this.state;
 
     return (
       <div>
         {jobs}
+        { loadMoreButton &&
+          <Button
+            label='加载更多...'
+            raised
+            primary
+            className={style['load-more']}
+            onClick={this.handleLoadJobs.bind(this, currentPage + 1)}
+          />
+        }
       </div>
     );
   }

@@ -7,6 +7,7 @@ import {
 import JobItem from './jobs/JobItem';
 import lodash from 'lodash';
 import { getJobs, requestJob, favorite, unfavorite } from './api';
+import style from './style';
 
 export default class Default extends Component {
   constructor(props) {
@@ -117,10 +118,20 @@ export default class Default extends Component {
 
   render() {
     const jobs = this.state.jobs.map((job) => this.renderJob(job));
+    const { loadMoreButton, currentPage } = this.state;
 
     return (
       <div>
         {jobs}
+        { loadMoreButton &&
+          <Button
+            label='加载更多...'
+            raised
+            primary
+            className={style['load-more']}
+            onClick={this.handleLoadJobs.bind(this, currentPage + 1)}
+          />
+        }
       </div>
     );
   }
