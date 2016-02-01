@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {
-  Tabs, Tab,
+  Tabs, Tab, Button,
   List, ListItem, ListSubHeader,
   ProgressBar
 } from 'react-toolbox';
@@ -46,15 +46,6 @@ export default class Job extends Component {
     let currentPage = this.state.currentPage;
     currentPage[idx] = page;
     this.setState({ currentPage });
-  }
-
-  handleLoadMore(tab, page) {
-    if (tab === 0 || tab === 2) {
-      this.loadWorkers(page);
-    }
-    if (tab === 1) {
-      this.loadRecords(page);
-    }
   }
 
   loadWorkers(page) {
@@ -135,7 +126,7 @@ export default class Job extends Component {
   }
 
   render() {
-    const { job, tab, loaded } = this.state;
+    const { job, tab, loaded, loadMoreButton, currentPage } = this.state;
     if (!loaded) {
       return <ProgressBar mode='indeterminate' />;
     }
@@ -181,11 +172,29 @@ export default class Job extends Component {
             <List selectable ripple>
               {workers}
             </List>
+            { loadMoreButton.worker &&
+              <Button
+                label='加载更多...'
+                raised
+                primary
+                className={style['load-more']}
+                onClick={this.loadWorkers.bind(this, currentPage.request + 1)}
+              />
+            }
           </Tab>
           <Tab label='请求'>
             <List selectable ripple>
-              {requrests}
+              {requests}
             </List>
+            { loadMoreButton.request &&
+              <Button
+                label='加载更多...'
+                raised
+                primary
+                className={style['load-more']}
+                onClick={this.loadRequests.bind(this, currentPage.request + 1)}
+              />
+            }
           </Tab>
         </Tabs>
       </div>
