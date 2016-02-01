@@ -42,6 +42,10 @@ export function getUserWork({ userId, jobId }, callback) {
 }
 
 export function getUserRecords({ userId, jobId, page, limit, status }, callback) {
+  if (!userId) {
+    const profile = store.get('profile');
+    userId = profile.userId;
+  }
   request.get(getUri(`/api/users/${userId}/records`, {jobId, page, limit, status}),
               wapperCallback(callback));
 }
