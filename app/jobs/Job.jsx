@@ -18,7 +18,7 @@ export default class Job extends Component {
     this.state = {
       job: {},
       workers: [],
-      requrests: [],
+      requests: [],
       loadMoreButton: {
         request: false,
         worker: false
@@ -91,10 +91,10 @@ export default class Job extends Component {
       if ( err ) {
         return notify(err);
       }
-      let { requrests } = this.state;
-      requrests = requrests.concat(lodash.clone(rsp.workers));
-      requrests = lodash.uniq(requrests, 'id');
-      this.setState( { requrests } );
+      let { requests } = this.state;
+      requests = requests.concat(lodash.clone(rsp.workers));
+      requests = lodash.uniq(requests, 'id');
+      this.setState( { requests } );
       if ( rsp.workers.length < limit ) {
         this.updateButtonState('request', false);
       } else {
@@ -158,8 +158,8 @@ export default class Job extends Component {
         </ListItem>);
     });
 
-    const requrests = this.state.requrests.map((requrest) => {
-      const { realName, phoneNumber, userId, avatar } = requrest.user;
+    const requests = this.state.requests.map((request) => {
+      const { realName, phoneNumber, userId, avatar } = request.user;
       let imgUrl = '/static/default-avatar.png';
       if (avatar && avatar.key) {
         imgUrl = `/upload/${avatar.key}`
@@ -170,7 +170,7 @@ export default class Job extends Component {
          legend={phoneNumber}
          rightIcon='star'
          onClick={this.handleShowRequest.bind(this, userId)}
-         key={`requrest-${userId}`}
+         key={`request-${userId}`}
        />);
     });
     return (
