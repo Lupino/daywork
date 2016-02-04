@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { CardActions, Button } from 'react-toolbox';
+import { List, ListItem } from 'react-toolbox';
 import { getUserWorks } from '../api';
 import JobItem from './JobItem';
 import style from '../style';
@@ -40,13 +40,22 @@ export default class Works extends Component {
   }
 
   renderWork(work) {
-    const { id, jobId } = work;
+    const { id, jobId, unpaid, job } = work;
+    let imgUrl = '/static/default-avatar.png';
+    const avatar = job.user.avatar;
+    if (avatar && avatar.key) {
+      imgUrl = `/upload/${avatar.key}`
+    }
     return (
-      <JobItem job={work.job} key={`work-${id}`}>
-        <CardActions>
-          <Button label="查看详情" raised onClick={this.handleShowWork.bind(this, jobId)} />
-        </CardActions>
-      </JobItem>
+      <ListItem
+        avatar={imgUrl}
+        caption={job.title}
+        key={id}
+        onClick={this.handleShowWork.bind(this, jobId)}>
+        <div className={style['right']}>
+          {`${unpaid} 元`}
+        </div>
+      </ListItem>
     );
   }
 
@@ -56,7 +65,9 @@ export default class Works extends Component {
 
     return (
       <div>
-        {works}
+        <List selectable={false} ripple>
+          {works}
+        </List>
         { loadMoreButton &&
           <Button
             label='加载更多...'
