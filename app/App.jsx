@@ -165,12 +165,15 @@ export default class App extends Component {
       dialog: this.handleDialog
     });
 
+    const { profile } = this.state;
+
     let menus = [];
     if (logIn) {
       menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
       menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
       menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);
       menus.push(<MenuItem value='works' icon='work' caption='我的工作' key='works' />);
+      menus.push(<MenuItem value='balance' icon='attach_money' caption='余额' key='balance' shortcut={`${profile.remainMoney} 元`} />);
     } else {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }

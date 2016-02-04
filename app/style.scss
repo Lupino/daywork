@@ -27,10 +27,14 @@
   position: relative;
 }
 
-.date {
+.date, .right {
   position: absolute;
   right: 10px;
   top: 26px;
+}
+
+ul li .right {
+  top: 16px;
 }
 
 .drawer-menu {

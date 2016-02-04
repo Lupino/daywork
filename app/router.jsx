@@ -19,6 +19,7 @@ import Job from './jobs/Job';
 import Work from './jobs/Work';
 import Worker from './jobs/Worker';
 import Request from './jobs/Request';
+import Balance from './Balance';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -41,6 +42,7 @@ var router = module.exports = (
       <Route path="/jobs/:jobId/workers/:userId/request" component={Worker} />
       <Route path="/works" component={Works} />
       <Route path="/works/:jobId" component={Work} />
+      <Route path="/balance" component={Balance} />
     </Route>
   </Router>
 );
