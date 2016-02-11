@@ -212,7 +212,7 @@ export default class App extends Component {
           onTimeout={this.handleSnackbarTimeout}
           type='cancel'
         />
-        <Dialog actions={diaActions} active={diaActive} title={diaTitle || '提示'}>
+        <Dialog actions={diaActions} active={diaActive} title={diaTitle || '提示'} onOverlayClick={this.handleDiaClose}>
           {diaChildren}
         </Dialog>
       </div>
