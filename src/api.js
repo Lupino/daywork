@@ -5,7 +5,7 @@ import async from 'async';
 import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
 import { hashedPassword } from './lib/daywork';
-import { createPayment, checkPayment, getPayments, drawMoney, cancelPayment } from './lib/pingpp';
+import { createPayment, checkPayment, getPayments, drawMoney, cancelPayment } from './lib/payment';
 import qs from 'querystring';
 
 export default function(app, daywork) {

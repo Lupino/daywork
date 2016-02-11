@@ -1,5 +1,5 @@
 import { sendJsonResponse } from './util';
-import { getPayment } from './pingpp';
+import { getPayment } from './payment';
 
 export default function(app, daywork) {
 
