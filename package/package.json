@@ -22,6 +22,8 @@
     "lodash": "^4.1.0",
     "method-override": "^2.3.5",
     "mongoose": "^4.3.7",
+    "pingpp": "^2.0.6",
+    "shortid": "^2.2.4",
     "uuid": "^2.0.1"
   }
 }
