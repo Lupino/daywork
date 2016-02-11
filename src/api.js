@@ -483,7 +483,6 @@ export default function(app, daywork) {
     let skip = limit * page;
 
     let query = { userId };
-    console.log(query);
     getPayments(query, { limit, skip },
                 (err, payments) => sendJsonResponse(res, err, { payments }));
   });
