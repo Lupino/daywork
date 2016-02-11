@@ -375,7 +375,7 @@ export default function(app, daywork) {
       }
       user.phoneVerified = true;
       daywork.createUser(user, (err, user) => {
-        if (user && user.userId) {
+        if (user && user.userId && req.session) {
           req.session.currentUser = user;
         }
         sendJsonResponse(res, err, { user: user });
@@ -384,7 +384,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/logOut', (req, res) => {
-    if (req.session.currentUser) {
+    if (req.session && req.session.currentUser) {
       delete req.session.currentUser;
     }
     sendJsonResponse(res, null, { result: 'success' });

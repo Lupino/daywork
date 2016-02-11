@@ -166,7 +166,9 @@ export default class extends Object {
               });
               token.save((err, token) => sendJsonResponse(res, 403, err, token));
             } else {
-              req.session.currentUser = user;
+              if (req.session) {
+                req.session.currentUser = user;
+              }
               return sendJsonResponse(res, null, user);
             }
           });
