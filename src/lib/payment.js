@@ -146,7 +146,6 @@ export function getPayments(query, options, callback) {
   if (!options.sort) {
     options.sort = 'field -id';
   }
-  console.log(query, options);
   Payment.find(query, null, options, (err, payments) => callback(err, payments));
 }
 
