@@ -192,9 +192,6 @@ export default class App extends Component {
             onSelect={this.handleMenuSelect}>
             <MenuItem value='/' icon='home' caption='首页' />
             { menus }
-            <MenuItem value='message' icon='message' caption='消息' />
-            <MenuItem value='settings' icon='settings' caption='设置' />
-            <MenuItem value='help' icon='help' caption='帮助' />
             <MenuDivider />
             <MenuItem value='about' icon='info' caption='关于' />
           </Menu>
