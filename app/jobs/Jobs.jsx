@@ -76,6 +76,11 @@ export default class Jobs extends Component {
     router.push(`/jobs/${jobId}`);
   };
 
+  handleNewJob = () => {
+    const { router } = this.context;
+    router.push(`/new_job`);
+  };
+
   componentDidMount() {
     this.handleLoadJobs();
   }
@@ -94,9 +99,25 @@ export default class Jobs extends Component {
     );
   }
 
+  renderNOJob() {
+    return (
+      <div>
+        <Button
+          label='还没有职位, 快点击我发布职位'
+          className={style['load-more']}
+          onClick={this.handleNewJob}
+        />
+      </div>
+    );
+  }
+
   render() {
     const jobs = this.state.jobs.map((job) => this.renderJob(job));
     const { loadMoreButton, currentPage } = this.state;
+
+    if (jobs.length === 0) {
+      return this.renderNOJob();
+    }
 
     return (
       <div>

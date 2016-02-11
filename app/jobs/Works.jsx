@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { List, ListItem } from 'react-toolbox';
+import { Button, List, ListItem } from 'react-toolbox';
 import { getUserWorks } from '../api';
 import JobItem from './JobItem';
 import style from '../style';
@@ -35,6 +35,11 @@ export default class Works extends Component {
     router.push(`/works/${jobId}`);
   };
 
+  handleFindJob = () => {
+    const { router } = this.context;
+    router.push(`/`);
+  };
+
   componentDidMount() {
     this.handleLoadWorks();
   }
@@ -59,9 +64,25 @@ export default class Works extends Component {
     );
   }
 
+  renderFindJob() {
+    return (
+      <div>
+        <Button
+          label='还没有工作, 快点击我找工作'
+          className={style['load-more']}
+          onClick={this.handleFindJob}
+        />
+      </div>
+    );
+  }
+
   render() {
     const works = this.state.works.map((work) => this.renderWork(work));
     const { loadMoreButton, currentPage } = this.state;
+
+    if (works.length === 0) {
+      return this.renderFindJob();
+    }
 
     return (
       <div>
