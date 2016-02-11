@@ -1,5 +1,7 @@
 import AV from 'leanengine';
-import { appId, appKey, masterKey } from '../config';
+import { leancloud } from '../config';
+
+const { appId, appKey, masterKey } = leancloud;
 
 AV.initialize(appId, appKey, masterKey);
 

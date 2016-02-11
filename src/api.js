@@ -5,6 +5,8 @@ import async from 'async';
 import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
 import { hashedPassword } from './lib/daywork';
+import { createPayment, checkPayment, getPayments, drawMoney, cancelPayment } from './lib/pingpp';
+import qs from 'querystring';
 
 export default function(app, daywork) {
   let  { requireLogin } = daywork;
@@ -460,5 +462,76 @@ export default function(app, daywork) {
     ], (err, file) => {
       sendJsonResponse(res, err, file);
     });
+  });
+
+  app.post(apiPrefix + '/createPayment/?', requireLogin(), (req, res) => {
+    let payment = req.body;
+    let userId = req.currentUser.userId;
+    let client_ip = req.ip;
+    createPayment({ ...payment, userId, client_ip }, (err, payment) => {
+      sendJsonResponse(res, err, { payment });
+    });
+  });
+
+  app.get(apiPrefix + '/payments/?', requireLogin(), (req, res) => {
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    let userId = req.currentUser.userId;
+    let skip = limit * page;
+
+    let query = { userId };
+    console.log(query);
+    getPayments(query, { limit, skip },
+                (err, payments) => sendJsonResponse(res, err, { payments }));
+  });
+
+
+  app.post(apiPrefix + '/payments/:order_no/check/?', requireLogin(), (req, res) => {
+    let payment = req.payment;
+    checkPayment(payment, (err, payment) => {
+      sendJsonResponse(res, err, { payment });
+    });
+  });
+
+  app.get(apiPrefix + '/payments/:order_no/?', requireLogin(), (req, res) => {
+    sendJsonResponse(res, null, { payment: req.payment });
+  });
+
+  app.delete(apiPrefix + '/payments/:order_no/?', requireLogin(), (req, res) => {
+    let payment = req.payment;
+    cancelPayment(payment, (err, payment) => {
+      sendJsonResponse(res, err, { payment });
+    });
+  });
+
+  app.post(apiPrefix + '/drawMoney/?', requireLogin(), (req, res) => {
+    let payment = req.body;
+    let client_ip = req.ip;
+    const { remainMoney, freezeMoney, userId, phoneNumber } = req.currentUser;
+    const amount = payment.amount;
+    const avalableMoney = (remainMoney - freezeMoney) * 100;
+    if ( avalableMoney < amount ) {
+      return sendJsonResponse(res, '可用余额不足');
+    }
+
+    verifySmsCode(payment.smsCode, phoneNumber, (err) => {
+      if (err) {
+        return sendJsonResponse(res, err);
+      }
+      drawMoney({ ...payment, userId, client_ip }, (err, payment) => {
+        sendJsonResponse(res, err, { payment });
+      });
+    });
+  });
+
+  app.get(apiPrefix + '/pay_result', (req, res) => {
+    res.redirect(`/#/pay_result?${qs.stringify(req.query)}`);
+  });
+
+  app.get(apiPrefix + '/pay_cancel', (req, res) => {
+    res.redirect(`/#/pay_cancel?${qs.stringify(req.query)}`);
   });
 }

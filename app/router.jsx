@@ -20,6 +20,10 @@ import Work from './jobs/Work';
 import Worker from './jobs/Worker';
 import Request from './jobs/Request';
 import Balance from './Balance';
+import Payment from './payment/Payment';
+import Result from './payment/Result';
+import Cancel from './payment/Cancel';
+import DrawMoney from './payment/DrawMoney';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -43,6 +47,10 @@ var router = module.exports = (
       <Route path="/works" component={Works} />
       <Route path="/works/:jobId" component={Work} />
       <Route path="/balance" component={Balance} />
+      <Route path="/payment" component={Payment} />
+      <Route path="/drawmoney" component={DrawMoney} />
+      <Route path="/pay_result" component={Result} />
+      <Route path="/pay_cancel" component={Cancel} />
     </Route>
   </Router>
 );

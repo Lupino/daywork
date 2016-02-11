@@ -16,11 +16,12 @@ var UserSchema = new Schema({
   phoneVerified: { type: Boolean, default: false },
   passwd: String,
   avatar: Mixed,
-  unpaid: { type: Number, default: 0 },
-  paidOnline: { type: Number, default: 0 },
-  paidOffline: { type: Number, default: 0 },
-  totalSalary: { type: Number, default: 0 },
-  remainMoney: { type: Number, default: 0 },
+  unpaid: { type: Number, min: 0, default: 0 },
+  paidOnline: { type: Number, min: 0, default: 0 },
+  paidOffline: { type: Number, min: 0, default: 0 },
+  totalSalary: { type: Number, min: 0, default: 0 },
+  remainMoney: { type: Number, min: 0, default: 0 },
+  freezeMoney: { type: Number, min: 0, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -56,7 +57,7 @@ var JobSchema = new Schema({
   userId: { type: Number, index: true },
   title: String,
   summary: String,
-  salary: Number,
+  salary: { type: Number, min: 0 },
   payMethod: { type: String, default: 'Daily' }, // Daily | Hourly
   requiredPeople: Number,
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
@@ -99,12 +100,12 @@ var MyJobSchema = new Schema({
   jobId: { type: Number, index: true },
   userId: { type: Number, index: true },
   status: { type: String, default: 'Request' }, // Request | Join | Leave
-  unpaid: { type: Number, default: 0 },
-  paidOnline: { type: Number, default: 0 },
-  paidOffline: { type: Number, default: 0 },
-  totalSalary: { type: Number, default: 0 },
-  remainMoney: { type: Number, default: 0 },
-  recordNumber: { type: Number, default: 0 },
+  unpaid: { type: Number, min: 0, default: 0 },
+  paidOnline: { type: Number, min: 0, default: 0 },
+  paidOffline: { type: Number, min: 0, default: 0 },
+  totalSalary: { type: Number, min: 0, default: 0 },
+  remainMoney: { type: Number, min: 0, default: 0 },
+  recordNumber: { type: Number, min: 0, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -141,3 +142,22 @@ var FavoriteSchema = new Schema({
 FavoriteSchema.plugin(autoIncrPlugin, { model: 'Favorite', field: 'id', startAt: 1 });
 
 export var Favorite = mongoose.model('Favorite', FavoriteSchema);
+
+var PaymentSchema = new Schema({
+  userId: Number,
+  subject: String,
+  body: String,
+  amount: { type: Number, min: 0 },
+  order_no: { type: String, index: { unique: true } },
+  channel: String,
+  app: String,
+  type: { type: String, index: true }, // charge, drawmoney
+  rawId: { type: String, index: { unique: true } },
+  raw: Mixed,
+  status: { type: String, default: 'Unpaid', index: true }, // Unapid, Proc, Paid, Cancel
+  createdAt: { type: Date, default: Date.now }
+});
+
+PaymentSchema.plugin(autoIncrPlugin, { model: 'Payment', field: 'id', startAt: 1 });
+
+export var Payment = mongoose.model('Payment', PaymentSchema);

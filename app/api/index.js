@@ -35,3 +35,11 @@ export {
 export { getMessages } from './message';
 export { sendSmsCode } from './sms';
 export { upload } from './upload';
+export {
+  createPayment,
+  getPayment,
+  getPayments,
+  checkPayment,
+  drawMoney,
+  cancelPayment
+} from './payment';
