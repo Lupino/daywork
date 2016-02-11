@@ -69,7 +69,8 @@ export default class Signup extends Component {
     signup({ phoneNumber, smsCode, realName, passwd }, (err) => {
       if (err) {
         if (/phoneNumber/.exec(err)) {
-          checkError.phoneNumber = `手机号码: ${phoneNumber} 已经被注册了`;
+          checkError.phoneNumber = `手机号码已经被注册了`;
+          this.setState({ checkError });
         }
         return;
       }
