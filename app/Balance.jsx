@@ -72,8 +72,8 @@ export default class Balance extends Component {
     if (payment.status !== 'Unpaid') {
       return;
     }
-    // title, children, actions
     let actions = [
+      {label: '关闭', raised: true},
       { label: '取消交易', raised: true, accent: true,
         onClick: this.handleCancelPayment.bind(this, idx) }
     ];
