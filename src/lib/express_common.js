@@ -28,7 +28,7 @@ export default function(app, daywork) {
   app.param('order_no', (req, res, next, order_no) => {
     getPayment(order_no, (err, payment) => {
       if (err || !payment) {
-        return sendJsonResponse(res, 'Payment: ' + order_sn + ' is not found.');
+        return sendJsonResponse(res, 'Payment: ' + order_no + ' is not found.');
       }
       req.payment = payment;
       req.isOwnerPayment = req.isOwner = req.currentUser && req.currentUser.userId === payment.userId;
