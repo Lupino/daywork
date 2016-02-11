@@ -113,6 +113,9 @@ export default class extends Object {
       if (!token) {
         token = req.body.access_token || req.query.access_token;
       }
+      if (url.pathname === authPath) {
+        token = false;
+      }
       let now = new Date();
       if (req.url.match(/^\/(js|css|img|favicon|logout)$/)) {
         return next();
