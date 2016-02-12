@@ -98,7 +98,8 @@ export default class Default extends Component {
   }
 
   renderJob(job) {
-    const { jobId, status, favorited, requested, user } = job;
+    const profile = this.props.getProfile();
+    const { jobId, status, favorited, requested, user, userId } = job;
     const phoneNumber = user && user.phoneNumber || '';
     return (
       <JobItem job={job} key={`job-${jobId}`}>
@@ -109,7 +110,7 @@ export default class Default extends Component {
           <IconButton icon='remove_red_eye' raised onClick={this.handleShowJob.bind(this, jobId)} />
           <IconButton icon='call' onClick={this.handleShowPhoneNumber.bind(this, phoneNumber)} />
           <IconButton icon='add'
-            disabled={requested}
+            disabled={requested || profile.userId === userId}
             onClick={this.handleRequestJob.bind(this, jobId)} />
         </CardActions>
       </JobItem>
