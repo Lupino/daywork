@@ -16,6 +16,7 @@ import EditJob from './jobs/EditJob';
 import Jobs from './jobs/Jobs';
 import Works from './jobs/Works';
 import Job from './jobs/Job';
+import JobInfo from './jobs/JobInfo';
 import Work from './jobs/Work';
 import Worker from './jobs/Worker';
 import Request from './jobs/Request';
@@ -42,6 +43,7 @@ var router = module.exports = (
       <Route path="/edit_job/:jobId" component={EditJob} />
       <Route path="/jobs" component={Jobs} />
       <Route path="/jobs/:jobId" component={Job} />
+      <Route path="/job_info/:jobId" component={JobInfo} />
       <Route path="/jobs/:jobId/workers/:userId" component={Worker} />
       <Route path="/jobs/:jobId/workers/:userId/request" component={Worker} />
       <Route path="/works" component={Works} />

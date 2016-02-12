@@ -41,7 +41,7 @@ export default class Default extends Component {
 
   handleShowJob(jobId) {
     const { router } = this.context;
-    router.push(`/jobs/${jobId}`);
+    router.push(`/job_info/${jobId}`);
   }
 
   handleShowPhoneNumber(phoneNumber) {
