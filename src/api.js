@@ -5,6 +5,7 @@ import async from 'async';
 import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
 import { hashedPassword } from './lib/daywork';
+import { OauthToken } from './lib/models';
 import { createPayment, checkPayment, getPayments, drawMoney, cancelPayment } from './lib/payment';
 import qs from 'querystring';
 
@@ -387,7 +388,18 @@ export default function(app, daywork) {
     if (req.session && req.session.currentUser) {
       delete req.session.currentUser;
     }
-    sendJsonResponse(res, null, { result: 'success' });
+    let token = req.get('Authorization');
+    token = token && token.substr(0, 6) === 'Bearer' ? token.substr(7) : false;
+    if (!token) {
+      token = req.body.access_token || req.query.access_token;
+    }
+    if (token) {
+      OauthToken.findOneAndRemove(
+        { accessToken: token },
+        (err, token) => sendJsonResponse(res, null, { result: 'success' }));
+    } else {
+      sendJsonResponse(res, null, { result: 'success' });
+    }
   });
 
   app.post(apiPrefix + '/sendSmsCode', (req, res) => {

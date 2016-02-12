@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox';
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox, Button } from 'react-toolbox';
 import Avatar from './modules/list/Avatar';
 import ButtonInput from './modules/input/ButtonInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
-import { updateProfile, updateAvatar } from './api';
+import { updateProfile, updateAvatar, logOut } from './api';
 
 class ListInput extends Component {
   constructor(props) {
@@ -145,6 +145,17 @@ export default class Profile extends Component {
     });
   };
 
+  handleLogOut = () => {
+    const { confirm } = this.props;
+    confirm({ title: '确定退出当前帐号？' }, (out) => {
+      if (out) {
+        logOut((err) => {
+          window.location.reload();
+        });
+      }
+    });
+  };
+
   render() {
     const profile = this.props.getProfile();
     let imgUrl = '/static/default-avatar.png';
@@ -210,6 +221,11 @@ export default class Profile extends Component {
             <span className={style['legend-right']}> {profile.phoneNumber} </span>
           </ListItem>
         </List>
+        <Button
+          label='退出当前帐号'
+          accent raised
+          className={style['load-more']}
+          onClick={this.handleLogOut} />
       </section>
     );
   }
