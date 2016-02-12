@@ -17,6 +17,10 @@ export function wapperCallback(callback) {
     if (res && res.body) {
       let rsp = res.body;
       if (rsp.err) {
+        if (rsp.msg && rsp.msg === 'Unauthorized') {
+          window.location.href='#/signin';
+          return;
+        }
         return callback(rsp.msg || rsp.err);
       }
       return callback(null, rsp);
