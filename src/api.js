@@ -20,10 +20,12 @@ export default function(app, daywork) {
 
   app.get(apiPrefix + '/jobs/:jobId',
           (req, res) => {
-            let job = req.job.toJSON();
-            daywork.getUser(job.userId, (err, user) => {
-              job.user = user;
-              sendJsonResponse(res, err, { job: job });
+            let options = { user: true };
+            if (req.currentUser) {
+              options.favorited = options.requested = req.currentUser.userId;
+            }
+            daywork.getJob(req.job.jobId, options, (err, job) => {
+              sendJsonResponse(res, err, { job });
             });
           });
 
@@ -96,12 +98,12 @@ export default function(app, daywork) {
     if (userId) {
       query.userId = userId;
     }
-    let filled = { user: true };
+    let extra = { user: true };
     if (req.currentUser) {
-      filled.favorited = filled.requested = req.currentUser.userId;
+      extra.favorited = extra.requested = req.currentUser.userId;
     }
     daywork.getJobs(query,
-                    { limit: limit, skip: skip, filled: filled },
+                    { limit: limit, skip: skip, extra: extra },
                     (err, jobs) => {
                       sendJsonResponse(res, err, { jobs: jobs });
                     });

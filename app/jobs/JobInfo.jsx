@@ -77,8 +77,7 @@ export default class JobInfo extends Component {
       return <ProgressBar mode='indeterminate' />;
     }
 
-    const profile = this.props.getProfile();
-    const { jobId, status, favorited, requested, user, userId } = job;
+    const { jobId, status, favorited, requested, user, userId, isOwner, work } = job;
     const phoneNumber = user && user.phoneNumber || '';
 
     return (
@@ -90,7 +89,7 @@ export default class JobInfo extends Component {
               onClick={this.handleFavorite.bind(this, !favorited)} />
             <IconButton icon='call' onClick={this.handleShowPhoneNumber.bind(this, phoneNumber)} />
             <IconButton icon='add'
-              disabled={requested || profile.userId === userId}
+              disabled={requested || isOwner || work}
               onClick={this.handleRequestJob.bind(this)} />
             </CardActions>
         </JobItem>

@@ -261,13 +261,54 @@ export default class extends Object {
     let query = { jobId: jobId, status: { $nin: [ 'Deleted' ] } };
     Job.findOne(query, (err, job) => {
       if (err) return callback(err);
-      if (!options.user) {
+      if (!job) {
         return callback(null, job);
       }
-      job = job.toJSON();
-      this.getUser(job.userId, (err, user) => {
+      let self = this;
+      async.parallel({
+        user(done) {
+          if (!options.user) { return done(); }
+          self.getUser(job.userId, done);
+        },
+        favorited(done) {
+          if (!options.favorited) { return done(); }
+          const userId = options.favorited;
+          Favorite.findOne({ userId, jobId }, (err, fav) => done(err, fav? true : false));
+        },
+        requested(done) {
+          if (!options.requested) return done();
+          let userId = options.requested;
+          MyJob.findOne({ userId, jobId }, (err, myJob) => done(err, myJob));
+        }
+      }, (err, result) => {
         if (err) return callback(err);
-        job.user = user;
+        job = job.toJSON();
+        if (options.user) {
+          job.user = result.user;
+        }
+        if (options.favorited) {
+          job.favorited = result.favorited;
+        }
+        if (options.requested) {
+          const userId = options.requested;
+          if (job.userId === userId) {
+            job.isOwner = true;
+          } else {
+            job.isOwner = false;
+          }
+          const req = result.requested;
+          if (req) {
+            job.requested = true;
+            if (req.status === 'Join') {
+              job.work = true;
+            } else {
+              job.work = false;
+            }
+          } else {
+            job.requested = false;
+            job.work = false;
+          }
+        }
         callback(null, job);
       });
     });
@@ -281,33 +322,33 @@ export default class extends Object {
     if (!options.sort) {
       options.sort = 'field -createdAt';
     }
-    let filled = options.filled || null;
-    if (options.filled) {
-      delete options.filled;
+    let extra = options.extra || null;
+    if (options.extra) {
+      delete options.extra;
     }
     query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
     Job.find(query, null, options, (err, jobs) => {
       if (err) {
         return callback(err);
       }
-      if (!filled) {
+      if (!extra) {
         return callback(null, jobs);
       }
       async.parallel({
         users(done) {
-          if (!filled.user) return done();
+          if (!extra.user) return done();
           let userIds = _.uniq(jobs.map(job => job.userId));
           User.find({ userId: { $in: userIds } }, (err, users) => done(err, users));
         },
         favs(done) {
-          if (!filled.favorited) return done();
-          let userId = filled.favorited;
+          if (!extra.favorited) return done();
+          let userId = extra.favorited;
           let jobIds = _.uniq(_.compact(jobs.map(job => job.jobId)));
           Favorite.find({ userId: userId, jobId: { $in: jobIds } }, (err, favs) => done(err, favs));
         },
         reqs(done) {
-          if (!filled.requested) return done();
-          let userId = filled.requested;
+          if (!extra.requested) return done();
+          let userId = extra.requested;
           let jobIds = _.uniq(_.compact(jobs.map(job => job.jobId)));
           MyJob.find({ userId: userId, jobId: { $in: jobIds } }, (err, myJobs) => done(err, myJobs));
         }
@@ -320,17 +361,34 @@ export default class extends Object {
         result.reqs = result.reqs || [];
         let userMap = toMap(result.users.map(user => [user.userId, user]));
         let favMap = toMap(result.favs.map(fav => [fav.jobId, true]));
-        let reqMap = toMap(result.reqs.map(req => [req.jobId, true]));
+        let reqMap = toMap(result.reqs.map(req => [req.jobId, req]));
         jobs = jobs.map((job) => {
           job = job.toJSON();
-          if (filled.user) {
+          if (extra.user) {
             job.user = userMap[job.userId];
           }
-          if (filled.favorited) {
+          if (extra.favorited) {
             job.favorited = favMap[job.jobId];
           }
-          if (filled.requested) {
-            job.requested = reqMap[job.jobId];
+          if (extra.requested) {
+            const userId = extra.requested;
+            if (job.userId === userId) {
+              job.isOwner = true;
+            } else {
+              job.isOwner = false;
+            }
+            const req = reqMap[job.jobId];
+            if (req) {
+              job.requested = true;
+              if (req.status === 'Join') {
+                job.work = true;
+              } else {
+                job.work = false;
+              }
+            } else {
+              job.requested = false;
+              job.work = false;
+            }
           }
           return job;
         });

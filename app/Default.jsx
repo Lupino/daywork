@@ -39,9 +39,15 @@ export default class Default extends Component {
     });
   }
 
-  handleShowJob(jobId) {
+  handleShowJob(jobId, { isOwner, work }) {
     const { router } = this.context;
-    router.push(`/job_info/${jobId}`);
+    if (isOwner) {
+      router.push(`/jobs/${jobId}`);
+    } else if ( work ) {
+      router.push(`/works/${jobId}`);
+    } else {
+      router.push(`/job_info/${jobId}`);
+    }
   }
 
   handleShowPhoneNumber(phoneNumber) {
@@ -98,8 +104,7 @@ export default class Default extends Component {
   }
 
   renderJob(job) {
-    const profile = this.props.getProfile();
-    const { jobId, status, favorited, requested, user, userId } = job;
+    const { jobId, status, favorited, requested, user, userId, isOwner, work } = job;
     const phoneNumber = user && user.phoneNumber || '';
     return (
       <JobItem job={job} key={`job-${jobId}`}>
@@ -107,10 +112,10 @@ export default class Default extends Component {
           <IconButton icon='favorite'
             accent={favorited}
             onClick={this.handleFavorite.bind(this, jobId, !favorited)} />
-          <IconButton icon='remove_red_eye' raised onClick={this.handleShowJob.bind(this, jobId)} />
+          <IconButton icon='remove_red_eye' raised onClick={this.handleShowJob.bind(this, jobId, { isOwner, work })} />
           <IconButton icon='call' onClick={this.handleShowPhoneNumber.bind(this, phoneNumber)} />
           <IconButton icon='add'
-            disabled={requested || profile.userId === userId}
+            disabled={requested || isOwner || work}
             onClick={this.handleRequestJob.bind(this, jobId)} />
         </CardActions>
       </JobItem>
