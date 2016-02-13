@@ -122,11 +122,6 @@ export default class Balance extends Component {
   }
 
   componentDidMount() {
-    const { location } = this.props;
-    if (location.query.reload) {
-      window.location.reload();
-      return;
-    }
     this.handleLoadPayments();
   }
 
