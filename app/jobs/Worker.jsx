@@ -163,7 +163,7 @@ export default class Worker extends Component {
   };
 
   handleAddedRecord = (record) => {
-    records = [record].concat(this.state.records);
+    const records = [record].concat(this.state.records);
     this.setState({ records });
   };
 
