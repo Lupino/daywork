@@ -55,7 +55,6 @@ export default class DrawMoney extends Component {
         return alert({ title: '提现失败', message: err.message || err });
       }
       alert({ title: '提现申请成功', message: '我们将在 1~2 个工作日处理' }, () => {
-        // router.push('/balance');
         window.location.href = '#/balance';
         window.location.reload();
       });
