@@ -45,7 +45,7 @@ var router = module.exports = (
       <Route path="/jobs/:jobId" component={Job} />
       <Route path="/job_info/:jobId" component={JobInfo} />
       <Route path="/jobs/:jobId/workers/:userId" component={Worker} />
-      <Route path="/jobs/:jobId/workers/:userId/request" component={Worker} />
+      <Route path="/jobs/:jobId/workers/:userId/request" component={Request} />
       <Route path="/works" component={Works} />
       <Route path="/works/:jobId" component={Work} />
       <Route path="/balance" component={Balance} />

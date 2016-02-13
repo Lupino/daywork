@@ -35,7 +35,10 @@ export default class Request extends Component {
       if (err) {
         return notify(err);
       }
-      notify('添加成功');
+      notify('添加成功', () => {
+        window.location.href = '#/jobs/1';
+        window.location.reload();
+      });
     });
   }
 
