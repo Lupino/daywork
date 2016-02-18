@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, List, ListItem } from 'react-toolbox';
-import { getUserWorks } from '../api';
+import { getUserWorks, imageRoot } from '../api';
 import JobItem from './JobItem';
 import style from '../style';
 import lodash from 'lodash';
@@ -49,7 +49,7 @@ export default class Works extends Component {
     let imgUrl = '/static/default-avatar.png';
     const avatar = job.user.avatar;
     if (avatar && avatar.key) {
-      imgUrl = `/upload/${avatar.key}`
+      imgUrl = `${imageRoot}${avatar.key}`
     }
     return (
       <ListItem

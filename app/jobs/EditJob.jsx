@@ -5,7 +5,7 @@ import { Input, Button, Switch,
 import Dropzone from 'react-dropzone';
 
 import style from '../style';
-import { getJob, updateJob, upload } from '../api';
+import { getJob, updateJob, upload, imageRoot } from '../api';
 
 export default class NewJob extends Component {
   constructor(props) {
@@ -89,7 +89,7 @@ export default class NewJob extends Component {
           </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>
-              { image && image.key ? <img src={`/upload/${image.key}`} /> : '点击此处添加一张图片'}
+              { image && image.key ? <img src={`${imageRoot}${image.key}`} /> : '点击此处添加一张图片'}
             </Dropzone>
           </li>
         </List>

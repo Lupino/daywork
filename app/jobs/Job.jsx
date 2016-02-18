@@ -6,7 +6,8 @@ import {
 } from 'react-toolbox';
 import {
   getJob, getJobWorkers, getJobRecords,
-  addRecord, cancelRecord, assignWorker
+  addRecord, cancelRecord, assignWorker,
+  imageRoot
 } from '../api';
 import JobItem from './JobItem';
 import style from '../style';
@@ -135,7 +136,7 @@ export default class Job extends Component {
       const { realName, phoneNumber, userId, avatar } = worker.user;
       let imgUrl = '/static/default-avatar.png';
       if (avatar && avatar.key) {
-        imgUrl = `/upload/${avatar.key}`
+        imgUrl = `${imageRoot}${avatar.key}`
       }
       return (
         <ListItem
@@ -153,7 +154,7 @@ export default class Job extends Component {
       const { realName, phoneNumber, userId, avatar } = request.user;
       let imgUrl = '/static/default-avatar.png';
       if (avatar && avatar.key) {
-        imgUrl = `/upload/${avatar.key}`
+        imgUrl = `${imageRoot}${avatar.key}`
       }
       return (<ListItem
          avatar={imgUrl}

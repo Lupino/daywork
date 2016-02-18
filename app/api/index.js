@@ -43,3 +43,5 @@ export {
   drawMoney,
   cancelPayment
 } from './payment';
+
+export { appRoot, imageRoot } from './config';

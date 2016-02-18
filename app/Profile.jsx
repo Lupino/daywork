@@ -4,7 +4,7 @@ import Avatar from './modules/list/Avatar';
 import ButtonInput from './modules/input/ButtonInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
 import style from './style';
-import { updateProfile, updateAvatar, logOut } from './api';
+import { updateProfile, updateAvatar, logOut, imageRoot } from './api';
 
 class ListInput extends Component {
   constructor(props) {
@@ -160,7 +160,7 @@ export default class Profile extends Component {
     const profile = this.props.getProfile();
     let imgUrl = '/static/default-avatar.png';
     if (profile.avatar && profile.avatar.key) {
-      imgUrl = `/upload/${profile.avatar.key}`
+      imgUrl = `${imageRoot}${profile.avatar.key}`
     }
 
     const { showInput } = this.state;

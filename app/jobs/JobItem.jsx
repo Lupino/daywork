@@ -4,6 +4,7 @@ import {
 } from 'react-toolbox';
 import { prettyTime } from '../modules/utils';
 import style from '../style';
+import { imageRoot } from '../api';
 
 export default class JobItem extends Component {
   render() {
@@ -12,11 +13,11 @@ export default class JobItem extends Component {
     return (
       <Card className={style.card}>
         { heading && user && <CardTitle
-          avatar={user.avatar && user.avatar.key ? `/upload/${user.avatar.key}` : '/static/default-avatar.png'}
+          avatar={user.avatar && user.avatar.key ? `${imageRoot}${user.avatar.key}` : '/static/default-avatar.png'}
           title={user.realName}
           subtitle={user.phoneNumber}
         />}
-        { image && image.key && <CardMedia aspectRatio='wide' image={`/upload/${image.key}`} /> }
+        { image && image.key && <CardMedia aspectRatio='wide' image={`${imageRoot}${image.key}`} /> }
         <CardTitle
           title={title}
           className={style.cardTitle}

@@ -1,9 +1,11 @@
 import qs from 'querystring';
+import { appRoot } from './config';
 
 export function getUri(path, query) {
   if (query) {
     path = `${path}?${qs.stringify(query)}`;
   }
+  path = `${appRoot}${path}`;
   return path;
 }
 

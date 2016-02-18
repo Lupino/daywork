@@ -3,6 +3,7 @@ import {
   Card, CardTitle, CardText
 } from 'react-toolbox';
 import style from '../style';
+import { imageRoot } from '../api';
 
 export default class UserItem extends Component {
   render() {
@@ -11,7 +12,7 @@ export default class UserItem extends Component {
     return (
       <Card className={style.card}>
         <CardTitle
-          avatar={avatar && avatar.key ? `/upload/${avatar.key}` : '/static/default-avatar.png'}
+          avatar={avatar && avatar.key ? `${imageRoot}${avatar.key}` : '/static/default-avatar.png'}
           title={realName}
           subtitle={phoneNumber}
         />
