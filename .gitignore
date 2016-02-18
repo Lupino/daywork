@@ -6,3 +6,5 @@ npm-debug.log
 *.swp
 mongodb
 config.json
+www/upload/*
+!www/upload/.lock
