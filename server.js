@@ -11,6 +11,7 @@ import appConfig from './src/config';
 import Daywork from './src/lib/daywork';
 import expressCommon from './src/lib/express_common';
 import api from './src/api';
+import cors from 'cors';
 
 function setup(app) {
   let daywork = new Daywork();
@@ -18,6 +19,7 @@ function setup(app) {
   app.use(bodyParser.urlencoded({
     extended: false
   }));
+  app.use(cors());
   app.use(express.static(path.join(__dirname, 'www')));
   app.use(bodyParser.json());
   app.use(methodOverride());
