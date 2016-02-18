@@ -17,5 +17,8 @@ dist: backend front
 	@cp package/package.json dist
 	tar cjf dist.tar.bz2 dist
 
+dist-app: front
+	cp -av dist/public/static Daywork/www
+
 clean:
 	rm -r dist
