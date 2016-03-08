@@ -1,5 +1,6 @@
 import React, { Component, cloneElement, PropTypes } from 'react';
 import {
+  App as ToolboxApp,
   AppBar,
   Navigation,
   Button,
@@ -178,7 +179,7 @@ export default class App extends Component {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }
     return (
-      <div>
+      <ToolboxApp>
         <AppBar fixed flat className={style['app-bar']}>
           <Button icon='list' floating mini ripple
             onClick={this.handleToggle}
@@ -212,7 +213,7 @@ export default class App extends Component {
         <Dialog actions={diaActions} active={diaActive} title={diaTitle || '提示'} onOverlayClick={this.handleDiaClose}>
           {diaChildren}
         </Dialog>
-      </div>
+      </ToolboxApp>
     );
   }
 }
