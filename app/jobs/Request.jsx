@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Button, CardActions,
   ProgressBar
@@ -31,13 +31,13 @@ export default class Request extends Component {
   handleJoin() {
     const { params, notify } = this.props;
     const { jobId, userId } = params;
+    const { router } = this.context;
     assignWorker({ userId, jobId }, (err, rsp) => {
       if (err) {
         return notify(err);
       }
       notify('添加成功', () => {
-        window.location.href = '#/jobs/' + jobId;
-        window.location.reload();
+        router.push(`/jobs/${jobId}`);
       });
     });
   }
@@ -64,3 +64,6 @@ export default class Request extends Component {
 }
 
 Request.title = '职工详情';
+Request.contextTypes = {
+  router: PropTypes.object
+}
