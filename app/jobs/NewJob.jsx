@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Switch,
   List, ListItem, ListSubHeader, ListCheckbox, ListDivider
 } from 'react-toolbox';
@@ -27,6 +27,7 @@ export default class NewJob extends Component {
   handleSave = () => {
     const { notify } = this.props;
     const {title, summary, salary, requiredPeople} = this.state;
+    const { router } = this.context;
 
     let hasError = false;
     let errors = {};
@@ -45,11 +46,14 @@ export default class NewJob extends Component {
       return notify('发现一些错误');
     }
 
-    createJob(this.state, (err, job) => {
+    createJob(this.state, (err, rsp) => {
       if (err) {
         return notify(err);
       }
-      notify('成功添加新职位');
+      notify('成功添加新职位', () => {
+        const { jobId } = rsp.job;
+        router.push(`/jobs/${jobId}`);
+      });
     });
   };
   handleDrop = (files) => {
@@ -124,3 +128,6 @@ export default class NewJob extends Component {
 }
 
 NewJob.title = '发布新职位';
+NewJob.contextTypes = {
+  router: PropTypes.object
+}
