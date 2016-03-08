@@ -36,7 +36,7 @@ export default class Request extends Component {
         return notify(err);
       }
       notify('添加成功', () => {
-        window.location.href = '#/jobs/1';
+        window.location.href = '#/jobs/' + jobId;
         window.location.reload();
       });
     });
