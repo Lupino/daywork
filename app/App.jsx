@@ -175,6 +175,7 @@ export default class App extends Component {
       menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);
       menus.push(<MenuItem value='works' icon='work' caption='我的工作' key='works' />);
       menus.push(<MenuItem value='balance' icon='attach_money' caption='余额' key='balance' shortcut={`${profile.remainMoney} 元`} />);
+      menus.push(<MenuItem value='message' icon='work' caption='消息' key='message' />);
     } else {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }
