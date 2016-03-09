@@ -36,4 +36,15 @@ export default function(app, daywork) {
     });
   });
 
+  app.param('serviceId', (req, res, next, serviceId) => {
+    daywork.getService(serviceId, (err, service) => {
+      if (err || !service) {
+        return sendJsonResponse(res, 'Service: ' + serviceId + ' is not found.');
+      }
+      req.service = service;
+      req.isOwnerService = req.isOwner = req.currentUser && req.currentUser.userId === service.userId;
+      next();
+    });
+  });
+
 }
