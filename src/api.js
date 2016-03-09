@@ -547,4 +547,128 @@ export default function(app, daywork) {
   app.get(apiPrefix + '/pay_cancel', (req, res) => {
     res.redirect(`/#/pay_cancel?${qs.stringify(req.query)}`);
   });
+
+  // service
+  app.get(apiPrefix + '/services/:serviceId',
+          (req, res) => {
+            let options = { user: true };
+            if (req.currentUser) {
+              options.favorited = req.currentUser.userId;
+            }
+            daywork.getService(req.service.serviceId, options, (err, service) => {
+              sendJsonResponse(res, err, { service });
+            });
+          });
+
+  app.get(apiPrefix + '/users/:userId/services', (req, res) => {
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    let status = req.query.status || null;
+    let userId = Number(req.params.userId);
+    let skip = limit * page;
+
+    let query = { userId: userId };
+    if (status) {
+      query.status = status;
+    }
+
+    daywork.getServices(query ,
+                    { limit: limit, skip: skip },
+                    (err, services) => {
+                      sendJsonResponse(res, err, { services: services });
+                    });
+  });
+
+  app.get(apiPrefix + '/services/?', (req, res) => {
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+    let status = req.query.status || null;
+    let userId = req.query.userId || null;
+    let skip = limit * page;
+
+    let query = {};
+    if (status) {
+      query.status = status;
+    }
+    if (userId) {
+      query.userId = userId;
+    }
+    let extra = { user: true };
+    if (req.currentUser) {
+      extra.favorited = req.currentUser.userId;
+    }
+    daywork.getServices(query,
+                    { limit: limit, skip: skip, extra: extra },
+                    (err, services) => {
+                      sendJsonResponse(res, err, { services: services });
+                    });
+  });
+
+  app.post(apiPrefix + '/services/create', requireLogin(), (req, res) => {
+    let service = req.body;
+    service.userId = req.currentUser.userId;
+    if (!service.title) {
+      return sendJsonResponse(res, '请填写标题');
+    }
+    if (!service.price) {
+      return sendJsonResponse(res, '请填写服务价格');
+    }
+    daywork.createService(service, (err, service) => sendJsonResponse(res, err, { service: service }));
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/publish', requireLogin(), (req, res) => {
+    if (req.isOwner) {
+      daywork.publishService(req.service.serviceId,
+                         (err, service) => sendJsonResponse(res, err, { service: service }));
+    } else {
+      sendJsonResponse(res, 403, 'no permission');
+    }
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/finish', requireLogin(), (req, res) => {
+    if (req.isOwner) {
+      daywork.finishService(req.service.serviceId,
+                        (err, service) => sendJsonResponse(res, err, { service: service }));
+    } else {
+      sendJsonResponse(res, 403, 'no permission');
+    }
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/delete', requireLogin(), (req, res) => {
+    if (req.isOwner) {
+      daywork.deleteService(req.service.serviceId,
+                        (err, service) => sendJsonResponse(res, err, { service: service }));
+    } else {
+      sendJsonResponse(res, 403, 'no permission');
+    }
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/update', requireLogin(), (req, res) => {
+    if (req.isOwner) {
+      daywork.updateService(req.service.serviceId, req.body,
+                        (err, service) => sendJsonResponse(res, err, { service: service }));
+    } else {
+      sendJsonResponse(res, 403, 'no permission');
+    }
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/favorite', requireLogin(), (req, res) => {
+    let userId = req.currentUser.userId;
+    let serviceId = req.service.serviceId;
+    daywork.favoriteService(userId, serviceId,
+                     (err, fav) => sendJsonResponse(res, err, fav));
+  });
+
+  app.post(apiPrefix + '/services/:serviceId/unfavorite', requireLogin(), (req, res) => {
+    let userId = req.currentUser.userId;
+    let serviceId = req.service.serviceId;
+    daywork.unfavoriteService(userId, serviceId,
+                       (err, fav) => sendJsonResponse(res, err, fav));
+  });
 }

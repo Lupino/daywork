@@ -3,6 +3,7 @@ export {
   getProfile,
   getUser,
   getUserJobs,
+  getUserServices,
   getUserWorks,
   getUserWork,
   getUserRecords,
@@ -45,3 +46,16 @@ export {
 } from './payment';
 
 export { appRoot, imageRoot } from './config';
+
+export {
+  requestService,
+  getService,
+  getServices,
+  createService,
+  publishService,
+  finishService,
+  deleteService,
+  updateService,
+  favoriteService,
+  unfavoriteService
+} from './service';
