@@ -23,6 +23,15 @@ export function getUserJobs({ userId, status, page, limit }, callback) {
               wapperCallback(callback));
 }
 
+export function getUserServices({ userId, status, page, limit }, callback) {
+  if (!userId) {
+    const profile = store.get('profile');
+    userId = profile.userId;
+  }
+  request.get(getUri(`/api/users/${userId}/services`, {status, limit, page}),
+              wapperCallback(callback));
+}
+
 export function getUserWorks({ userId, page, limit }, callback) {
   if (!userId) {
     const profile = store.get('profile');
