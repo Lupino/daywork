@@ -81,14 +81,17 @@ export default class NewJob extends Component {
             <Input label="简要描述"
               type='text'
               multiline
+              className={style.summary}
               value={summary}
               onChange={this.handleInputChange.bind(this, 'summary')} />
           </li>
           <ListSubHeader caption='工资' />
           <ListCheckbox caption='按天计算'
+            className={style.checkbox}
             checked={payMethod === 'Daily'}
             onChange={this.handleInputChange.bind(this, 'payMethod', 'Daily')} />
           <ListCheckbox caption='按小时计算'
+            className={style.checkbox}
             checked={payMethod === 'Hourly'}
             onChange={this.handleInputChange.bind(this, 'payMethod', 'Hourly')} />
           <ListDivider />

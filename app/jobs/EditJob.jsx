@@ -84,6 +84,7 @@ export default class NewJob extends Component {
             <Input label="简要描述"
               type='text'
               multiline
+              className={style.summary}
               value={summary}
               onChange={this.handleInputChange.bind(this, 'summary')} />
           </li>
