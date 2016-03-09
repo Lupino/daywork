@@ -161,3 +161,29 @@ var PaymentSchema = new Schema({
 PaymentSchema.plugin(autoIncrPlugin, { model: 'Payment', field: 'id', startAt: 1 });
 
 export var Payment = mongoose.model('Payment', PaymentSchema);
+
+// service same like job
+var ServiceSchema = new Schema({
+  userId: { type: Number, index: true },
+  title: String,
+  summary: String,
+  price: { type: Number, min: 0 },
+  unit: { type: String },
+  status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
+  image: Mixed,
+  createdAt: { type: Date, default: Date.now }
+});
+
+ServiceSchema.plugin(autoIncrPlugin, { model: 'Service', field: 'serviceId', startAt: 1 });
+
+export var Service = mongoose.model('Service', ServiceSchema);
+
+var FavoriteServiceSchema = new Schema({
+  userId: Number,
+  serviceId: Number,
+  createdAt: { type: Date, default: Date.now }
+});
+
+FavoriteServiceSchema.plugin(autoIncrPlugin, { model: 'FavoriteService', field: 'id', startAt: 1 });
+
+export var FavoriteService = mongoose.model('FavoriteService', FavoriteServiceSchema);

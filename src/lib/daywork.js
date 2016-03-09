@@ -4,7 +4,20 @@ import { parse as urlParse } from 'url';
 import _ from 'lodash';
 import fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { User, File, OauthToken, Job, MyJob, WorkRecord, Sequence, PaidRecord, Favorite, Message } from './models';
+import {
+  User,
+  File,
+  OauthToken,
+  Job,
+  MyJob,
+  WorkRecord,
+  Sequence,
+  PaidRecord,
+  Favorite,
+  Message,
+  Service,
+  FavoriteService
+} from './models';
 import { sendJsonResponse } from './util';
 import { uploadPath } from '../config';
 import {
@@ -1001,5 +1014,161 @@ export default class extends Object {
         });
       }, callback);
     });
+  }
+
+  // service
+  createService(service, callback) {
+    if (service.status !== 'Draft' && service.status !== 'Publish') {
+      service.status = 'Draft';
+    }
+    let serviceObj = new Service({
+      userId: service.userId,
+      title: service.title,
+      summary: service.summary,
+      price: service.price,
+      unit: service.unit,
+      status: service.status,
+      image: service.image
+    });
+    serviceObj.save((err, serviceObj) => callback(err, serviceObj));
+  }
+
+  publishService(serviceId, callback) {
+    let query = { serviceId: serviceId, status: 'Draft' };
+    Service.findOneAndUpdate(query, {status: 'Publish'}, (err, service) => callback(err, service));
+  }
+
+  finishService(serviceId, callback) {
+    let query = { serviceId: serviceId, status: 'Publish' };
+    Service.findOneAndUpdate(query, {status: 'Finish'}, (err, service) => callback(err, service));
+  }
+
+  deleteService(serviceId, callback) { // you can set service deleted on Draft or Finish
+    let query = { serviceId: serviceId, status: { $in: [ 'Draft', 'Finish' ] }};
+    Service.findOneAndUpdate(query, {status: 'Deleted'}, (err, service) => callback(err, service));
+  }
+
+  updateService(serviceId, service, callback) {
+    let updated = {};
+    ['title', 'summary', 'status', 'image'].forEach(key => {
+      if (service[key]) {
+        updated[key] = service[key];
+      }
+    });
+    if (updated.status && (updated.status !== 'Draft' || updated.status !== 'Publish')) {
+      delete updated.status;
+    }
+    Service.findOneAndUpdate({ serviceId }, updated, (err, service) => callback(err, service));
+  }
+
+  getService(serviceId, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    let query = { serviceId: serviceId, status: { $nin: [ 'Deleted' ] } };
+    Service.findOne(query, (err, service) => {
+      if (err) return callback(err);
+      if (!service) {
+        return callback(null, service);
+      }
+      let self = this;
+      async.parallel({
+        user(done) {
+          if (!options.user) { return done(); }
+          self.getUser(service.userId, done);
+        },
+        favorited(done) {
+          if (!options.favorited) { return done(); }
+          const userId = options.favorited;
+          FavoriteService.findOne({ userId, serviceId }, (err, fav) => done(err, fav? true : false));
+        }
+      }, (err, result) => {
+        if (err) return callback(err);
+        service = service.toJSON();
+        if (options.user) {
+          service.user = result.user;
+        }
+        if (options.favorited) {
+          service.favorited = result.favorited;
+        }
+        callback(null, service);
+      });
+    });
+  }
+
+  getServices(query, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+    if (!options.sort) {
+      options.sort = 'field -createdAt';
+    }
+    let extra = options.extra || null;
+    if (options.extra) {
+      delete options.extra;
+    }
+    query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
+    Service.find(query, null, options, (err, services) => {
+      if (err) {
+        return callback(err);
+      }
+      if (!extra) {
+        return callback(null, services);
+      }
+      async.parallel({
+        users(done) {
+          if (!extra.user) return done();
+          let userIds = _.uniq(services.map(service => service.userId));
+          User.find({ userId: { $in: userIds } }, (err, users) => done(err, users));
+        },
+        favs(done) {
+          if (!extra.favorited) return done();
+          let userId = extra.favorited;
+          let serviceIds = _.uniq(_.compact(services.map(service => service.serviceId)));
+          FavoriteService.find({ userId: userId, serviceId: { $in: serviceIds } }, (err, favs) => done(err, favs));
+        }
+      }, (err, result) => {
+        if (err) {
+          return callback(err);
+        }
+        result.users = result.users || [];
+        result.favs = result.favs || [];
+        let userMap = toMap(result.users.map(user => [user.userId, user]));
+        let favMap = toMap(result.favs.map(fav => [fav.serviceId, true]));
+        services = services.map((service) => {
+          service = service.toJSON();
+          if (extra.user) {
+            service.user = userMap[service.userId];
+          }
+          if (extra.favorited) {
+            service.favorited = favMap[service.serviceId];
+          }
+          return service;
+        });
+        callback(null, services);
+      });
+    });
+  }
+
+  favoriteService(userId, serviceId, callback) {
+    let query = { userId: userId, serviceId: serviceId };
+    FavoriteService.findOne(query, (err, favorte) => {
+      if (err) {
+        return callback(err);
+      }
+      if (favorte) {
+        return callback(null, favorte);
+      }
+      favorte = new FavoriteService(query);
+      favorte.save((err, favorte) => callback(err, favorte));
+    });
+  }
+
+  unfavoriteService(userId, serviceId, callback) {
+    let query = { userId: userId, serviceId: serviceId };
+    FavoriteService.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
   }
 }
