@@ -26,6 +26,13 @@ import Result from './payment/Result';
 import Cancel from './payment/Cancel';
 import DrawMoney from './payment/DrawMoney';
 
+// service
+import NewService from './services/NewService';
+import EditService from './services/EditService';
+import Services from './services/Services';
+import Service from './services/Service';
+import ServiceInfo from './services/ServiceInfo';
+
 var router = module.exports = (
   <Router history={hashHistory}>
     <Route path="/" component={App}>
@@ -53,6 +60,12 @@ var router = module.exports = (
       <Route path="/drawmoney" component={DrawMoney} />
       <Route path="/pay_result" component={Result} />
       <Route path="/pay_cancel" component={Cancel} />
+
+      <Route path="/new_service" component={NewService} />
+      <Route path="/edit_service/:serviceId" component={EditService} />
+      <Route path="/services" component={Services} />
+      <Route path="/services/:serviceId" component={Service} />
+      <Route path="/service_info/:serviceId" component={ServiceInfo} />
     </Route>
   </Router>
 );

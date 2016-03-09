@@ -171,6 +171,8 @@ export default class App extends Component {
     let menus = [];
     if (logIn) {
       menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
+      menus.push(<MenuItem value='new_service' icon='add' caption='发布新服务' key='new_service' />);
+      menus.push(<MenuItem value='services' icon='check_box_outline_blank' caption='我发布的服务' key='services' />);
       menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
       menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);
       menus.push(<MenuItem value='works' icon='work' caption='我的工作' key='works' />);
