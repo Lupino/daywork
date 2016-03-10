@@ -1,4 +1,4 @@
-import { apiPrefix } from './config';
+import { apiPrefix, categories } from './config';
 import formidable from 'formidable';
 import { sendJsonResponse } from './lib/util';
 import async from 'async';
@@ -88,12 +88,16 @@ export default function(app, daywork) {
       limit = 50;
     }
     let status = req.query.status || null;
+    let category = req.query.category || null;
     let userId = req.query.userId || null;
     let skip = limit * page;
 
     let query = {};
     if (status) {
       query.status = status;
+    }
+    if (category) {
+      query.category = category;
     }
     if (userId) {
       query.userId = userId;
@@ -589,12 +593,16 @@ export default function(app, daywork) {
       limit = 50;
     }
     let status = req.query.status || null;
+    let category = req.query.category || null;
     let userId = req.query.userId || null;
     let skip = limit * page;
 
     let query = {};
     if (status) {
       query.status = status;
+    }
+    if (category) {
+      query.category = category;
     }
     if (userId) {
       query.userId = userId;
@@ -670,5 +678,9 @@ export default function(app, daywork) {
     let serviceId = req.service.serviceId;
     daywork.unfavoriteService(userId, serviceId,
                        (err, fav) => sendJsonResponse(res, err, fav));
+  });
+
+  app.get(apiPrefix + '/categories/?', (req, res) => {
+    sendJsonResponse(res, null, categories);
   });
 }

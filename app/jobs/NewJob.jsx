@@ -6,6 +6,7 @@ import Dropzone from 'react-dropzone';
 
 import style from '../style';
 import { createJob, upload, imageRoot } from '../api';
+import Categories from '../modules/dropdown/Categories';
 
 export default class NewJob extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class NewJob extends Component {
       requiredPeople: 0,
       status: 'Draft',
       image: {},
+      category: '',
       errors: {}
     }
   }
@@ -66,7 +68,8 @@ export default class NewJob extends Component {
     });
   };
   render() {
-    const { title, summary, salary, payMethod, requiredPeople, status, image, errors } = this.state;
+    const { title, summary, salary, payMethod, requiredPeople, status, category, image, errors } = this.state;
+    const categories = this.props.getCategories('job');
     return (
       <div>
         <List selectable ripple>
@@ -84,6 +87,13 @@ export default class NewJob extends Component {
               className={style.summary}
               value={summary}
               onChange={this.handleInputChange.bind(this, 'summary')} />
+          </li>
+          <li>
+            <Categories
+              label="分类"
+              categories={categories}
+              onChange={this.handleInputChange.bind(this, 'category')}
+              value={category} />
           </li>
           <ListSubHeader caption='工资' />
           <ListCheckbox caption='按天计算'

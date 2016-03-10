@@ -9,7 +9,7 @@ import {
   Snackbar, Dialog
 } from 'react-toolbox';
 import style from './style';
-import { getProfile } from './api';
+import { getProfile, getCategories } from './api';
 import store from './modules/store';
 
 export default class App extends Component {
@@ -18,6 +18,7 @@ export default class App extends Component {
     this.state = {
       logIn: false,
       profile: {},
+      categories: {},
       drawerActive: false,
       snackbarActive: false,
       snackbarLabel: '',
@@ -54,6 +55,13 @@ export default class App extends Component {
 
   handleGetProfile = () => {
     return this.state.profile;
+  };
+
+  handleGetCategories = (key) => {
+    if (key) {
+      return this.state.categories[key];
+    }
+    return this.state.categories;
   };
 
   handleSnackbarClick = () => {
@@ -148,8 +156,18 @@ export default class App extends Component {
     });
   };
 
+  loadCategories() {
+    getCategories((err, rsp) => {
+      if (!err && rsp) {
+        store.set('categories', rsp);
+        this.setState({ categories: rsp });
+      }
+    });
+  }
+
   componentDidMount = () => {
     this.loadProfile();
+    this.loadCategories();
   };
 
   render() {
@@ -160,6 +178,7 @@ export default class App extends Component {
       onProfileLoaded: this.handleProfileLoaded,
       onProfileUpdated: this.handleProfileUpdated,
       getProfile: this.handleGetProfile,
+      getCategories: this.handleGetCategories,
       notify: this.handleShowSnackbar,
       alert: this.handleDiaAlert,
       confirm: this.handleDiaConfirm,

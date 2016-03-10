@@ -59,3 +59,7 @@ export {
   favoriteService,
   unfavoriteService
 } from './service';
+
+export {
+  getCategories
+} from './category';

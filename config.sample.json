@@ -15,5 +15,27 @@
   },
   "gearmanHost": { "host": "localhost" },
   "port": 3000,
+  "categories": {
+    "job": [
+      {
+        "name": "工程",
+        "category": "engineering"
+      },
+      {
+        "name": "餐饮",
+        "category": "food"
+      }
+    ],
+    "service": [
+      {
+        "name": "汽车",
+        "category": "car"
+      },
+      {
+        "name": "餐饮",
+        "category": "food"
+      }
+    ]
+  },
   "dev": false
 }
