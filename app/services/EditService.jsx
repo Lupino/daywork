@@ -6,6 +6,7 @@ import Dropzone from 'react-dropzone';
 
 import style from '../style';
 import { getService, updateService, upload, imageRoot } from '../api';
+import Categories from '../modules/dropdown/Categories';
 
 export default class NewService extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class NewService extends Component {
       title: '',
       summary: '',
       image: {},
+      category: '',
       errors: {},
       loaded: false
     }
@@ -69,7 +71,8 @@ export default class NewService extends Component {
     this.loadService();
   }
   render() {
-    const { title, summary, image, errors } = this.state;
+    const { title, summary, image, category, errors } = this.state;
+    const categories = this.props.getCategories('service');
     return (
       <div>
         <List selectable ripple>
@@ -87,6 +90,13 @@ export default class NewService extends Component {
               className={style.summary}
               value={summary}
               onChange={this.handleInputChange.bind(this, 'summary')} />
+          </li>
+          <li>
+            <Categories
+              label="分类"
+              categories={categories}
+              onChange={this.handleInputChange.bind(this, 'category')}
+              value={category} />
           </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>
