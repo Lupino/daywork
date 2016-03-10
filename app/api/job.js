@@ -19,8 +19,8 @@ export function getJobWorkers({ jobId, status, page, limit }, callback) {
   request.get(url, wapperCallback(callback));
 }
 
-export function getJobs({ status, userId, page, limit }, callback) {
-  let url = getUri('/api/jobs/', { status, userId, page, limit });
+export function getJobs({ category, status, userId, page, limit }, callback) {
+  let url = getUri('/api/jobs/', { category, status, userId, page, limit });
   request.get(url, wapperCallback(callback));
 }
 
@@ -34,9 +34,9 @@ export function getJobPayment({ jobId, userId}, callback) {
   request.get(url, wapperCallback(callback));
 }
 
-export function createJob({ title, summary, payMethod, salary, requiredPeople, status, image }, callback) {
+export function createJob({ title, summary, payMethod, salary, requiredPeople, status, category, image }, callback) {
   request.post(getUri('/api/jobs/create'),
-               { title, summary, payMethod, salary, requiredPeople, status, image },
+               { title, summary, payMethod, salary, requiredPeople, status, category, image },
                wapperCallback(callback));
 }
 

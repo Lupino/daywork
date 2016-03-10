@@ -232,6 +232,7 @@ export default class extends Object {
       payMethod: job.payMethod,
       requiredPeople: job.requiredPeople,
       status: job.status,
+      category: job.category,
       image: job.image
     });
     jobObj.save((err, jobObj) => callback(err, jobObj));
@@ -1028,6 +1029,7 @@ export default class extends Object {
       price: service.price,
       unit: service.unit,
       status: service.status,
+      category: service.category,
       image: service.image
     });
     serviceObj.save((err, serviceObj) => callback(err, serviceObj));

@@ -5,14 +5,14 @@ export function getService({ serviceId }, callback) {
   request.get(getUri(`/api/services/${serviceId}`), wapperCallback(callback));
 }
 
-export function getServices({ status, userId, page, limit }, callback) {
-  let url = getUri('/api/services/', { status, userId, page, limit });
+export function getServices({ category, status, userId, page, limit }, callback) {
+  let url = getUri('/api/services/', { category, status, userId, page, limit });
   request.get(url, wapperCallback(callback));
 }
 
-export function createService({ title, summary, unit, price, status, image }, callback) {
+export function createService({ title, summary, unit, price, status, category, image }, callback) {
   request.post(getUri('/api/services/create'),
-               { title, summary, unit, price, status, image },
+               { title, summary, unit, price, status, category, image },
                wapperCallback(callback));
 }
 

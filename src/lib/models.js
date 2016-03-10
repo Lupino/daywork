@@ -62,6 +62,7 @@ var JobSchema = new Schema({
   requiredPeople: Number,
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
   image: Mixed,
+  category: { type: String, index: true },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -171,6 +172,7 @@ var ServiceSchema = new Schema({
   unit: { type: String },
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
   image: Mixed,
+  category: { type: String, index: true },
   createdAt: { type: Date, default: Date.now }
 });
 

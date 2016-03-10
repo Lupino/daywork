@@ -88,12 +88,16 @@ export default function(app, daywork) {
       limit = 50;
     }
     let status = req.query.status || null;
+    let category = req.query.category || null;
     let userId = req.query.userId || null;
     let skip = limit * page;
 
     let query = {};
     if (status) {
       query.status = status;
+    }
+    if (category) {
+      query.category = category;
     }
     if (userId) {
       query.userId = userId;
@@ -589,12 +593,16 @@ export default function(app, daywork) {
       limit = 50;
     }
     let status = req.query.status || null;
+    let category = req.query.category || null;
     let userId = req.query.userId || null;
     let skip = limit * page;
 
     let query = {};
     if (status) {
       query.status = status;
+    }
+    if (category) {
+      query.category = category;
     }
     if (userId) {
       query.userId = userId;
