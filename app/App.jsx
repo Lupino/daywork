@@ -190,13 +190,16 @@ export default class App extends Component {
     let menus = [];
     if (logIn) {
       menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
+      menus.push(<MenuDivider key='div1' />)
       menus.push(<MenuItem value='new_service' icon='add' caption='发布新服务' key='new_service' />);
       menus.push(<MenuItem value='services' icon='check_box_outline_blank' caption='我发布的服务' key='services' />);
+      menus.push(<MenuDivider key='div2' />)
       menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
       menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);
       menus.push(<MenuItem value='works' icon='work' caption='我的工作' key='works' />);
+      menus.push(<MenuDivider key='div3' />)
       menus.push(<MenuItem value='balance' icon='attach_money' caption='余额' key='balance' shortcut={`${profile.remainMoney} 元`} />);
-      menus.push(<MenuItem value='message' icon='work' caption='消息' key='message' />);
+      menus.push(<MenuItem value='message' icon='message' caption='消息' key='message' />);
     } else {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }
