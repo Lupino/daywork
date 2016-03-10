@@ -1,4 +1,4 @@
-import { apiPrefix } from './config';
+import { apiPrefix, categories } from './config';
 import formidable from 'formidable';
 import { sendJsonResponse } from './lib/util';
 import async from 'async';
@@ -670,5 +670,9 @@ export default function(app, daywork) {
     let serviceId = req.service.serviceId;
     daywork.unfavoriteService(userId, serviceId,
                        (err, fav) => sendJsonResponse(res, err, fav));
+  });
+
+  app.get(apiPrefix + '/categories/?', (req, res) => {
+    sendJsonResponse(res, null, categories);
   });
 }
