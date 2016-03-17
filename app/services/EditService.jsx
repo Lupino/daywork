@@ -29,7 +29,7 @@ export default class NewService extends Component {
   handleSave = () => {
     const { params, notify } = this.props;
     const serviceId = params.serviceId;
-    const { title, summary, image, city, address } = this.state;
+    const { title, summary, image, category, city, address } = this.state;
 
     let hasError = false;
     let errors = {};
@@ -43,7 +43,7 @@ export default class NewService extends Component {
       return notify('发现一些错误');
     }
 
-    updateService({ serviceId, title, summary, image, city, address }, (err, service) => {
+    updateService({ serviceId, title, summary, image, category, city, address }, (err, service) => {
       if (err) {
         return notify(err);
       }
@@ -66,8 +66,8 @@ export default class NewService extends Component {
       if (err) {
         return notify(err);
       }
-      const { title, summary, image, city, address } = rsp.service;
-      this.setState({ title, summary, image, city, address, loaded: true });
+      const { title, summary, image, category, city, address } = rsp.service;
+      this.setState({ title, summary, image, category, city, address, loaded: true });
     })
   };
   componentDidMount() {

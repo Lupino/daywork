@@ -29,7 +29,7 @@ export default class NewJob extends Component {
   handleSave = () => {
     const { params, notify } = this.props;
     const jobId = params.jobId;
-    const { title, summary, image, city, address } = this.state;
+    const { title, summary, image, category, city, address } = this.state;
 
     let hasError = false;
     let errors = {};
@@ -43,7 +43,7 @@ export default class NewJob extends Component {
       return notify('发现一些错误');
     }
 
-    updateJob({ jobId, title, summary, image, city, address }, (err, job) => {
+    updateJob({ jobId, title, summary, image, category, city, address }, (err, job) => {
       if (err) {
         return notify(err);
       }
@@ -66,8 +66,8 @@ export default class NewJob extends Component {
       if (err) {
         return notify(err);
       }
-      const { title, summary, image, city, address } = rsp.job;
-      this.setState({ title, summary, image, city, address, loaded: true });
+      const { title, summary, image, city, address, category } = rsp.job;
+      this.setState({ title, summary, image, city, address, category, loaded: true });
     })
   };
   componentDidMount() {

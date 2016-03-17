@@ -249,7 +249,7 @@ export default class extends Object {
 
   updateJob(jobId, job, callback) {
     let updated = {};
-    ['title', 'summary', 'status', 'image', 'city', 'address'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
       if (job[key]) {
         updated[key] = job[key];
       }
@@ -1039,7 +1039,7 @@ export default class extends Object {
 
   updateService(serviceId, service, callback) {
     let updated = {};
-    ['title', 'summary', 'status', 'image', 'city', 'address'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
       if (service[key]) {
         updated[key] = service[key];
       }
