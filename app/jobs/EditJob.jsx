@@ -7,6 +7,7 @@ import Dropzone from 'react-dropzone';
 import style from '../style';
 import { getJob, updateJob, upload, imageRoot } from '../api';
 import Categories from '../modules/dropdown/Categories';
+import Cities from '../modules/dropdown/Cities';
 
 export default class NewJob extends Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export default class NewJob extends Component {
       summary: '',
       image: {},
       category: '',
+      city: '',
+      address: '',
       errors: {},
       loaded: false
     }
@@ -26,7 +29,7 @@ export default class NewJob extends Component {
   handleSave = () => {
     const { params, notify } = this.props;
     const jobId = params.jobId;
-    const { title, summary, image } = this.state;
+    const { title, summary, image, city, address } = this.state;
 
     let hasError = false;
     let errors = {};
@@ -40,7 +43,7 @@ export default class NewJob extends Component {
       return notify('发现一些错误');
     }
 
-    updateJob({ jobId, title, summary, image }, (err, job) => {
+    updateJob({ jobId, title, summary, image, city, address }, (err, job) => {
       if (err) {
         return notify(err);
       }
@@ -63,15 +66,15 @@ export default class NewJob extends Component {
       if (err) {
         return notify(err);
       }
-      const { title, summary, image } = rsp.job;
-      this.setState({ title, summary, image, loaded: true });
+      const { title, summary, image, city, address } = rsp.job;
+      this.setState({ title, summary, image, city, address, loaded: true });
     })
   };
   componentDidMount() {
     this.loadJob();
   }
   render() {
-    const { title, summary, image, category, errors } = this.state;
+    const { title, summary, image, category, city, address, errors } = this.state;
     const categories = this.props.getCategories('job');
     return (
       <div>
@@ -97,6 +100,19 @@ export default class NewJob extends Component {
               categories={categories}
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
+          </li>
+          <li>
+            <Cities
+              label="城市"
+              onChange={this.handleInputChange.bind(this, 'city')}
+              value={city} />
+          </li>
+          <li>
+            <Input label="地址"
+              type='text'
+              className={style.address}
+              value={address}
+              onChange={this.handleInputChange.bind(this, 'address')} />
           </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>

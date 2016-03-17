@@ -7,6 +7,7 @@ import Dropzone from 'react-dropzone';
 import style from '../style';
 import { createJob, upload, imageRoot } from '../api';
 import Categories from '../modules/dropdown/Categories';
+import Cities from '../modules/dropdown/Cities';
 
 export default class NewJob extends Component {
   constructor(props) {
@@ -20,6 +21,8 @@ export default class NewJob extends Component {
       status: 'Draft',
       image: {},
       category: '',
+      city: 'xiamen',
+      address: '',
       errors: {}
     }
   }
@@ -68,7 +71,8 @@ export default class NewJob extends Component {
     });
   };
   render() {
-    const { title, summary, salary, payMethod, requiredPeople, status, category, image, errors } = this.state;
+    const { title, summary, salary, payMethod, requiredPeople, status, category,
+      city, address, image, errors } = this.state;
     const categories = this.props.getCategories('job');
     return (
       <div>
@@ -94,6 +98,19 @@ export default class NewJob extends Component {
               categories={categories}
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
+          </li>
+          <li>
+            <Cities
+              label="城市"
+              onChange={this.handleInputChange.bind(this, 'city')}
+              value={city} />
+          </li>
+          <li>
+            <Input label="地址"
+              type='text'
+              className={style.address}
+              value={address}
+              onChange={this.handleInputChange.bind(this, 'address')} />
           </li>
           <ListSubHeader caption='工资' />
           <ListCheckbox caption='按天计算'

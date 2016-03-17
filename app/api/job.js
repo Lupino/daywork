@@ -34,9 +34,10 @@ export function getJobPayment({ jobId, userId}, callback) {
   request.get(url, wapperCallback(callback));
 }
 
-export function createJob({ title, summary, payMethod, salary, requiredPeople, status, category, image }, callback) {
+export function createJob({ title, summary, payMethod, salary, requiredPeople,
+                          status, category, image, city, address }, callback) {
   request.post(getUri('/api/jobs/create'),
-               { title, summary, payMethod, salary, requiredPeople, status, category, image },
+               { title, summary, payMethod, salary, requiredPeople, status, category, image, city, address },
                wapperCallback(callback));
 }
 
@@ -53,9 +54,9 @@ export function deleteJob({ jobId }, callback) {
                wapperCallback(callback));
 }
 
-export function updateJob({ jobId, title, summary, status }, callback) {
+export function updateJob({ jobId, title, summary, status, city, address }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/update`),
-               { title, summary, status },
+               { title, summary, status, city, address },
                wapperCallback(callback));
 }
 

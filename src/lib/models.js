@@ -57,6 +57,8 @@ var JobSchema = new Schema({
   userId: { type: Number, index: true },
   title: String,
   summary: String,
+  city: String,
+  address: String,
   salary: { type: Number, min: 0 },
   payMethod: { type: String, default: 'Daily' }, // Daily | Hourly
   requiredPeople: Number,
@@ -168,6 +170,8 @@ var ServiceSchema = new Schema({
   userId: { type: Number, index: true },
   title: String,
   summary: String,
+  city: String,
+  address: String,
   price: { type: Number, min: 0 },
   unit: { type: String },
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted

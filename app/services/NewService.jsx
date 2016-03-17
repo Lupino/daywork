@@ -8,6 +8,7 @@ import style from '../style';
 import { createService, upload, imageRoot } from '../api';
 import { getUnit } from './utils';
 import Categories from '../modules/dropdown/Categories';
+import Cities from '../modules/dropdown/Cities';
 
 export default class NewService extends Component {
   constructor(props) {
@@ -20,6 +21,8 @@ export default class NewService extends Component {
       status: 'Draft',
       image: {},
       category: '',
+      city: '',
+      address: '',
       errors: {}
     }
   }
@@ -69,7 +72,7 @@ export default class NewService extends Component {
     });
   };
   render() {
-    const { title, summary, price, unit, status, category, image, errors } = this.state;
+    const { title, summary, price, unit, status, category, city, address, image, errors } = this.state;
     const categories = this.props.getCategories('service');
     return (
       <div>
@@ -95,6 +98,19 @@ export default class NewService extends Component {
               categories={categories}
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
+          </li>
+          <li>
+            <Cities
+              label="城市"
+              onChange={this.handleInputChange.bind(this, 'city')}
+              value={city} />
+          </li>
+          <li>
+            <Input label="地址"
+              type='text'
+              className={style.address}
+              value={address}
+              onChange={this.handleInputChange.bind(this, 'address')} />
           </li>
           <ListSubHeader caption='费用' />
           <ListCheckbox caption='按天计算'

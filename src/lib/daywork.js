@@ -220,20 +220,14 @@ export default class extends Object {
     };
   }
 
-  createJob(job, callback) {
-    if (job.status !== 'Draft' && job.status !== 'Publish') {
-      job.status = 'Draft';
+  createJob({ title, summary, city, address, salary, payMethod, requiredPeople,
+            category, image, status }, callback) {
+    if (status !== 'Draft' && status !== 'Publish') {
+      status = 'Draft';
     }
     let jobObj = new Job({
-      userId: job.userId,
-      title: job.title,
-      summary: job.summary,
-      salary: job.salary,
-      payMethod: job.payMethod,
-      requiredPeople: job.requiredPeople,
-      status: job.status,
-      category: job.category,
-      image: job.image
+      userId, title, summary, city, address, salary, payMethod, requiredPeople,
+      status, category, image
     });
     jobObj.save((err, jobObj) => callback(err, jobObj));
   }
@@ -255,7 +249,7 @@ export default class extends Object {
 
   updateJob(jobId, job, callback) {
     let updated = {};
-    ['title', 'summary', 'status', 'image'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'city', 'address'].forEach(key => {
       if (job[key]) {
         updated[key] = job[key];
       }
@@ -1018,19 +1012,12 @@ export default class extends Object {
   }
 
   // service
-  createService(service, callback) {
+  createService({ userId, title, summary, price, unit, status, category, image, city, address }, callback) {
     if (service.status !== 'Draft' && service.status !== 'Publish') {
       service.status = 'Draft';
     }
     let serviceObj = new Service({
-      userId: service.userId,
-      title: service.title,
-      summary: service.summary,
-      price: service.price,
-      unit: service.unit,
-      status: service.status,
-      category: service.category,
-      image: service.image
+      userId, title, summary, price, unit, status, category, image, city, address
     });
     serviceObj.save((err, serviceObj) => callback(err, serviceObj));
   }
@@ -1052,7 +1039,7 @@ export default class extends Object {
 
   updateService(serviceId, service, callback) {
     let updated = {};
-    ['title', 'summary', 'status', 'image'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'city', 'address'].forEach(key => {
       if (service[key]) {
         updated[key] = service[key];
       }
