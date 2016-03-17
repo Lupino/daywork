@@ -16,3 +16,11 @@ export function prettyTime(timestamp) {
   }
   return string;
 }
+
+const cities = {
+  'xiamen': '厦门'
+}
+
+export function getCityName(name) {
+  return cities[name] || '不限'
+}
