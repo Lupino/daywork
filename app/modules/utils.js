@@ -18,7 +18,9 @@ export function prettyTime(timestamp) {
 }
 
 const cities = {
-  'xiamen': '厦门'
+  'xiamen': '厦门',
+  'zhangzhou': '漳州',
+  'quanzhou': '泉州'
 }
 
 export function getCityName(name) {
