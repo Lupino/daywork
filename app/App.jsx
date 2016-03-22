@@ -146,6 +146,11 @@ export default class App extends Component {
     this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
   };
 
+  handleGoto = (route) => {
+    const { router } = this.context;
+    router.push(route);
+  }
+
   loadProfile = () => {
     getProfile((err, rsp) => {
       if (!err && rsp && rsp.user && rsp.user.userId) {
@@ -182,7 +187,9 @@ export default class App extends Component {
       notify: this.handleShowSnackbar,
       alert: this.handleDiaAlert,
       confirm: this.handleDiaConfirm,
-      dialog: this.handleDialog
+      dialog: this.handleDialog,
+      goto: this.handleGoto,
+      isLogIn: logIn
     });
 
     const { profile } = this.state;
