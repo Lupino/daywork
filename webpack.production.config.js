@@ -17,7 +17,7 @@ module.exports = {
     ] // And other vendors
   },
   output: {
-    path: path.join(__dirname, 'dist/public/static'),
+    path: path.join(__dirname, 'build/public/static'),
     filename: '[name].js',
     chunkFilename: '[id].bundle.js',
     sourceMapFilename: '{file}.map',
