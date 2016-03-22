@@ -64,7 +64,7 @@ export default class ResetPassword extends Component {
         return;
       }
       this.props.onLogin(false);
-      this.props.onLoadedProfile({});
+      this.props.onProfileLoaded({});
       store.remove('token');
       store.remove('profile');
       router.push('signin');
