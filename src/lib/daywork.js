@@ -1013,8 +1013,8 @@ export default class extends Object {
 
   // service
   createService({ userId, title, summary, price, unit, status, category, image, city, address }, callback) {
-    if (service.status !== 'Draft' && service.status !== 'Publish') {
-      service.status = 'Draft';
+    if (status !== 'Draft' && status !== 'Publish') {
+      status = 'Draft';
     }
     let serviceObj = new Service({
       userId, title, summary, price, unit, status, category, image, city, address
