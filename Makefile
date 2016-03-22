@@ -15,6 +15,7 @@ dist: backend front
 	@sed -i 's@../config.json@./config.json@' dist/config.js
 	@cp package/Dockerfile dist
 	@cp package/package.json dist
+	@rm -f dist/public/upload/*
 	tar cjf dist.tar.bz2 dist
 
 dist-app: front
