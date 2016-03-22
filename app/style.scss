@@ -54,6 +54,9 @@ ul li .right {
   border: 1px dashed #aaa;
   width: 100%;
   padding: 10px;
+  img {
+    max-width: 100%;
+  }
 }
 
 .legend-right {
