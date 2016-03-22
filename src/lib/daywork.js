@@ -220,7 +220,7 @@ export default class extends Object {
     };
   }
 
-  createJob({ title, summary, city, address, salary, payMethod, requiredPeople,
+  createJob({ userId, title, summary, city, address, salary, payMethod, requiredPeople,
             category, image, status }, callback) {
     if (status !== 'Draft' && status !== 'Publish') {
       status = 'Draft';
