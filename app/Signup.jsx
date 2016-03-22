@@ -41,6 +41,7 @@ export default class Signup extends Component {
     const { phoneNumber, smsCode, realName, passwd } = this.state;
     const { router } = this.context;
     const { notify } = this.props;
+    const next = this.props.location.query.next;
     if (!/\d{11}/.exec(phoneNumber)) {
       checkError.phoneNumber = '请填写正确的手机号码';
       hasError = true;
@@ -76,13 +77,13 @@ export default class Signup extends Component {
       }
       signinForToken({ userName: phoneNumber, passwd }, (err, token) => {
         if (err) {
-          router.push('signin');
+          router.push('signin' + (next?'?next='+next: ''));
           return;
         }
         store.set('token', token);
         getProfile((err, rsp) => {
           if (err) {
-            router.push('signin');
+            router.push('signin' + (next?'?next='+next: ''));
             return;
           }
           const user = rsp.user;
@@ -90,7 +91,7 @@ export default class Signup extends Component {
           this.props.onProfileLoaded(user);
           store.set('profile', user);
           notify('注册并登录成功');
-          router.push('/');
+          router.push(next || '/');
         });
       });
     });
@@ -98,8 +99,9 @@ export default class Signup extends Component {
 
   render() {
     const { sendTimeout, phoneNumber, smsCode, realName, passwd, checkError } = this.state;
+    const next = this.props.location.query.next;
     const links = [
-      { href: '#/signin', label: '我是老用户?' }
+      { href: '#/signin' + (next?'?next=' + next: ''), label: '我是老用户?' }
     ];
     return (
       <section>

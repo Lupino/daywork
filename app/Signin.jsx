@@ -56,15 +56,17 @@ export default class Signin extends Component {
         this.props.onProfileLoaded(user);
         store.set('profile', user);
         notify('登录成功');
-        router.push('/');
+        const next = this.props.location.query.next || '/';
+        router.push(next);
       });
     });
   };
 
   render() {
     const { phoneNumber, passwd, checkError } = this.state;
+    const next = this.props.location.query.next;
     const links = [
-      { href: '#/signup', label: '我是新用户?' },
+      { href: '#/signup' + (next?'?next=' + next: ''), label: '我是新用户?' },
       { href: '#/problem', label: '登录遇到问题?'}
     ];
     return (

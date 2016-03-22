@@ -157,6 +157,13 @@ export default class App extends Component {
         const user = rsp.user;
         store.set('profile', user);
         this.setState({ profile: user, logIn: true });
+      } else {
+        const uneedAuth = /about|signin|signup|problem|reset_password|help|job_info|service_info/;
+        const pathname = this.props.location.pathname;
+        console.log(this.props.location);
+        if (!uneedAuth.exec(pathname) && pathname !== '/') {
+          this.handleGoto('signin?next=' + pathname);
+        }
       }
     });
   };
