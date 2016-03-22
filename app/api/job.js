@@ -54,9 +54,9 @@ export function deleteJob({ jobId }, callback) {
                wapperCallback(callback));
 }
 
-export function updateJob({ jobId, title, summary, status, city, address }, callback) {
+export function updateJob({ jobId, title, summary, image, status, city, address }, callback) {
   request.post(getUri(`/api/jobs/${jobId}/update`),
-               { title, summary, status, city, address },
+               { title, summary, status, city, address, image },
                wapperCallback(callback));
 }
 
