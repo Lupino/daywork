@@ -11,7 +11,7 @@
     "worker": "node lib/message_worker.js"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0-rc.1",
     "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "errorhandler": "^1.4.3",
@@ -22,7 +22,7 @@
     "leanengine": "^0.4.0",
     "lodash": "^4.6.1",
     "method-override": "^2.3.5",
-    "mongoose": "^4.4.7",
+    "mongoose": "^4.4.8",
     "pingpp": "^2.0.7",
     "shortid": "^2.2.4",
     "uuid": "^2.0.1"

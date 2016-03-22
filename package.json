@@ -13,7 +13,7 @@
     "worker": "babel-node src/lib/message_worker.js"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0-rc.1",
     "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "errorhandler": "^1.4.3",
@@ -24,7 +24,7 @@
     "leanengine": "^0.4.0",
     "lodash": "^4.6.1",
     "method-override": "^2.3.5",
-    "mongoose": "^4.4.7",
+    "mongoose": "^4.4.8",
     "pingpp": "^2.0.7",
     "shortid": "^2.2.4",
     "uuid": "^2.0.1"
@@ -43,7 +43,7 @@
     "history": "^2.0.1",
     "methods": "^1.1.2",
     "node-sass": "^3.4.2",
-    "normalize.css": "^3.0.3",
+    "normalize.css": "^4.0.0",
     "postcss-loader": "^0.8.2",
     "react": "^0.14.7",
     "react-addons-css-transition-group": "^0.14.7",
@@ -54,7 +54,7 @@
     "react-toolbox": "^0.14.2",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.0",
-    "superagent": "^1.8.1",
+    "superagent": "^1.8.2",
     "toolbox-loader": "0.0.3",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
