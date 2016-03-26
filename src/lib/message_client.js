@@ -1,63 +1,79 @@
-import gearmanode from 'gearmanode';
 import { cleanObj } from './util';
-import { gearmanHost } from '../config';
+import worker from './message_worker';
 
-let client = gearmanode.client(gearmanHost);
-
-export function submitJob(funcName, data) {
+export function submitJob(funcName, data, done) {
   data.createdAt = new Date();
   data = cleanObj(data);
-  data = JSON.stringify(data);
-  client.submitJob(funcName, data, { background: true });
+  worker.process(funcName, data, done);
 }
 
 export function wrapperAddRecordCallback(callback) {
   return (err, record) => {
+    var cb = () => {
+      callback(err, record);
+    };
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('daywork.addRecord', { recordId, userId });
+      submitJob('daywork.addRecord', { recordId, userId }, cb);
+      return;
     }
-    callback(err, record);
+    cb();
   };
 }
 
 export function wrapperCancelRecordCallback(callback) {
   return (err, record) => {
+    var cb = () => {
+      callback(err, record);
+    };
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('daywork.cancelRecord', { recordId, userId });
+      submitJob('daywork.cancelRecord', { recordId, userId }, cb);
+      return;
     }
-    callback(err, record);
+    cb();
   };
 }
 
 export function wrapperPaidRecordCallback(callback) {
   return (err, result) => {
+    var cb = () => {
+      callback(err, result);
+    };
     if (!err) {
       let { paidRecord } = result;
       let { recordId, userId } = paidRecord;
-      submitJob('daywork.paidRecord', { recordId, userId });
+      submitJob('daywork.paidRecord', { recordId, userId }, cb);
+      return;
     }
-    callback(err, result);
+    cb();
   };
 }
 
 export function wrapperRequestJobCallback(callback) {
   return (err, myJob) => {
+    var cb = () => {
+      callback(err, myJob);
+    };
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('daywork.requestJob', { userId, jobId });
+      submitJob('daywork.requestJob', { userId, jobId }, cb);
+      return;
     }
-    callback(err, myJob);
+    cb();
   };
 }
 
 export function wrapperJoinJobCallback(callback) {
   return (err, myJob) => {
+    var cb = () => {
+      callback(err, myJob);
+    };
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('daywork.joinJob', { userId, jobId });
+      submitJob('daywork.joinJob', { userId, jobId }, cb);
+      return;
     }
-    callback(err, myJob);
+    cb();
   };
 }

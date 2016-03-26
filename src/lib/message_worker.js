@@ -1,63 +1,58 @@
-import gearmanode from 'gearmanode';
 import Daywork from './daywork';
 import async from 'async';
-import { gearmanHost } from '../config';
 
 let daywork = new Daywork();
 
-let worker = gearmanode.worker(gearmanHost);
+class Worker {
+  constructor() {
+    this.funcs = {};
+  }
+  addFunction(funcName, callback) {
+    this.funcs[funcName] = callback;
+  }
+  process(funcName, data, done) {
+    const func = this.funcs[funcName];
+    func(data, done);
+  }
+}
+
+const worker = new Worker();
 
 function wrapperCallback(callback) {
-  return (job) => {
+  return (payload, done) => {
     let payload = {};
-    try {
-      payload = JSON.parse(job.payload);
-    } catch (e) {
-      console.log('parse json fail:', e);
-    }
     if (payload.createdAt) {
       payload.createdAt = new Date(payload.createdAt);
     }
-    payload.job = job;
-    callback(payload);
+    callback(payload, done);
   };
 }
 
-function report(job) {
-  return (err) => {
-    if (err) {
-      job.reportError();
-    } else {
-      job.workComplete('ok');
-    }
-  };
-}
-
-worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'addRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, report(job));
+  daywork.addMessage({ userId, message, createdAt }, done);
 }));
 
-worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'cancelRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, report(job));
+  daywork.addMessage({ userId, message, createdAt }, done);
 }));
 
-worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, createdAt, job }) => {
+worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'paidRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, report(job));
+  daywork.addMessage({ userId, message, createdAt }, done());
 }));
 
-worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, createdAt, job }) => {
+worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, createdAt }, done) => {
   let message = {
     type: 'requestJob',
     content: { userId, jobId }
@@ -65,13 +60,15 @@ worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, creat
   async.waterfall([
     (next) => daywork.getJob(jobId, next),
     ({ userId }, next) => daywork.addMessage({ userId, message, createdAt }, next)
-  ], report(job));
+  ], done);
 }));
 
-worker.addFunction('daywork.joinJob', wrapperCallback(({ userId, jobId, createdAt, job }) => {
+worker.addFunction('daywork.joinJob', wrapperCallback(({ userId, jobId, createdAt }, done) => {
   let message = {
     type: 'joinJob',
     content: { jobId }
   };
-  daywork.addMessage({ userId, message, createdAt }, report(job));
+  daywork.addMessage({ userId, message, createdAt }, done);
 }));
+
+export default worker;
