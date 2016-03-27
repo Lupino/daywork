@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes, cloneElement } from 'react';
 
 import { Drawer, Menu, MenuItem, MenuDivider, Table } from 'react-toolbox';
 import style from './style';
@@ -10,7 +10,8 @@ export default class Dashboard extends Component {
   };
 
   render() {
-    const child = cloneElement(this.props.children, { ...this.props });
+    const { children, ...props } = this.props;
+    const child = cloneElement(children, { ...props });
     return (
       <section>
         <div className={style['container-left']}>

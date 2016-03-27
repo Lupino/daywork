@@ -8,7 +8,8 @@ import WapperApp from '../modules/WapperApp';
 
 class App extends Component {
   render() {
-    const child = cloneElement(this.props.children, { ...this.props });
+    const { children, ...props } = this.props;
+    const child = cloneElement(children, { ...props });
 
     const { location } = this.props;
     const isCurrent = (pathname) => {
