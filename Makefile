@@ -7,6 +7,8 @@ DIST=build/
 
 APPJS=$(DIST)public/static/app.js
 
+PUBLISHHOST=asiaroad
+
 all: dist
 
 $(DIST): $(SRC)
@@ -31,9 +33,18 @@ clean:
 	rm -r $(DIST)
 
 rsync: dist
-	rsync -avz --exclude=public/upload --exclude=node_modules --delete $(DIST) core@huabot.com:app/daywork
+	rsync -avz --exclude=public/upload --exclude=node_modules --delete $(DIST) $(PUBLISHHOST):/data/apps/yiqilaila.ml
 
 publish: rsync
-	ssh core@huabot.com docker build -t daywork app/daywork
-	ssh core@huabot.com sudo systemctl restart daywork
-	ssh core@huabot.com sudo systemctl restart daywork-worker
+	ssh asiaroad docker build -t yiqilaila /data/apps/yiqilaila.ml
+
+restart:
+	ssh $(PUBLISHHOST) docker stop yiqilaila
+	ssh $(PUBLISHHOST) docker rm yiqilaila
+	ssh $(PUBLISHHOST) docker run -d \
+		--name yiqilaila \
+		-e TMPDIR=/src/public/upload \
+		-v /data/conf/yiqilaila/config.json:/src/config.json \
+		-v /data/files/yiqilaila:/src/public/upload \
+		-p 192.168.42.1:4000:3000 \
+		yiqilaila
