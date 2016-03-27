@@ -44,7 +44,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/management/addService', requireAdmin(), (req, res) => {
     let service = req.body;
-    if (!job.userId) {
+    if (!service.userId) {
       return sendJsonResponse(res, '请选择发布用户');
     }
     if (!service.title) {
