@@ -165,8 +165,6 @@ export default class Balance extends Component {
             </List>
           <CardActions>
             <Button label='查看我的工作' raised onClick={this.handleShowWorks}/>
-            <Button label='充值' raised onClick={this.handleShowPayment} />
-            <Button label='提现' raised onClick={this.handleShowDrawMoney} />
           </CardActions>
         </Card>
         <List selectable={false} ripple>
