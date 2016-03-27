@@ -8,7 +8,6 @@ export default class PasswordInput extends Component {
     const value = props.value || '';
     this.state = {
       passwd: value || '',
-      passwdShadow: value.replace(/./g, '*'),
       showPasswd: false
     };
   }
@@ -17,35 +16,24 @@ export default class PasswordInput extends Component {
     this.setState({ showPasswd: !this.state.showPasswd });
   };
 
-  handlePasswdChange = (value) => {
-    let { passwdShadow, passwd, showPasswd } = this.state;
-    if (showPasswd) {
-      passwd = value;
-    } else if (passwdShadow.length > value.length) {
-      passwd = passwd.substr(0, value.length);
-    } else {
-      let changed = value.substr(passwdShadow.length, value.length);
-      passwd = passwd + changed;
-    }
-
-    passwdShadow = passwd.replace(/./g, '*');
-    this.setState({ passwd, passwdShadow });
+  handlePasswdChange = (passwd) => {
+    this.setState({ passwd });
     if (this.props.onChange) {
       this.props.onChange(passwd);
     }
   };
 
   render() {
-    const { passwd, passwdShadow, showPasswd } = this.state;
-    const { value, onChange, ...props } = this.props;
+    const { passwd, showPasswd } = this.state;
+    const { value, type, onChange, ...props } = this.props;
     return (
       <div className={style['button-input-group']}>
         <Input
-          value={showPasswd ? passwd : passwdShadow}
+          value={ passwd }
+          type={ showPasswd ? 'text' : 'password'}
           {...props}
           onChange={this.handlePasswdChange}
         />
-
         <IconButton
           ripple
           accent={showPasswd}
