@@ -1,11 +1,12 @@
-import Daywork from './daywork';
 import async from 'async';
 
-let daywork = new Daywork();
+import { Message, Job } from './models';
 
-class Worker {
+export class Worker extends Object {
   constructor() {
+    super();
     this.funcs = {};
+    this.daywork = null;
   }
   addFunction(funcName, callback) {
     this.funcs[funcName] = callback;
@@ -16,11 +17,20 @@ class Worker {
   }
 }
 
-const worker = new Worker();
+function addMessage({ userId, message, createdAt }, callback) {
+  let msg = new Message({ userId, message, createdAt });
+  msg.save((err, msg) => callback(err, msg));
+}
+function  getJob(jobId, callback) {
+  let query = { jobId: jobId, status: { $nin: [ 'Deleted' ] } };
+  Job.findOne(query, (err, job) => callback(err, job));
+}
+
+let worker = new Worker();
 
 function wrapperCallback(callback) {
   return (payload, done) => {
-    let payload = {};
+    payload = payload || {};
     if (payload.createdAt) {
       payload.createdAt = new Date(payload.createdAt);
     }
@@ -33,7 +43,7 @@ worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, cre
     type: 'addRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, done);
+  addMessage({ userId, message, createdAt }, done);
 }));
 
 worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
@@ -41,7 +51,7 @@ worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, 
     type: 'cancelRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, done);
+  addMessage({ userId, message, createdAt }, done);
 }));
 
 worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
@@ -49,7 +59,7 @@ worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, cr
     type: 'paidRecord',
     content: { recordId }
   };
-  daywork.addMessage({ userId, message, createdAt }, done());
+  addMessage({ userId, message, createdAt }, done());
 }));
 
 worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, createdAt }, done) => {
@@ -58,8 +68,8 @@ worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, creat
     content: { userId, jobId }
   };
   async.waterfall([
-    (next) => daywork.getJob(jobId, next),
-    ({ userId }, next) => daywork.addMessage({ userId, message, createdAt }, next)
+    (next) => getJob(jobId, next),
+    ({ userId }, next) => addMessage({ userId, message, createdAt }, next)
   ], done);
 }));
 
@@ -68,7 +78,7 @@ worker.addFunction('daywork.joinJob', wrapperCallback(({ userId, jobId, createdA
     type: 'joinJob',
     content: { jobId }
   };
-  daywork.addMessage({ userId, message, createdAt }, done);
+  addMessage({ userId, message, createdAt }, done);
 }));
 
 export default worker;
