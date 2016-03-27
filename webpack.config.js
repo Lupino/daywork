@@ -10,6 +10,9 @@ module.exports = {
     app: ['webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
     './app/index'],
+    management: ['webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './app/management/index'],
     vendors: [
       'react',
       'react-toolbox',
