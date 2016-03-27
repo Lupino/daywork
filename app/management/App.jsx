@@ -23,12 +23,27 @@ class App extends Component {
         href: '#/',
         label: '控制面板',
         className: `${navStyle.link} ${style['color-white']} ${isCurrent('/dashboard')}`
+      },
+      {
+        href: '#/users',
+        label: '用户管理',
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/users')}`
+      },
+      {
+        href: '#/jobs',
+        label: '职位管理',
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/jobs')}`
+      },
+      {
+        href: '#/services',
+        label: '服务管理',
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/services')}`
       }
     ];
     return (
       <div>
         <AppBar fixed flat className={`${style['app-bar']} ${style['not-print']}`}>
-          <a href='#'> 一起来啦 </a>
+          <a href='#'> 一起来啦 管理中心</a>
           <Navigation className={style.menu} type='horizontal' routes={links} />
         </AppBar>
         <div className={style.container}>
