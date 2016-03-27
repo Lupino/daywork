@@ -122,6 +122,16 @@ export default class UserList extends Component {
     router.push(`/users/${user.userId}/addJob`);
   }
 
+  handleShowAddService = () => {
+    const { selected, source } = this.state;
+    if (selected.length === 0) {
+      return;
+    }
+    const user = source[selected[0]];
+    const { router } = this.context;
+    router.push(`/users/${user.userId}/addService`);
+  }
+
   loadUserList(page) {
     page = page || 1;
     const { notify } = this.props;
@@ -168,6 +178,7 @@ export default class UserList extends Component {
       { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditUser },
       { label: '修改密码', onClick: this.handleShow.bind(this, 'showPasswordForm'), raised: true, disabled: selected.length !== 1 },
       { label: '添加职位', raised: true, disabled: selected.length !== 1, onClick: this.handleShowAddJob },
+      { label: '添加服务', raised: true, disabled: selected.length !== 1, onClick: this.handleShowAddService },
     ]
     return (
       <section>
