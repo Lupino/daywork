@@ -1,32 +1,23 @@
 import React, { Component, cloneElement, PropTypes } from 'react';
 import {
-  App as ToolboxApp,
   AppBar,
   Navigation,
   Button,
   Drawer,
-  Menu, MenuItem, MenuDivider,
-  Snackbar, Dialog
+  Menu, MenuItem, MenuDivider
 } from 'react-toolbox';
 import style from './style';
 import { getProfile, getCategories } from './api';
 import store from './modules/store';
+import WapperApp from './modules/WapperApp';
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       logIn: false,
       profile: {},
-      categories: {},
-      drawerActive: false,
-      snackbarActive: false,
-      snackbarLabel: '',
-      snackbarCallback: null,
-      diaTitle: '',
-      diaActive: false,
-      diaActions: [],
-      diaChildren: null
+      categories: {}
     };
   }
 
@@ -64,88 +55,6 @@ export default class App extends Component {
     return this.state.categories;
   };
 
-  handleSnackbarClick = () => {
-    const { snackbarCallback } = this.state;
-    if ( snackbarCallback ) {
-      snackbarCallback();
-    }
-    this.setState({ snackbarActive: false, snackbarCallback: null });
-  };
-
-  handleSnackbarTimeout = () => {
-    const { snackbarCallback } = this.state;
-    if ( snackbarCallback ) {
-      snackbarCallback();
-    }
-    this.setState({ snackbarActive: false, snackbarCallback: null });
-  };
-
-  handleShowSnackbar = (snackbarLabel, snackbarCallback) => {
-    this.setState({ snackbarActive: true, snackbarLabel, snackbarCallback })
-  };
-
-  handleDiaClose = () => {
-    this.setState( { diaActive: false } );
-  };
-
-  handleDiaAlert = ({ message, title }, callback) => {
-    const diaActive = true;
-    const diaActions = [
-      {
-        label: '确定',
-        raised: true,
-        onClick: () => {
-          callback && callback();
-          this.handleDiaClose();
-        }
-      }
-    ];
-    const diaChildren = <p> {message} </p>;
-    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  };
-
-  handleDiaConfirm = ({ message, title, onConfirm, onCancel }, callback) => {
-    const diaActive = true;
-    const diaActions = [
-      {
-        label: '确定',
-        raised: true,
-        onClick: () => {
-          onConfirm && onConfirm();
-          callback && callback(true);
-          this.handleDiaClose();
-        }
-      },
-      {
-        label: '取消',
-        raised: true,
-        onClick: () => {
-          onCancel && onCancel();
-          callback && callback(false);
-          this.handleDiaClose();
-        }
-      }
-    ];
-    const diaChildren = <p> {message} </p>;
-    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  };
-
-  handleDialog = ({ title, children, actions }) => {
-    const diaActive = true;
-    const diaActions = actions.map(( action ) => {
-      const _onClick = action.onClick;
-      action.onClick = () => {
-        const ret = _onClick ? _onClick.apply(null, arguments) : null;
-        if (ret !== false) {
-          this.handleDiaClose();
-        }
-      }
-      return action;
-    });
-    const diaChildren = children;
-    this.setState( { diaTitle: title, diaActions, diaChildren, diaActive } );
-  };
-
   handleGoto = (route) => {
     const { router } = this.context;
     router.push(route);
@@ -160,7 +69,6 @@ export default class App extends Component {
       } else {
         const uneedAuth = /about|signin|signup|problem|reset_password|help|job_info|service_info/;
         const pathname = this.props.location.pathname;
-        console.log(this.props.location);
         if (!uneedAuth.exec(pathname) && pathname !== '/') {
           this.handleGoto('signin?next=' + pathname);
         }
@@ -183,18 +91,13 @@ export default class App extends Component {
   };
 
   render() {
-    const { drawerActive, snackbarActive, snackbarLabel, logIn } = this.state;
-    const { diaTitle, diaActive, diaActions, diaChildren } = this.state;
+    const { drawerActive, logIn } = this.state;
     let child = cloneElement(this.props.children, {
       onLogin: this.handleLogIn,
       onProfileLoaded: this.handleProfileLoaded,
       onProfileUpdated: this.handleProfileUpdated,
       getProfile: this.handleGetProfile,
       getCategories: this.handleGetCategories,
-      notify: this.handleShowSnackbar,
-      alert: this.handleDiaAlert,
-      confirm: this.handleDiaConfirm,
-      dialog: this.handleDialog,
       goto: this.handleGoto,
       isLogIn: logIn
     });
@@ -218,12 +121,12 @@ export default class App extends Component {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }
     return (
-      <ToolboxApp>
+      <section>
         <AppBar fixed flat className={style['app-bar']}>
           <Button icon='list' floating mini ripple
             onClick={this.handleToggle}
           />
-          <div className={style['app-bar-text']}> {child.type.title || '每日工作'} </div>
+          <div className={style['app-bar-text']}> {child.type.title || '一起来啦'} </div>
           <Navigation />
         </AppBar>
         <Drawer active={drawerActive} onOverlayClick={this.handleToggle}>
@@ -239,20 +142,7 @@ export default class App extends Component {
         <div className={style.container}>
          {child}
         </div>
-        <Snackbar
-          action='关闭'
-          active={snackbarActive}
-          icon='info'
-          label={snackbarLabel}
-          timeout={2000}
-          onClick={this.handleSnackbarClick}
-          onTimeout={this.handleSnackbarTimeout}
-          type='cancel'
-        />
-        <Dialog actions={diaActions} active={diaActive} title={diaTitle || '提示'} onOverlayClick={this.handleDiaClose}>
-          {diaChildren}
-        </Dialog>
-      </ToolboxApp>
+      </section>
     );
   }
 }
@@ -260,3 +150,5 @@ export default class App extends Component {
 App.contextTypes = {
   router: PropTypes.object
 }
+
+export default WapperApp(App);
