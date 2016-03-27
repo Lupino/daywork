@@ -6,6 +6,7 @@ import config from './config';
 import Daywork from './lib/daywork';
 import expressCommon from './lib/express_common';
 import api from './api';
+import management from './management';
 import cors from 'cors';
 
 var app = module.exports = express();
@@ -28,3 +29,4 @@ app.use(daywork.auth('/auth'));
 expressCommon(app, daywork);
 
 api(app, daywork);
+management(app, daywork);

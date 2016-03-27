@@ -77,6 +77,24 @@ export default class extends Object {
     });
   }
 
+  getUsers(query, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    options = options || {};
+
+    if (!options.sort) {
+      options.sort = 'field -createdAt';
+    }
+    User.find(query, null, options, (err, users) => callback(err, users));
+  }
+
+  countUser(query, callback) {
+    User.count(query, (err, counter) => callback(err, counter));
+  }
+
   changePasswd(pwds, callback) {
     var hash = hashedPassword(pwds.passwd);
     User.findOneAndUpdate({ phoneNumber: pwds.phoneNumber },
