@@ -102,6 +102,16 @@ export default class UserList extends Component {
     this.setState({[key]: true, phoneNumber: user.phoneNumber});
   }
 
+  handleShowEditUser = () => {
+    const { selected, source } = this.state;
+    if (selected.length === 0) {
+      return;
+    }
+    const user = source[selected[0]];
+    const { router } = this.context;
+    router.push(`/users/edit/${user.userId}`);
+  }
+
   loadUserList(page) {
     page = page || 1;
     const { notify } = this.props;
@@ -145,7 +155,7 @@ export default class UserList extends Component {
     const { currentPage, total, limit } = this.state;
     const { showPasswordForm, phoneNumber } = this.state;
     const actions = [
-      { label: '查看详情', raised: true, disabled: selected.length !== 1 },
+      { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditUser },
       { label: '修改密码', onClick: this.handleShow.bind(this, 'showPasswordForm'), raised: true, disabled: selected.length !== 1 }
     ]
     return (
