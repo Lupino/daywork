@@ -44,7 +44,7 @@ export default class AddUser extends Component {
         return;
       }
       alert('修改成功');
-      router.push('/users');
+      router.goBack();
     });
   };
 

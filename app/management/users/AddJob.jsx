@@ -58,6 +58,7 @@ export default class AddJob extends Component {
       if (err) {
         return notify(err);
       }
+      alert('添加职位成功')
       router.goBack();
     });
   };
