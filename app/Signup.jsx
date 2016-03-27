@@ -73,6 +73,9 @@ export default class Signup extends Component {
           checkError.phoneNumber = `手机号码已经被注册了`;
           this.setState({ checkError });
         }
+        if (err.message) {
+          alert(err.message);
+        }
         return;
       }
       signinForToken({ userName: phoneNumber, passwd }, (err, token) => {
