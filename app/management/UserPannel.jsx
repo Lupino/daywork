@@ -10,7 +10,7 @@ export default class Dashboard extends Component {
   };
 
   render() {
-    const child = this.props.children;
+    const child = cloneElement(this.props.children, { ...this.props });
     return (
       <section>
         <div className={style['container-left']}>
