@@ -28,3 +28,8 @@ export function updateUser({ ...user }, callback) {
   request.post(getUri('/api/management/updateUser'), { ...user },
                wapperCallback(callback));
 }
+
+export function updatePassword({ phoneNumber, passwd }, callback) {
+  request.post(getUri('/api/management/updatePassword'), { phoneNumber, passwd },
+               wapperCallback(callback));
+}

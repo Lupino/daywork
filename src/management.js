@@ -67,4 +67,17 @@ export default function(app, daywork) {
                        (err, user) => sendJsonResponse(res, err, { user: user }));
   });
 
+  app.post(apiPrefix + '/management/updatePassword', requireAdmin(), (req, res) => {
+    let pwds = req.body;
+    const phoneNumber = pwds.phoneNumber;
+
+    if (!phoneNumber) {
+      return sendJsonResponse(res, '请选择用户');
+    }
+    if (!pwds.passwd) {
+      return sendJsonResponse(res, '请输入密码');
+    }
+    daywork.changePasswd(pwds,
+                       (err, user) => sendJsonResponse(res, err, { user }));
+  });
 }
