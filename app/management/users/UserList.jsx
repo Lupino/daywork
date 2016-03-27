@@ -86,7 +86,7 @@ export default class UserList extends Component {
 
   handlePagenavClick = (page) => {
     const { router } = this.context;
-    router.push(`/dashboard/p/${page}`);
+    router.push(`/users/p/${page}`);
   };
 
   handleClose = () => {
