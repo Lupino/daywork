@@ -16,6 +16,7 @@ var UserSchema = new Schema({
   phoneVerified: { type: Boolean, default: false },
   passwd: String,
   avatar: Mixed,
+  roles: String,
   unpaid: { type: Number, min: 0, default: 0 },
   paidOnline: { type: Number, min: 0, default: 0 },
   paidOffline: { type: Number, min: 0, default: 0 },
