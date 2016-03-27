@@ -11,6 +11,7 @@ import appConfig from './src/config';
 import Daywork from './src/lib/daywork';
 import expressCommon from './src/lib/express_common';
 import api from './src/api';
+import management from './src/management';
 import cors from 'cors';
 
 function setup(app) {
@@ -27,6 +28,7 @@ function setup(app) {
   app.use(daywork.auth('/auth'));
   expressCommon(app, daywork);
   api(app, daywork);
+  management(app, daywork);
   app.use(errorHandler());
 }
 
