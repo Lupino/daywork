@@ -6,6 +6,7 @@ import UserPannel from './UserPannel';
 import UserList from './users/UserList';
 import AddUser from './users/AddUser';
 import EditUser from './users/EditUser';
+import AddJob from './users/AddJob';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -17,6 +18,7 @@ var router = module.exports = (
         <Route path="/users/p/:page" component={UserList} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:userId" component={EditUser} />
+        <Route path="/users/:userId/addJob" component={AddJob} />
       </Route>
       <Route path="/jobs" component={Dashboard} />
       <Route path="/services" component={Dashboard} />
