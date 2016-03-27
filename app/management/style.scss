@@ -26,4 +26,20 @@
   margin: 70px 10px 0 10px;
   word-wrap: break-word;
   word-break: break-all;
+  position: relative;
+}
+
+.container-left {
+  position: fixed;
+  width: 250px;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+  height: 100%;
+  .left-menu {
+    width: 100%;
+  }
+}
+
+.container-right {
+  margin-left: 260px;
 }
