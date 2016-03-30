@@ -223,6 +223,9 @@ export default class extends Object {
   requireLogin() {
     return (req, res, next) => {
       if (req.currentUser) {
+        if (req.currentUser.roles && ~req.currentUser.roles.indexOf('admin')) {
+          req.isAdmin = true;
+        }
         return next();
       }
       return res.json({ err: 401, msg: 'Unauthorized' });

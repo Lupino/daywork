@@ -213,7 +213,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/jobs/:jobId/publish', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.publishJob(req.job.jobId,
                          (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
@@ -222,7 +222,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/jobs/:jobId/finish', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.finishJob(req.job.jobId,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
@@ -231,7 +231,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/jobs/:jobId/delete', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.deleteJob(req.job.jobId,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
@@ -240,7 +240,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/jobs/:jobId/update', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.updateJob(req.job.jobId, req.body,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
@@ -631,7 +631,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/services/:serviceId/publish', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.publishService(req.service.serviceId,
                          (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
@@ -640,7 +640,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/services/:serviceId/finish', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.finishService(req.service.serviceId,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
@@ -649,7 +649,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/services/:serviceId/delete', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.deleteService(req.service.serviceId,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
@@ -658,7 +658,7 @@ export default function(app, daywork) {
   });
 
   app.post(apiPrefix + '/services/:serviceId/update', requireLogin(), (req, res) => {
-    if (req.isOwner) {
+    if (req.isOwner || req.isAdmin) {
       daywork.updateService(req.service.serviceId, req.body,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
