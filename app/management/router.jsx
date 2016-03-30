@@ -11,6 +11,9 @@ import AddService from './users/AddService';
 import JobPannel from './JobPannel';
 import JobList from './jobs/JobList';
 import EditJob from './jobs/EditJob';
+import ServicePannel from './ServicePannel';
+import ServiceList from './services/ServiceList';
+import EditService from './services/EditService';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -30,7 +33,11 @@ var router = module.exports = (
         <Route path="/jobs/p/:page" component={JobList} />
         <Route path="/jobs/edit/:jobId" component={EditJob} />
       </Route>
-      <Route path="/services" component={Dashboard} />
+      <Route path="/services" component={ServicePannel}>
+        <IndexRoute component={ServiceList} />
+        <Route path="/services/p/:page" component={ServiceList} />
+        <Route path="/services/edit/:serviceId" component={EditService} />
+      </Route>
     </Route>
   </Router>
 );
