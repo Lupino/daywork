@@ -10,7 +10,7 @@ import AddJob from './users/AddJob';
 import AddService from './users/AddService';
 import JobPannel from './JobPannel';
 import JobList from './jobs/JobList';
-import EditJob from '../jobs/EditJob';
+import EditJob from './jobs/EditJob';
 
 var router = module.exports = (
   <Router history={hashHistory}>
