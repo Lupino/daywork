@@ -1,7 +1,12 @@
 @import "~react-toolbox/lib/commons";
 
+.app {
+  max-width: 610px;
+}
+
 .app-bar {
   height: 60px;
+  max-width: 610px;
 }
 
 .app-bar-text {
@@ -56,6 +61,7 @@ ul li .right {
   padding: 10px;
   img {
     max-width: 100%;
+    max-height: 100%;
   }
 }
 

@@ -6,7 +6,7 @@ import Dropzone from 'react-dropzone';
 
 import style from '../style';
 import { createService, upload, imageRoot } from '../api';
-import { getUnit } from './utils';
+import { getUnit } from '../modules/utils';
 import Categories from '../modules/dropdown/Categories';
 import Cities from '../modules/dropdown/Cities';
 

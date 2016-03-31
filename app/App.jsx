@@ -121,7 +121,7 @@ class App extends Component {
       menus.push(<MenuItem value='signin' icon='account_box' caption='注册/登录' key='signin' />);
     }
     return (
-      <section>
+      <section className={style.app}>
         <AppBar fixed flat className={style['app-bar']}>
           <Button icon='list' floating mini ripple
             onClick={this.handleToggle}

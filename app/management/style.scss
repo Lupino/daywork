@@ -43,3 +43,10 @@
 .container-right {
   margin-left: 260px;
 }
+
+div[data-name="edit-job"], div[data-name="edit-service"] {
+  max-width: 600px;
+  button {
+    width: auto;
+  }
+}

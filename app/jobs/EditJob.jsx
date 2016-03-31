@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Switch,
   List, ListItem, ListSubHeader, ListCheckbox, ListDivider
 } from 'react-toolbox';
@@ -9,7 +9,7 @@ import { getJob, updateJob, upload, imageRoot } from '../api';
 import Categories from '../modules/dropdown/Categories';
 import Cities from '../modules/dropdown/Cities';
 
-export default class NewJob extends Component {
+export default class EditJob extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +30,7 @@ export default class NewJob extends Component {
     const { params, notify } = this.props;
     const jobId = params.jobId;
     const { title, summary, image, category, city, address } = this.state;
+    const { router } = this.context;
 
     let hasError = false;
     let errors = {};
@@ -47,7 +48,7 @@ export default class NewJob extends Component {
       if (err) {
         return notify(err);
       }
-      notify('成功更新职位');
+      notify('成功更新职位', () => router.goBack());
     });
   };
   handleDrop = (files) => {
@@ -77,7 +78,7 @@ export default class NewJob extends Component {
     const { title, summary, image, category, city, address, errors } = this.state;
     const categories = this.props.getCategories('job');
     return (
-      <div>
+      <div data-name='edit-job'>
         <List selectable ripple>
           <li>
             <Input label="职位的标题"
@@ -131,4 +132,6 @@ export default class NewJob extends Component {
   }
 }
 
-NewJob.title = '编辑职位';
+EditJob.contextTypes = {
+  router: PropTypes.object
+}

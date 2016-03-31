@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Input, Button, Switch,
   List, ListItem, ListSubHeader, ListCheckbox, ListDivider
 } from 'react-toolbox';
@@ -9,7 +9,7 @@ import { getService, updateService, upload, imageRoot } from '../api';
 import Categories from '../modules/dropdown/Categories';
 import Cities from '../modules/dropdown/Cities';
 
-export default class NewService extends Component {
+export default class EditService extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +30,7 @@ export default class NewService extends Component {
     const { params, notify } = this.props;
     const serviceId = params.serviceId;
     const { title, summary, image, category, city, address } = this.state;
+    const { router } = this.context;
 
     let hasError = false;
     let errors = {};
@@ -47,7 +48,7 @@ export default class NewService extends Component {
       if (err) {
         return notify(err);
       }
-      notify('成功更新服务');
+      notify('成功更新服务', () => router.goBack());
     });
   };
   handleDrop = (files) => {
@@ -77,7 +78,7 @@ export default class NewService extends Component {
     const { title, summary, image, category, city, address, errors } = this.state;
     const categories = this.props.getCategories('service');
     return (
-      <div>
+      <div data-name='edit-service'>
         <List selectable ripple>
           <li>
             <Input label="服务的标题"
@@ -131,4 +132,6 @@ export default class NewService extends Component {
   }
 }
 
-NewService.title = '编辑服务';
+EditService.contextTypes = {
+  router: PropTypes.object
+}
