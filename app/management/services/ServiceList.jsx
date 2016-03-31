@@ -23,9 +23,7 @@ export default class ServiceList extends Component {
     source: [],
     limit: 10,
     currentPage: 1,
-    loaded: false,
-    showPasswordForm: false,
-    phoneNumber: ''
+    loaded: false
   };
 
   handleSelect = (selected) => {
@@ -37,19 +35,6 @@ export default class ServiceList extends Component {
     router.push(`/services/p/${page}`);
   };
 
-  handleClose = () => {
-    this.setState({showPasswordForm: false, selected: []});
-  };
-
-  handleShow(key) {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const service = source[selected[0]];
-    this.setState({[key]: true, phoneNumber: service.phoneNumber});
-  }
-
   handleShowEditService = () => {
     const { selected, source } = this.state;
     if (selected.length === 0) {
@@ -58,26 +43,6 @@ export default class ServiceList extends Component {
     const service = source[selected[0]];
     const { router } = this.context;
     router.push(`/services/edit/${service.serviceId}`);
-  }
-
-  handleShowAddService = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const service = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/services/${service.serviceId}/addService`);
-  }
-
-  handleShowAddService = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const service = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/services/${service.serviceId}/addService`);
   }
 
   loadServiceList(page) {
@@ -125,7 +90,6 @@ export default class ServiceList extends Component {
 
     const { source, selected } = this.state;
     const { currentPage, total, limit } = this.state;
-    const { showPasswordForm, phoneNumber } = this.state;
     const actions = [
       { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditService },
     ]

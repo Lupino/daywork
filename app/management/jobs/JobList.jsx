@@ -24,9 +24,7 @@ export default class JobList extends Component {
     source: [],
     limit: 10,
     currentPage: 1,
-    loaded: false,
-    showPasswordForm: false,
-    phoneNumber: ''
+    loaded: false
   };
 
   handleSelect = (selected) => {
@@ -38,19 +36,6 @@ export default class JobList extends Component {
     router.push(`/jobs/p/${page}`);
   };
 
-  handleClose = () => {
-    this.setState({showPasswordForm: false, selected: []});
-  };
-
-  handleShow(key) {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const job = source[selected[0]];
-    this.setState({[key]: true, phoneNumber: job.phoneNumber});
-  }
-
   handleShowEditJob = () => {
     const { selected, source } = this.state;
     if (selected.length === 0) {
@@ -59,26 +44,6 @@ export default class JobList extends Component {
     const job = source[selected[0]];
     const { router } = this.context;
     router.push(`/jobs/edit/${job.jobId}`);
-  }
-
-  handleShowAddJob = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const job = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/jobs/${job.jobId}/addJob`);
-  }
-
-  handleShowAddService = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const job = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/jobs/${job.jobId}/addService`);
   }
 
   loadJobList(page) {
@@ -129,7 +94,6 @@ export default class JobList extends Component {
 
     const { source, selected } = this.state;
     const { currentPage, total, limit } = this.state;
-    const { showPasswordForm, phoneNumber } = this.state;
     const actions = [
       { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditJob },
     ]
