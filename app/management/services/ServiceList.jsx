@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Table, ProgressBar, Navigation, Dialog, Input } from 'react-toolbox';
-import { getServices } from '../../api';
+import { getServices, deleteService, publishService } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
 import { prettyTime, getCityName, getUnit } from '../../modules/utils';
+import async from 'async';
 
 const ServiceModel = {
   serviceId: { type: String, title: '#' },
@@ -43,6 +44,84 @@ export default class ServiceList extends Component {
     const service = source[selected[0]];
     const { router } = this.context;
     router.push(`/services/edit/${service.serviceId}`);
+  }
+
+  handleDeleteService = () => {
+    if (!this.checkAllDraft()) {
+      alert('请只选择草稿的服务');
+      return;
+    }
+    const self = this;
+    const { selected, source } = this.state;
+    const { confirm, notify } = this.props;
+    confirm({ title: '确定删除？', message: '删除后将无法恢复' }, (del) => {
+      if (!del) return;
+      async.each(selected, (idx, done) => {
+        const service = source[idx];
+        const { serviceId } = service;
+        deleteService({ serviceId }, done);
+      }, (err) => {
+        if (err) {
+          notify(err)
+        }
+        self.setState({ selected: [] });
+        self.componentDidMount();
+      });
+    });
+  };
+
+  handlePublishService = () => {
+    if (!this.checkAllDraft()) {
+      alert('请只选择草稿的服务');
+      return;
+    }
+    const self = this;
+    const { selected, source } = this.state;
+    const { confirm, notify } = this.props;
+    confirm({ title: '确定发布？', message: '发布后不能回退' }, (publish) => {
+      if (!publish) return;
+      async.each(selected, (idx, done) => {
+        const service = source[idx];
+        const { serviceId } = service;
+        publishService({ serviceId }, done);
+      }, (err) => {
+        if (err) {
+          notify(err)
+        }
+        self.setState({ selected: [] });
+        self.componentDidMount();
+      });
+    });
+  };
+
+  checkAllDraft() {
+    const { selected, source } = this.state;
+    const len = selected.length;
+    if (len === 0) {
+      return false;
+    }
+    for (let i=0; i<len;i++) {
+      const service = source[selected[i]];
+      if (service.status !== 'Draft') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  checkAllPublish() {
+    const { selected, source } = this.state;
+    const len = selected.length;
+    if (len === 0) {
+      return false;
+    }
+    for (let i=0; i<len;i++) {
+      const service = source[selected[i]];
+      if (service.status !== 'Publish') {
+        return false;
+      }
+    }
+    return true;
   }
 
   loadServiceList(page) {
@@ -92,6 +171,8 @@ export default class ServiceList extends Component {
     const { currentPage, total, limit } = this.state;
     const actions = [
       { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditService },
+      { label: '发布', raised: true, disabled: !this.checkAllDraft(), onClick: this.handlePublishService },
+      { label: '删除', raised: true, accent: true, disabled: !this.checkAllDraft(), onClick: this.handleDeleteService },
     ]
     return (
       <section>
