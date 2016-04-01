@@ -688,7 +688,30 @@ export default function(app, daywork) {
                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
-  app.get(apiPrefix + '/categories/?', (req, res) => {
-    sendJsonResponse(res, null, categories);
+  app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
+    const { categoryType } = req.params;
+    daywork.getCategories(categoryType, (err, categories) => {
+      sendJsonResponse(res, err, { categories });
+    });
+  });
+
+  app.get(apiPrefix + '/categories/:categoryType/:categoryId?', (req, res) => {
+    const { categoryType, categoryId } = req.params;
+    daywork.getCategory({ categoryId, categoryType }, (err, category) => {
+      sendJsonResponse(res, err, { category });
+    });
+  });
+
+  app.get(apiPrefix + '/cities/?', (req, res) => {
+    daywork.getCities((err, cities) => {
+      sendJsonResponse(res, err, { cities });
+    });
+  });
+
+  app.get(apiPrefix + '/cities/:cityId', (req, res) => {
+    const { cityId } = req.params;
+    daywork.getCity(cityId, (err, city) => {
+      sendJsonResponse(res, err, { city });
+    });
   });
 }

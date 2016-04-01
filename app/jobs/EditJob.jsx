@@ -76,7 +76,6 @@ export default class EditJob extends Component {
   }
   render() {
     const { title, summary, image, category, city, address, errors } = this.state;
-    const categories = this.props.getCategories('job');
     return (
       <div data-name='edit-job'>
         <List selectable ripple>
@@ -98,7 +97,7 @@ export default class EditJob extends Component {
           <li>
             <Categories
               label="分类"
-              categories={categories}
+              type="job"
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
           </li>

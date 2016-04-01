@@ -61,5 +61,11 @@ export {
 } from './service';
 
 export {
-  getCategories
+  getCategories,
+  getCategory
 } from './category';
+
+export {
+  getCities,
+  getCity
+} from './city';

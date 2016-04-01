@@ -80,4 +80,59 @@ export default function(app, daywork) {
     daywork.changePasswd(pwds,
                        (err, user) => sendJsonResponse(res, err, { user }));
   });
+
+  app.post(apiPrefix + '/management/addCity', requireAdmin(), (req, res) => {
+    const city = req.body;
+    if (!city.cityId) {
+      return sendJsonResponse(res, 'cityId is required');
+    }
+    if (!city.cityName) {
+      return sendJsonResponse(res, 'cityName is required');
+    }
+    daywork.addCity(city, (err, city) => {
+      sendJsonResponse(res, err, { city });
+    });
+  });
+
+  app.post(apiPrefix + '/management/updateCity', requireAdmin(), (req, res) => {
+    const city = req.body;
+    if (!city.cityId) {
+      return sendJsonResponse(res, 'cityId is required');
+    }
+    if (!city.cityName) {
+      return sendJsonResponse(res, 'cityName is required');
+    }
+    daywork.updateCity(city, (err, city) => {
+      sendJsonResponse(res, err, { city });
+    });
+  });
+
+  app.post(apiPrefix + '/management/addCategory', requireAdmin(), (req, res) => {
+    const category = req.body;
+    if (!category.categoryId) {
+      return sendJsonResponse(res, 'categoryId is required');
+    }
+    if (!category.categoryName) {
+      return sendJsonResponse(res, 'categoryName is required');
+    }
+    if (!category.categoryType) {
+      return sendJsonResponse(res, 'categoryType is required');
+    }
+    daywork.addCategory(category, (err, category) => {
+      sendJsonResponse(res, err, { category });
+    });
+  });
+
+  app.post(apiPrefix + '/management/updateCategory', requireAdmin(), (req, res) => {
+    const category = req.body;
+    if (!category.categoryId) {
+      return sendJsonResponse(res, 'categoryId is required');
+    }
+    if (!category.categoryName) {
+      return sendJsonResponse(res, 'categoryName is required');
+    }
+    daywork.updateCategory(category, (err, category) => {
+      sendJsonResponse(res, err, { category });
+    });
+  });
 }

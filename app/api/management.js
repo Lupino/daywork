@@ -33,3 +33,23 @@ export function updatePassword({ phoneNumber, passwd }, callback) {
   request.post(getUri('/api/management/updatePassword'), { phoneNumber, passwd },
                wapperCallback(callback));
 }
+
+export function addCity({ cityId, cityName }, callback) {
+  request.post(getUri('/api/management/addCity'), { cityId, cityName },
+               wapperCallback(callback));
+}
+
+export function updateCity({ cityId, cityName }, callback) {
+  request.post(getUri('/api/management/updateCity'), { cityId, cityName },
+               wapperCallback(callback));
+}
+
+export function addCategory({ categoryId, categoryName, categoryType, icon }, callback) {
+  request.post(getUri('/api/management/addCategory'), { categoryId, categoryName, categoryType, icon },
+               wapperCallback(callback));
+}
+
+export function updateCategory({ categoryId, categoryType, categoryName, icon }, callback) {
+  request.post(getUri('/api/management/updateCategory'), { categoryId, categoryName, categoryType, icon },
+               wapperCallback(callback));
+}

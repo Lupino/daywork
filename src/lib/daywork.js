@@ -16,7 +16,10 @@ import {
   Favorite,
   Message,
   Service,
-  FavoriteService
+  FavoriteService,
+  JobCategory,
+  ServiceCategory,
+  City
 } from './models';
 import { sendJsonResponse } from './util';
 import { uploadPath } from '../config';
@@ -1190,5 +1193,43 @@ export default class extends Object {
   unfavoriteService(userId, serviceId, callback) {
     let query = { userId: userId, serviceId: serviceId };
     FavoriteService.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
+  }
+
+  addCity({ cityName, cityId }, callback) {
+    let cityObj = new City({ cityName, cityId });
+    cityObj.save((err, cityObj) => callback(err, cityObj));
+  }
+
+  updateCity({ cityId, cityName }, callback) {
+    City.findOneAndUpdate({ cityId }, { cityName }, callback);
+  }
+
+  getCities(callback) {
+    City.find({}, (err, cities) => callback(err, cities));
+  }
+
+  getCity(cityId, callback) {
+    City.findOne({ cityId }, (err, city) => callback(err, city));
+  }
+
+  addCategory({ categoryId, categoryName, categoryType, icon }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    let categoryObj = new Category({ categoryName, categoryId, icon });
+    categoryObj.save((err, categoryObj) => callback(err, categoryObj));
+  }
+
+  updateCategory({ categoryId, categoryName, categoryType, icon }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    Category.findOneAndUpdate({ categoryId }, { categoryName, icon }, callback);
+  }
+
+  getCategories(categoryType, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    Category.find({}, (err, categories) => callback(err, categories));
+  }
+
+  getCategory({ categoryType, categoryId }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    Category.findOne({ categoryId }, (err, category) => callback(err, category));
   }
 }

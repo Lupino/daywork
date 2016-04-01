@@ -5,35 +5,12 @@ import linkStyle from 'react-toolbox/lib/link/style';
 import navStyle from 'react-toolbox/lib/navigation/style';
 
 import WapperApp from '../modules/WapperApp';
-import { getCategories } from '../api';
 import store from '../modules/store';
 
 class App extends Component {
-  state = {
-    categories: {}
-  };
-  handleGetCategories = (key) => {
-    if (key) {
-      return this.state.categories[key];
-    }
-    return this.state.categories;
-  };
-  loadCategories() {
-    getCategories((err, rsp) => {
-      if (!err && rsp) {
-        store.set('categories', rsp);
-        this.setState({ categories: rsp });
-      }
-    });
-  }
-  componentDidMount() {
-    this.loadCategories();
-  }
   render() {
     const { children, ...props } = this.props;
-    const child = cloneElement(children, { ...props,
-      getCategories: this.handleGetCategories,
-    });
+    const child = cloneElement(children, { ...props });
 
     const { location } = this.props;
     const isCurrent = (pathname) => {
@@ -63,6 +40,11 @@ class App extends Component {
         href: '#/services',
         label: '服务管理',
         className: `${navStyle.link} ${style['color-white']} ${isCurrent('/services')}`
+      },
+      {
+        href: '#/cities',
+        label: '城市管理',
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/cities')}`
       }
     ];
     return (
