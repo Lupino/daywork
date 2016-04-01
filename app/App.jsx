@@ -7,7 +7,7 @@ import {
   Menu, MenuItem, MenuDivider
 } from 'react-toolbox';
 import style from './style';
-import { getProfile, getCategories } from './api';
+import { getProfile } from './api';
 import store from './modules/store';
 import WapperApp from './modules/WapperApp';
 
@@ -16,8 +16,7 @@ class App extends Component {
     super(props);
     this.state = {
       logIn: false,
-      profile: {},
-      categories: {}
+      profile: {}
     };
   }
 
@@ -48,13 +47,6 @@ class App extends Component {
     return this.state.profile;
   };
 
-  handleGetCategories = (key) => {
-    if (key) {
-      return this.state.categories[key];
-    }
-    return this.state.categories;
-  };
-
   handleGoto = (route) => {
     const { router } = this.context;
     router.push(route);
@@ -76,18 +68,8 @@ class App extends Component {
     });
   };
 
-  loadCategories() {
-    getCategories((err, rsp) => {
-      if (!err && rsp) {
-        store.set('categories', rsp);
-        this.setState({ categories: rsp });
-      }
-    });
-  }
-
   componentDidMount = () => {
     this.loadProfile();
-    this.loadCategories();
   };
 
   render() {
@@ -97,7 +79,6 @@ class App extends Component {
       onProfileLoaded: this.handleProfileLoaded,
       onProfileUpdated: this.handleProfileUpdated,
       getProfile: this.handleGetProfile,
-      getCategories: this.handleGetCategories,
       goto: this.handleGoto,
       isLogIn: logIn
     });

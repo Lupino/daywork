@@ -73,7 +73,6 @@ export default class NewService extends Component {
   };
   render() {
     const { title, summary, price, unit, status, category, city, address, image, errors } = this.state;
-    const categories = this.props.getCategories('service');
     return (
       <div>
         <List selectable ripple>
@@ -95,7 +94,7 @@ export default class NewService extends Component {
           <li>
             <Categories
               label="分类"
-              categories={categories}
+              type="service"
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
           </li>

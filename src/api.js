@@ -695,13 +695,13 @@ export default function(app, daywork) {
     }
 
     daywork.getCategories(query, (err, categories) => {
-      sendJsonResponse(res, err, categories);
+      sendJsonResponse(res, err, { categories });
     });
   });
 
   app.get(apiPrefix + '/cities/?', (req, res) => {
     daywork.getCities((err, cities) => {
-      sendJsonResponse(res, err, cities);
+      sendJsonResponse(res, err, { cities });
     });
   });
 }

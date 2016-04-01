@@ -73,7 +73,6 @@ export default class NewJob extends Component {
   render() {
     const { title, summary, salary, payMethod, requiredPeople, status, category,
       city, address, image, errors } = this.state;
-    const categories = this.props.getCategories('job');
     return (
       <div>
         <List selectable ripple>
@@ -95,7 +94,7 @@ export default class NewJob extends Component {
           <li>
             <Categories
               label="分类"
-              categories={categories}
+              type="job"
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
           </li>

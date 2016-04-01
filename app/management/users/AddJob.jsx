@@ -74,7 +74,6 @@ export default class AddJob extends Component {
   render() {
     const { title, summary, salary, payMethod, requiredPeople, status, category,
       city, address, image, errors } = this.state;
-    const categories = this.props.getCategories('job');
     const { router } = this.context;
     return (
       <div style={{width: 600}}>
@@ -97,7 +96,7 @@ export default class AddJob extends Component {
           <li>
             <Categories
               label="分类"
-              categories={categories}
+              type="job"
               onChange={this.handleInputChange.bind(this, 'category')}
               value={category} />
           </li>
