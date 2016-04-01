@@ -40,6 +40,11 @@ class App extends Component {
         href: '#/services',
         label: '服务管理',
         className: `${navStyle.link} ${style['color-white']} ${isCurrent('/services')}`
+      },
+      {
+        href: '#/cities',
+        label: '城市管理',
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/cities')}`
       }
     ];
     return (
