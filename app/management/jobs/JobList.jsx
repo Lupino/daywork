@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Table, ProgressBar, Navigation, Dialog, Input } from 'react-toolbox';
+import { Table, ProgressBar, Navigation } from 'react-toolbox';
 import { getJobs, deleteJob, publishJob, finishJob } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';

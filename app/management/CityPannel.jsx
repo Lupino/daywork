@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, cloneElement } from 'react';
 
-import { Drawer, Menu, MenuItem, MenuDivider, Table } from 'react-toolbox';
+import { Menu, MenuItem, MenuDivider } from 'react-toolbox';
 import style from './style';
 
 export default class Dashboard extends Component {
