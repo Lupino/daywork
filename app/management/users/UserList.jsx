@@ -73,6 +73,7 @@ export default class UserList extends Component {
   state = {
     selected: [],
     source: [],
+    total: 0,
     limit: 10,
     currentPage: 1,
     loaded: false,
