@@ -695,6 +695,13 @@ export default function(app, daywork) {
     });
   });
 
+  app.get(apiPrefix + '/categories/:categoryType/:categoryId?', (req, res) => {
+    const { categoryType, categoryId } = req.params;
+    daywork.getCategory({ categoryId, categoryType }, (err, category) => {
+      sendJsonResponse(res, err, { category });
+    });
+  });
+
   app.get(apiPrefix + '/cities/?', (req, res) => {
     daywork.getCities((err, cities) => {
       sendJsonResponse(res, err, { cities });

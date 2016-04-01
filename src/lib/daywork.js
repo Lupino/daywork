@@ -1227,4 +1227,9 @@ export default class extends Object {
     const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
     Category.find({}, (err, categories) => callback(err, categories));
   }
+
+  getCategory({ categoryType, categoryId }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    Category.findOne({ categoryId }, (err, category) => callback(err, category));
+  }
 }
