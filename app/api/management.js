@@ -49,7 +49,7 @@ export function addCategory({ categoryId, categoryName, categoryType, icon }, ca
                wapperCallback(callback));
 }
 
-export function updateCategory({ categoryId, categoryName, icon }, callback) {
-  request.post(getUri('/api/management/updateCategory'), { categoryId, categoryName, icon },
+export function updateCategory({ categoryId, categoryType, categoryName, icon }, callback) {
+  request.post(getUri('/api/management/updateCategory'), { categoryId, categoryName, categoryType, icon },
                wapperCallback(callback));
 }

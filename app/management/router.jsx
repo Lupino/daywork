@@ -19,6 +19,10 @@ import CityList from './cities/CityList';
 import AddCity from './cities/AddCity';
 import EditCity from './cities/EditCity';
 
+import CategoryList from './categories/CategoryList';
+import AddCategory from './categories/AddCategory';
+import EditCategory from './categories/EditCategory';
+
 var router = module.exports = (
   <Router history={hashHistory}>
     <Route path="/" component={App}>
@@ -36,11 +40,17 @@ var router = module.exports = (
         <IndexRoute component={JobList} />
         <Route path="/jobs/p/:page" component={JobList} />
         <Route path="/jobs/edit/:jobId" component={EditJob} />
+        <Route path="/jobs/categories/" component={CategoryList} />
+        <Route path="/jobs/categories/add" component={AddCategory} />
+        <Route path="/jobs/categories/edit/:categoryId" component={EditCategory} />
       </Route>
       <Route path="/services" component={ServicePannel}>
         <IndexRoute component={ServiceList} />
         <Route path="/services/p/:page" component={ServiceList} />
         <Route path="/services/edit/:serviceId" component={EditService} />
+        <Route path="/services/categories/" component={CategoryList} />
+        <Route path="/services/categories/add" component={AddCategory} />
+        <Route path="/services/categories/edit/:categoryId" component={EditCategory} />
       </Route>
       <Route path="/cities" component={CityPannel}>
         <IndexRoute component={CityList} />
