@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Table, ProgressBar, Navigation, Dialog, Input } from 'react-toolbox';
-import { getServices, deleteService, publishService } from '../../api';
+import { getServices, deleteService, publishService, finishService } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
 import { prettyTime, getCityName, getUnit } from '../../modules/utils';
@@ -94,6 +94,30 @@ export default class ServiceList extends Component {
     });
   };
 
+  handleFinishService = () => {
+    if (!this.checkAllPublish()) {
+      alert('请只选择发布后的服务');
+      return;
+    }
+    const self = this;
+    const { selected, source } = this.state;
+    const { confirm, notify } = this.props;
+    confirm({ title: '确定结束？', message: '结束后不能回退' }, (finish) => {
+      if (!finish) return;
+      async.each(selected, (idx, done) => {
+        const service = source[idx];
+        const { serviceId } = service;
+        finishService({ serviceId }, done);
+      }, (err) => {
+        if (err) {
+          notify(err)
+        }
+        self.setState({ selected: [] });
+        self.componentDidMount();
+      });
+    });
+  };
+
   checkAllDraft() {
     const { selected, source } = this.state;
     const len = selected.length;
@@ -173,6 +197,7 @@ export default class ServiceList extends Component {
       { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditService },
       { label: '发布', raised: true, disabled: !this.checkAllDraft(), onClick: this.handlePublishService },
       { label: '删除', raised: true, accent: true, disabled: !this.checkAllDraft(), onClick: this.handleDeleteService },
+      { label: '结束', raised: true, accent: true, disabled: !this.checkAllPublish(), onClick: this.handleFinishService },
     ]
     return (
       <section>
