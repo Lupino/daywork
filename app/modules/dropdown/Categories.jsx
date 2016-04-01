@@ -10,7 +10,7 @@ export default class Categories extends Component {
 
   loadCategories() {
     const { type } = this.props;
-    getCategories({ type }, (err, rsp) => {
+    getCategories(type, (err, rsp) => {
       if (err) {
         alert(err);
         return;

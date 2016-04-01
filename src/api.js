@@ -688,13 +688,9 @@ export default function(app, daywork) {
                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
-  app.get(apiPrefix + '/categories/?', (req, res) => {
-    let query = {};
-    if (req.query.type) {
-      query.categoryType = req.query.type;
-    }
-
-    daywork.getCategories(query, (err, categories) => {
+  app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
+    const { categoryType } = req.params;
+    daywork.getCategories(categoryType, (err, categories) => {
       sendJsonResponse(res, err, { categories });
     });
   });

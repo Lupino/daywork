@@ -17,7 +17,8 @@ import {
   Message,
   Service,
   FavoriteService,
-  Category,
+  JobCategory,
+  ServiceCategory,
   City
 } from './models';
 import { sendJsonResponse } from './util';
@@ -1211,16 +1212,19 @@ export default class extends Object {
     City.findOne({ cityId }, (err, city) => callback(err, city));
   }
 
-  addCategory({ categoryName, categoryId, categoryType, icon }, callback) {
-    let categoryObj = new Category({ categoryName, categoryId, categoryType, icon });
+  addCategory({ categoryId, categoryName, categoryType, icon }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    let categoryObj = new Category({ categoryName, categoryId, icon });
     categoryObj.save((err, categoryObj) => callback(err, categoryObj));
   }
 
-  updateCategory({ categoryId, categoryName, icon }, callback) {
+  updateCategory({ categoryId, categoryName, categoryType, icon }, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
     Category.findOneAndUpdate({ categoryId }, { categoryName, icon }, callback);
   }
 
-  getCategories(query, callback) {
-    Category.find(query, (err, categories) => callback(err, categories));
+  getCategories(categoryType, callback) {
+    const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
+    Category.find({}, (err, categories) => callback(err, categories));
   }
 }

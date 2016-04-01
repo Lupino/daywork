@@ -203,12 +203,20 @@ var CitySchema = new Schema({
 
 export var City = mongoose.model('City', CitySchema);
 
-var CategorySchema = new Schema({
+var JobCategorySchema = new Schema({
   categoryId: { type: String, index: { unique: true } },
-  categoryType: { type: String }, // Job Service
   categoryName: { type: String, index: { unique: true }},
   icon: { type: Mixed },
   createdAt: { type: Date, default: Date.now }
 });
 
-export var Category = mongoose.model('Category', CategorySchema);
+export var JobCategory = mongoose.model('JobCategory', JobCategorySchema);
+
+var ServiceCategorySchema = new Schema({
+  categoryId: { type: String, index: { unique: true } },
+  categoryName: { type: String, index: { unique: true }},
+  icon: { type: Mixed },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export var ServiceCategory = mongoose.model('ServiceCategory', ServiceCategorySchema);
