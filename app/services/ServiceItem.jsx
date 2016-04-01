@@ -5,7 +5,7 @@ import {
 import { prettyTime, getCityName } from '../modules/utils';
 import style from '../style';
 import { imageRoot } from '../api';
-import { getUnit } from './utils';
+import { getUnit } from '../modules/utils';
 
 export default class ServiceItem extends Component {
   render() {

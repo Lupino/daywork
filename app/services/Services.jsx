@@ -36,7 +36,7 @@ export default class Services extends Component {
     const { confirm, notify } = this.props;
     confirm({ title: '确定删除？', message: '删除后将无法恢复' }, (del) => {
       if (!del) return;
-      deleteService({ serviceId: '100' }, (err, rsp) => {
+      deleteService({ serviceId }, (err, rsp) => {
         if (err) {
           return notify(err);
         }

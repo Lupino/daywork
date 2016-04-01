@@ -23,6 +23,11 @@ export default class PasswordInput extends Component {
     }
   };
 
+  componentWillReceiveProps(props) {
+    const { value } = props;
+    this.setState({ passwd: value || '' });
+  }
+
   render() {
     const { passwd, showPasswd } = this.state;
     const { value, type, onChange, ...props } = this.props;

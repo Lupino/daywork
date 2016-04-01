@@ -4,32 +4,35 @@ import { Input, Button, Switch,
 } from 'react-toolbox';
 import Dropzone from 'react-dropzone';
 
-import style from '../style';
-import { getService, updateService, upload, imageRoot } from '../api';
-import Categories from '../modules/dropdown/Categories';
-import Cities from '../modules/dropdown/Cities';
+import style from '../../style';
+import { upload, imageRoot } from '../../api';
+import { getUnit } from '../../modules/utils';
+import { addService } from '../../api/management';
+import Categories from '../../modules/dropdown/Categories';
+import Cities from '../../modules/dropdown/Cities';
 
-export default class EditService extends Component {
+export default class AddService extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
       summary: '',
+      price: 0,
+      unit: 'Daily',
+      status: 'Draft',
       image: {},
       category: '',
       city: '',
       address: '',
-      errors: {},
-      loaded: false
+      errors: {}
     }
   }
   handleInputChange = (name, value) => {
     this.setState({ [name]: value });
   };
   handleSave = () => {
-    const { params, notify } = this.props;
-    const serviceId = params.serviceId;
-    const { title, summary, image, category, city, address } = this.state;
+    const { notify } = this.props;
+    const {title, summary, price} = this.state;
     const { router } = this.context;
 
     let hasError = false;
@@ -39,18 +42,27 @@ export default class EditService extends Component {
       hasError = true;
     }
 
+    if (!price || Number(price) === 0) {
+      errors.price = '请填写服务价格';
+      hasError = true;
+    }
+
     if (hasError) {
       this.setState({ errors });
       return notify('发现一些错误');
     }
 
-    updateService({ serviceId, title, summary, image, category, city, address }, (err, service) => {
+    const { userId } = this.props.params;
+
+    addService({...this.state, userId}, (err, rsp) => {
       if (err) {
         return notify(err);
       }
-      notify('成功更新服务', () => router.goBack());
+      alert('添加服务成功')
+      router.goBack();
     });
   };
+
   handleDrop = (files) => {
     const { notify } = this.props;
     upload(files, (err, files) => {
@@ -60,25 +72,11 @@ export default class EditService extends Component {
       this.setState({ image: files[0] });
     });
   };
-  loadService = () => {
-    const { params } = this.props;
-    const serviceId = params.serviceId;
-    getService({ serviceId }, (err, rsp) => {
-      if (err) {
-        return notify(err);
-      }
-      const { title, summary, image, category, city, address } = rsp.service;
-      this.setState({ title, summary, image, category, city, address, loaded: true });
-    })
-  };
-  componentDidMount() {
-    this.loadService();
-  }
   render() {
-    const { title, summary, image, category, city, address, errors } = this.state;
+    const { title, summary, price, unit, status, category, city, address, image, errors } = this.state;
     const categories = this.props.getCategories('service');
     return (
-      <div data-name='edit-service'>
+      <div style={{width: 600}}>
         <List selectable ripple>
           <li>
             <Input label="服务的标题"
@@ -115,13 +113,43 @@ export default class EditService extends Component {
               value={address}
               onChange={this.handleInputChange.bind(this, 'address')} />
           </li>
+          <ListSubHeader caption='费用' />
+          <ListCheckbox caption='按天计算'
+            className={style.checkbox}
+            checked={unit === 'Daily'}
+            onChange={this.handleInputChange.bind(this, 'unit', 'Daily')} />
+          <ListCheckbox caption='按小时计算'
+            className={style.checkbox}
+            checked={unit === 'Hourly'}
+            onChange={this.handleInputChange.bind(this, 'unit', 'Hourly')} />
+          <ListCheckbox caption='按次计算'
+            className={style.checkbox}
+            checked={unit === 'Timely'}
+            onChange={this.handleInputChange.bind(this, 'unit', 'Timely')} />
+          <ListCheckbox caption='按件计算'
+            className={style.checkbox}
+            checked={unit === 'Itemly'}
+            onChange={this.handleInputChange.bind(this, 'unit', 'Itemly')} />
+          <ListDivider />
+          <li>
+            <Input label={`每${getUnit(unit)}费用(元)`}
+              type='number'
+              value={price > 0 ? price : ''}
+              error={errors.price}
+              onChange={this.handleInputChange.bind(this, 'price')} />
+          </li>
+          <li>
+            <Switch label='直接发布？'
+              checked={ status === 'Publish'}
+              onChange={this.handleInputChange.bind(this, 'status', status === 'Draft' ? 'Publish' : 'Draft')} />
+          </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>
-              { image && image.key ? <img src={`${imageRoot}${image.key}`} /> : '点击此处添加一张图片'}
+              { image && image.key ? <img src={`${imageRoot}${image.key}`} /> : <p>点击此处添加一张图片</p>}
             </Dropzone>
           </li>
         </List>
-        <Button label='保存'
+        <Button label={ status === 'Publish' ? '发布' : '保存草稿' }
           raised
           primary
           floating
@@ -132,6 +160,6 @@ export default class EditService extends Component {
   }
 }
 
-EditService.contextTypes = {
+AddService.contextTypes = {
   router: PropTypes.object
 }

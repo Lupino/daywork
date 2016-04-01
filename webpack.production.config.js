@@ -6,6 +6,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   entry: {
     app: './app/index',
+    management: './app/management/index',
+
     vendors: [
       'react',
       'react-toolbox',

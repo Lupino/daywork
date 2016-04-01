@@ -36,7 +36,7 @@ export default class Jobs extends Component {
     const { confirm, notify } = this.props;
     confirm({ title: '确定删除？', message: '删除后将无法恢复' }, (del) => {
       if (!del) return;
-      deleteJob({ jobId: '100' }, (err, rsp) => {
+      deleteJob({ jobId }, (err, rsp) => {
         if (err) {
           return notify(err);
         }

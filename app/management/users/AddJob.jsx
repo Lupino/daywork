@@ -4,32 +4,35 @@ import { Input, Button, Switch,
 } from 'react-toolbox';
 import Dropzone from 'react-dropzone';
 
-import style from '../style';
-import { getJob, updateJob, upload, imageRoot } from '../api';
-import Categories from '../modules/dropdown/Categories';
-import Cities from '../modules/dropdown/Cities';
+import style from '../../style';
+import { upload, imageRoot } from '../../api';
+import { addJob } from '../../api/management';
+import Categories from '../../modules/dropdown/Categories';
+import Cities from '../../modules/dropdown/Cities';
 
-export default class EditJob extends Component {
+export default class AddJob extends Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
       summary: '',
+      salary: 0,
+      payMethod: 'Daily',
+      requiredPeople: 0,
+      status: 'Draft',
       image: {},
       category: '',
-      city: '',
+      city: 'xiamen',
       address: '',
-      errors: {},
-      loaded: false
+      errors: {}
     }
   }
   handleInputChange = (name, value) => {
     this.setState({ [name]: value });
   };
   handleSave = () => {
-    const { params, notify } = this.props;
-    const jobId = params.jobId;
-    const { title, summary, image, category, city, address } = this.state;
+    const { notify } = this.props;
+    const {title, summary, salary, requiredPeople} = this.state;
     const { router } = this.context;
 
     let hasError = false;
@@ -39,16 +42,24 @@ export default class EditJob extends Component {
       hasError = true;
     }
 
+    if (!salary || Number(salary) === 0) {
+      errors.salary = '请填写单位工资';
+      hasError = true;
+    }
+
     if (hasError) {
       this.setState({ errors });
       return notify('发现一些错误');
     }
 
-    updateJob({ jobId, title, summary, image, category, city, address }, (err, job) => {
+    const { userId } = this.props.params;
+
+    addJob({...this.state, userId}, (err, rsp) => {
       if (err) {
         return notify(err);
       }
-      notify('成功更新职位', () => router.goBack());
+      alert('添加职位成功')
+      router.goBack();
     });
   };
   handleDrop = (files) => {
@@ -60,25 +71,13 @@ export default class EditJob extends Component {
       this.setState({ image: files[0] });
     });
   };
-  loadJob = () => {
-    const { params } = this.props;
-    const jobId = params.jobId;
-    getJob({ jobId }, (err, rsp) => {
-      if (err) {
-        return notify(err);
-      }
-      const { title, summary, image, city, address, category } = rsp.job;
-      this.setState({ title, summary, image, city, address, category, loaded: true });
-    })
-  };
-  componentDidMount() {
-    this.loadJob();
-  }
   render() {
-    const { title, summary, image, category, city, address, errors } = this.state;
+    const { title, summary, salary, payMethod, requiredPeople, status, category,
+      city, address, image, errors } = this.state;
     const categories = this.props.getCategories('job');
+    const { router } = this.context;
     return (
-      <div data-name='edit-job'>
+      <div style={{width: 600}}>
         <List selectable ripple>
           <li>
             <Input label="职位的标题"
@@ -115,13 +114,41 @@ export default class EditJob extends Component {
               value={address}
               onChange={this.handleInputChange.bind(this, 'address')} />
           </li>
+          <ListSubHeader caption='工资' />
+          <ListCheckbox caption='按天计算'
+            className={style.checkbox}
+            checked={payMethod === 'Daily'}
+            onChange={this.handleInputChange.bind(this, 'payMethod', 'Daily')} />
+          <ListCheckbox caption='按小时计算'
+            className={style.checkbox}
+            checked={payMethod === 'Hourly'}
+            onChange={this.handleInputChange.bind(this, 'payMethod', 'Hourly')} />
+          <ListDivider />
+          <li>
+            <Input label={payMethod === 'Daily' ? '每天工资(元)' : '每小时工资(元)'}
+              type='number'
+              value={salary > 0 ? salary : ''}
+              error={errors.salary}
+              onChange={this.handleInputChange.bind(this, 'salary')} />
+          </li>
+          <li>
+            <Input label="需要人数，默认不做限制"
+              type='number'
+              value={requiredPeople > 0 ? requiredPeople : ''}
+              onChange={this.handleInputChange.bind(this, 'requiredPeople')} />
+          </li>
+          <li>
+            <Switch label='直接发布？'
+              checked={ status === 'Publish'}
+              onChange={this.handleInputChange.bind(this, 'status', status === 'Draft' ? 'Publish' : 'Draft')} />
+          </li>
           <li>
             <Dropzone className={style.dropzone} onDrop={this.handleDrop}>
-              { image && image.key ? <img src={`${imageRoot}${image.key}`} /> : '点击此处添加一张图片'}
+              { image && image.key ? <img src={`${imageRoot}${image.key}`} /> : <p>点击此处添加一张图片</p>}
             </Dropzone>
           </li>
         </List>
-        <Button label='保存'
+        <Button label={ status === 'Publish' ? '发布' : '保存草稿' }
           raised
           primary
           floating
@@ -132,6 +159,6 @@ export default class EditJob extends Component {
   }
 }
 
-EditJob.contextTypes = {
+AddJob.contextTypes = {
   router: PropTypes.object
 }
