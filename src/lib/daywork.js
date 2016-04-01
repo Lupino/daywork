@@ -426,6 +426,11 @@ export default class extends Object {
     });
   }
 
+  countJob(query, callback) {
+    query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
+    Job.count(query, (err, counter) => callback(err, counter));
+  }
+
   requestMyJob(jobId, userId, callback) {
     let query = { userId: userId, jobId: jobId };
     callback = wrapperRequestJobCallback(callback);
@@ -1161,6 +1166,11 @@ export default class extends Object {
         callback(null, services);
       });
     });
+  }
+
+  countService(query, callback) {
+    query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
+    Service.count(query, (err, counter) => callback(err, counter));
   }
 
   favoriteService(userId, serviceId, callback) {

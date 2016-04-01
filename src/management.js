@@ -15,7 +15,7 @@ export default function(app, daywork) {
 
     daywork.getUsers({}, { limit: limit, skip: skip },
                      (err, users) => {
-                       daywork.countUser({}, (err, total) => {
+                       daywork.countUser({}, (_, total) => {
                          sendJsonResponse(res, err, { users, total });
                        });
 

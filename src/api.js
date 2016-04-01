@@ -77,7 +77,9 @@ export default function(app, daywork) {
     daywork.getJobs(query ,
                     { limit: limit, skip: skip },
                     (err, jobs) => {
-                      sendJsonResponse(res, err, { jobs: jobs });
+                      daywork.countJob(query, (_, total) => {
+                        sendJsonResponse(res, err, { jobs, total });
+                      });
                     });
   });
 
@@ -109,7 +111,9 @@ export default function(app, daywork) {
     daywork.getJobs(query,
                     { limit: limit, skip: skip, extra: extra },
                     (err, jobs) => {
-                      sendJsonResponse(res, err, { jobs: jobs });
+                      daywork.countJob(query, (_, total) => {
+                        sendJsonResponse(res, err, { jobs, total });
+                      });
                     });
   });
 
@@ -582,7 +586,9 @@ export default function(app, daywork) {
     daywork.getServices(query ,
                     { limit: limit, skip: skip },
                     (err, services) => {
-                      sendJsonResponse(res, err, { services: services });
+                      daywork.countService(query, (_, total) => {
+                        sendJsonResponse(res, err, { services, total });
+                      });
                     });
   });
 
@@ -614,7 +620,9 @@ export default function(app, daywork) {
     daywork.getServices(query,
                     { limit: limit, skip: skip, extra: extra },
                     (err, services) => {
-                      sendJsonResponse(res, err, { services: services });
+                      daywork.countService(query, (_, total) => {
+                        sendJsonResponse(res, err, { services, total });
+                      });
                     });
   });
 
