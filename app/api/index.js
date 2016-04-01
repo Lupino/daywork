@@ -65,5 +65,6 @@ export {
 } from './category';
 
 export {
-  getCities
+  getCities,
+  getCity
 } from './city';

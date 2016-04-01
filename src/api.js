@@ -704,4 +704,11 @@ export default function(app, daywork) {
       sendJsonResponse(res, err, { cities });
     });
   });
+
+  app.get(apiPrefix + '/cities/:cityId', (req, res) => {
+    const { cityId } = req.params;
+    daywork.getCity(cityId, (err, city) => {
+      sendJsonResponse(res, err, { city });
+    });
+  });
 }

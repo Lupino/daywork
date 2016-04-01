@@ -1207,6 +1207,10 @@ export default class extends Object {
     City.find({}, (err, cities) => callback(err, cities));
   }
 
+  getCity(cityId, callback) {
+    City.findOne({ cityId }, (err, city) => callback(err, city));
+  }
+
   addCategory({ categoryName, categoryId, categoryType, icon }, callback) {
     let categoryObj = new Category({ categoryName, categoryId, categoryType, icon });
     categoryObj.save((err, categoryObj) => callback(err, categoryObj));
