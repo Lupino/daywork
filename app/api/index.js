@@ -63,3 +63,7 @@ export {
 export {
   getCategories
 } from './category';
+
+export {
+  getCities
+} from './city';

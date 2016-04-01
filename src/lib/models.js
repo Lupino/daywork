@@ -194,3 +194,21 @@ var FavoriteServiceSchema = new Schema({
 FavoriteServiceSchema.plugin(autoIncrPlugin, { model: 'FavoriteService', field: 'id', startAt: 1 });
 
 export var FavoriteService = mongoose.model('FavoriteService', FavoriteServiceSchema);
+
+var CitySchema = new Schema({
+  cityId: { type: String, index: { unique: true } },
+  cityName: { type: String, index: { unique: true }},
+  createdAt: { type: Date, default: Date.now }
+});
+
+export var City = mongoose.model('City', CitySchema);
+
+var CategorySchema = new Schema({
+  categoryId: { type: String, index: { unique: true } },
+  categoryType: { type: String }, // Job Service
+  categoryName: { type: String, index: { unique: true }},
+  icon: { type: Mixed },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export var Category = mongoose.model('Category', CategorySchema);

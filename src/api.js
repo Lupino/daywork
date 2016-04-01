@@ -689,6 +689,19 @@ export default function(app, daywork) {
   });
 
   app.get(apiPrefix + '/categories/?', (req, res) => {
-    sendJsonResponse(res, null, categories);
+    let query = {};
+    if (req.query.type) {
+      query.categoryType = req.query.type;
+    }
+
+    daywork.getCategories(query, (err, categories) => {
+      sendJsonResponse(res, err, categories);
+    });
+  });
+
+  app.get(apiPrefix + '/cities/?', (req, res) => {
+    daywork.getCities((err, cities) => {
+      sendJsonResponse(res, err, cities);
+    });
   });
 }
