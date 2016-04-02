@@ -14,5 +14,6 @@
     "appId": ""
   },
   "port": 3000,
+  "searchRoot": "http://localhost:3030",
   "dev": false
 }
