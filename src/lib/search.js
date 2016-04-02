@@ -24,6 +24,22 @@ export default class Search extends Object {
   index(doc, callback) {
     request.post(searchRoot + '/api/docs/', { form: doc }, wapperCallback(callback));
   }
+  indexJob({ jobId, title, summary, city, address, salary, payMethod, status,
+           category, createdAt }, callback) {
+    const doc = {
+      id: 'job-' + jobId, title, summary, city, address, price: salary, unit: payMethod,
+      status, category, spec: 'job', createdAt
+    };
+    this.index(doc, callback);
+  }
+  indexService({ serviceId, title, summary, city, address, price, unit, status,
+               category, createdAt }, callback) {
+    const doc = {
+      id: 'service-' + serviceId, title, summary, city, address, price, unit, status,
+      category, spec: 'service', createdAt
+    };
+    this.index(doc, callback);
+  }
   delete(docId, callback) {
     request.del(searchRoot + '/api/docs/' + docId, wapperCallback(callback));
   }
