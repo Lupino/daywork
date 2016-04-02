@@ -51,3 +51,29 @@ export default class Search extends Object {
                 wapperCallback(callback));
   }
 }
+
+const search = new Search();
+
+export function wapperIndexJobCallback(callback) {
+  return (err, job) => {
+    if (err) {
+      return callback(err);
+    }
+    search.indexJob(job, (e) => {
+      console.error(e);
+      callback(err, job);
+    });
+  };
+}
+
+export function wapperIndexServiceCallback(callback) {
+  return (err, job) => {
+    if (err) {
+      return callback(err);
+    }
+    search.indexJob(job, (e) => {
+      console.error(e);
+      callback(err, job);
+    });
+  };
+}

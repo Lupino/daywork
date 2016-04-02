@@ -31,7 +31,9 @@ import {
   wrapperJoinJobCallback
 } from './message_client';
 
-var passwordSalt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9';
+import { wapperIndexJobCallback, wapperIndexServiceCallback } from './search';
+
+const passwordSalt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9';
 
 export function hashedPassword(rawPassword) {
   return crypto.createHmac('sha1', passwordSalt).update(rawPassword).digest('hex');
@@ -246,6 +248,7 @@ export default class extends Object {
 
   createJob({ userId, title, summary, city, address, salary, payMethod, requiredPeople,
             category, image, status }, callback) {
+    callback = wapperIndexJobCallback(callback);
     if (status !== 'Draft' && status !== 'Publish') {
       status = 'Draft';
     }
@@ -257,21 +260,25 @@ export default class extends Object {
   }
 
   publishJob(jobId, callback) {
+    callback = wapperIndexJobCallback(callback);
     let query = { jobId: jobId, status: 'Draft' };
     Job.findOneAndUpdate(query, {status: 'Publish'}, (err, job) => callback(err, job));
   }
 
   finishJob(jobId, callback) {
+    callback = wapperIndexJobCallback(callback);
     let query = { jobId: jobId, status: 'Publish' };
     Job.findOneAndUpdate(query, {status: 'Finish'}, (err, job) => callback(err, job));
   }
 
   deleteJob(jobId, callback) { // you can set job deleted on Draft or Finish
+    callback = wapperIndexJobCallback(callback);
     let query = { jobId: jobId, status: { $in: [ 'Draft', 'Finish' ] }};
     Job.findOneAndUpdate(query, {status: 'Deleted'}, (err, job) => callback(err, job));
   }
 
   updateJob(jobId, job, callback) {
+    callback = wapperIndexJobCallback(callback);
     let updated = {};
     ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
       if (job[key]) {
@@ -1042,6 +1049,7 @@ export default class extends Object {
 
   // service
   createService({ userId, title, summary, price, unit, status, category, image, city, address }, callback) {
+    callback = wapperIndexServiceCallback(callback);
     if (status !== 'Draft' && status !== 'Publish') {
       status = 'Draft';
     }
@@ -1052,21 +1060,25 @@ export default class extends Object {
   }
 
   publishService(serviceId, callback) {
+    callback = wapperIndexServiceCallback(callback);
     let query = { serviceId: serviceId, status: 'Draft' };
     Service.findOneAndUpdate(query, {status: 'Publish'}, (err, service) => callback(err, service));
   }
 
   finishService(serviceId, callback) {
+    callback = wapperIndexServiceCallback(callback);
     let query = { serviceId: serviceId, status: 'Publish' };
     Service.findOneAndUpdate(query, {status: 'Finish'}, (err, service) => callback(err, service));
   }
 
   deleteService(serviceId, callback) { // you can set service deleted on Draft or Finish
+    callback = wapperIndexServiceCallback(callback);
     let query = { serviceId: serviceId, status: { $in: [ 'Draft', 'Finish' ] }};
     Service.findOneAndUpdate(query, {status: 'Deleted'}, (err, service) => callback(err, service));
   }
 
   updateService(serviceId, service, callback) {
+    callback = wapperIndexServiceCallback(callback);
     let updated = {};
     ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
       if (service[key]) {
