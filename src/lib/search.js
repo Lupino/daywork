@@ -52,14 +52,14 @@ export default class Search extends Object {
   }
 }
 
-const search = new Search();
+const realSearch = new Search();
 
 export function wapperIndexJobCallback(callback) {
   return (err, job) => {
     if (err) {
       return callback(err);
     }
-    search.indexJob(job, (e) => {
+    realSearch.indexJob(job, (e) => {
       console.error(e);
       callback(err, job);
     });
@@ -71,9 +71,13 @@ export function wapperIndexServiceCallback(callback) {
     if (err) {
       return callback(err);
     }
-    search.indexJob(job, (e) => {
+    realSearch.indexJob(job, (e) => {
       console.error(e);
       callback(err, job);
     });
   };
+}
+
+export function search({ q, from, size }, callback) {
+  realSearch.search({ q, from, size }, callback);
 }
