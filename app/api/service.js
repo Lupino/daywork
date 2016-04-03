@@ -30,9 +30,9 @@ export function deleteService({ serviceId }, callback) {
                wapperCallback(callback));
 }
 
-export function updateService({ serviceId, title, summary, image, status, city, address }, callback) {
+export function updateService({ serviceId, title, summary, image, status, category, city, address }, callback) {
   request.post(getUri(`/api/services/${serviceId}/update`),
-               { title, summary, image, status, city, address },
+               { title, summary, image, status, category, city, address },
                wapperCallback(callback));
 }
 

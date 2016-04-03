@@ -6,8 +6,15 @@ import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
 import { hashedPassword } from './lib/daywork';
 import { OauthToken } from './lib/models';
-import { createPayment, checkPayment, getPayments, drawMoney, cancelPayment } from './lib/payment';
+import {
+  createPayment,
+  checkPayment,
+  getPayments,
+  drawMoney,
+  cancelPayment
+} from './lib/payment';
 import qs from 'querystring';
+import { search } from './lib/search';
 
 export default function(app, daywork) {
   let  { requireLogin } = daywork;
@@ -712,6 +719,34 @@ export default function(app, daywork) {
     const { cityId } = req.params;
     daywork.getCity(cityId, (err, city) => {
       sendJsonResponse(res, err, { city });
+    });
+  });
+
+  app.get(apiPrefix + '/search/?', (req, res) => {
+    const { q, from, size } = req.query;
+    search({ q, from, size }, (err, rsp) => {
+      if (err) {
+        return sendJsonResponse(res, err);
+      }
+
+      let options = { user: true };
+      if (req.currentUser) {
+        options.favorited = options.requested = req.currentUser.userId;
+      }
+
+      const { total, from, size, q, docs } = rsp;
+      async.map(docs || [], (doc, done) => {
+        const line = doc.id.split('-');
+        if (line[0] === 'job') {
+          daywork.getJob(line[1], options, (err, job) => done(err, job));
+        } else if (line[0] === 'service') {
+          daywork.getService(line[1], options, (err, service) => done(err, service));
+        } else {
+          done();
+        }
+      }, (err, docs) => {
+        sendJsonResponse(res, err, { docs, total, from, size, q });
+      });
     });
   });
 }

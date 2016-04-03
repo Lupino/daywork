@@ -69,3 +69,7 @@ export {
   getCities,
   getCity
 } from './city';
+
+export {
+  search
+} from './search';
