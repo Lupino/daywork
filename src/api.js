@@ -724,7 +724,7 @@ export default function(app, daywork) {
 
   app.get(apiPrefix + '/search/?', (req, res) => {
     const { q, from, size } = req.query;
-    search({ q, from, size }, (err, docs) => {
+    search({ q, from, size }, (err, rsp) => {
       if (err) {
         return sendJsonResponse(res, err);
       }
@@ -733,7 +733,9 @@ export default function(app, daywork) {
       if (req.currentUser) {
         options.favorited = options.requested = req.currentUser.userId;
       }
-      async.map(docs, (doc, done) => {
+
+      const { total, from, size, q, docs } = rsp;
+      async.map(docs || [], (doc, done) => {
         const line = doc.id.split('-');
         if (line[0] === 'job') {
           daywork.getJob(line[1], options, (err, job) => done(err, job));
@@ -743,7 +745,7 @@ export default function(app, daywork) {
           done();
         }
       }, (err, docs) => {
-        sendJsonResponse(res, err, docs);
+        sendJsonResponse(res, err, { docs, total, from, size, q });
       });
     });
   });
