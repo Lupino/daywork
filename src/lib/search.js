@@ -67,13 +67,13 @@ export function wapperIndexJobCallback(callback) {
 }
 
 export function wapperIndexServiceCallback(callback) {
-  return (err, job) => {
+  return (err, service) => {
     if (err) {
       return callback(err);
     }
-    realSearch.indexJob(job, (e) => {
+    realSearch.indexService(service, (e) => {
       console.error(e);
-      callback(err, job);
+      callback(err, service);
     });
   };
 }
