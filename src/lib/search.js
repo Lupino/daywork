@@ -28,7 +28,7 @@ export default class Search extends Object {
            category, createdAt }, callback) {
     const doc = {
       id: 'job-' + jobId, title, summary, city, address, price: salary, unit: payMethod,
-      status, category, spec: 'job', createdAt
+      status, category, spec: 'job', createdAt: createdAt.toISOString()
     };
     this.index(doc, callback);
   }
@@ -36,7 +36,7 @@ export default class Search extends Object {
                category, createdAt }, callback) {
     const doc = {
       id: 'service-' + serviceId, title, summary, city, address, price, unit, status,
-      category, spec: 'service', createdAt
+      category, spec: 'service', createdAt: createdAt.toISOString()
     };
     this.index(doc, callback);
   }
