@@ -19,7 +19,8 @@ import {
   FavoriteService,
   JobCategory,
   ServiceCategory,
-  City
+  City,
+  ServiceOrder
 } from './models';
 import { sendJsonResponse } from './util';
 import { uploadPath } from '../config';
@@ -1243,5 +1244,171 @@ export default class extends Object {
   getCategory({ categoryType, categoryId }, callback) {
     const Category = categoryType === 'job' ? JobCategory : ServiceCategory;
     Category.findOne({ categoryId }, (err, category) => callback(err, category));
+  }
+
+  createServiceOrder({ userId, serviceId, amount, summary }, callback) {
+    const self = this;
+    async.waterfall([
+      (next) => {
+        self.getService(serviceId, next);
+      },
+      (service, next) => {
+        if (!service) {
+          return next('service not exists.');
+        }
+
+        if (service.status !== 'Publish') {
+          return next('service is not on publish');
+        }
+        const price = service.price * amount;
+        const order = new ServiceOrder( {
+          userId,
+          serviceId,
+          amount,
+          price,
+          summary,
+          status: 'Unpaid'
+        } );
+
+        order.save((err, o) => next(err, o));
+      }
+    ], callback);
+
+  }
+
+  payServiceOrder(id, callback) {
+    const self = this;
+    const ctx = {};
+    function errRecover(err) {
+      const order = ctx.order;
+      async.parallel([
+        (done) => {
+          if (!ctx.step0) return done();
+          User.findOneAndUpdate({ userId: order.userId },
+                                { $inc: { remainMoney: order.price } },
+                                (err, u) => done());
+        },
+        (done) => {
+          if (!ctx.step1) return done();
+          User.findOneAndUpdate({ userId: order.service.userId },
+                                { $inc: { remainMoney: - order.price } },
+                                (err, u) => next(err, order));
+
+        }
+      ], () => {
+        callback(err);
+      })
+    }
+    async.waterfall([
+      (next) => {
+        self.getServiceOrder(id, { user: true, service: true }, next);
+      },
+      (order, next) => {
+        ctx.order = order;
+        if (order.price > order.user.remainMoney) {
+          return next('余额不足');
+        }
+        User.findOneAndUpdate({ userId: order.userId },
+                              { $inc: { remainMoney: - order.price } },
+                              (err, u) => next(err, order));
+      },
+      (order, next) => {
+        ctx.step0 = true;
+        User.findOneAndUpdate({ userId: order.service.userId },
+                              { $inc: { remainMoney: order.price } },
+                              (err, u) => next(err, order));
+      },
+      (order, next) => {
+        ctx.step1 = true;
+        ServiceOrder.findOneAndUpdate({ id }, { status: 'Paid' }, ( err, o ) => next(err, order));
+      }
+    ], (err, order) => {
+      if (err) {
+        return errRecover(err);
+      }
+      callback(null, order);
+    });
+  }
+
+  cancelServiceOrder({ id, reason }, callback) {
+    const self = this;
+    async.waterfall([
+      (next) => {
+        self.getServiceOrder(id, { user: true, service: true }, next);
+      },
+      (order, next) => {
+        if (order.status === 'Unpaid') {
+          return next(null, order);
+        }
+        if (order.status === 'Paid') {
+          async.parallel([
+            (done) => {
+              User.findOneAndUpdate({ userId: order.userId },
+                                    { $inc: { remainMoney: order.price } },
+                                    (err, u) => done());
+            },
+            (done) => {
+              User.findOneAndUpdate({ userId: order.service.userId },
+                                    { $inc: { remainMoney: - order.price } },
+                                    (err, u) => next(err, order));
+
+            }
+          ], () => {
+            next(null, order);
+          })
+          return;
+        }
+        callback(null, order);
+      }
+
+    ], callback);
+  }
+
+  getServiceOrder(id, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    options = options || {};
+    ServiceOrder.findOne({ id }, (err, order) => {
+      if (!order) return callback('Order not found.');
+      async.parallel({
+        user(done) {
+          if (!options.user) { return done(); }
+          self.getUser(order.userId, done);
+        },
+        service(done) {
+          if (!options.service) return done();
+          self.getService(order.serviceId, { user: true }, done)
+        }
+      }, (err, result) => {
+        if (err) {
+          return err;
+        }
+        order = order.toJSON();
+        if (options.user) {
+          order.user = result.user;
+        }
+        if (options.service) {
+          order.service = result.service;
+        }
+        callback(null, order);
+      });
+    });
+  }
+
+  getServiceOrders(query, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    options = options || {};
+
+    if (!options.sort) {
+      options.sort = 'field -createdAt';
+    }
+    ServiceOrder.find(query, null, options, (err, order) => callback(err, order));
   }
 }

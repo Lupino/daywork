@@ -220,3 +220,18 @@ var ServiceCategorySchema = new Schema({
 });
 
 export var ServiceCategory = mongoose.model('ServiceCategory', ServiceCategorySchema);
+
+var ServiceOrderSchema = new Schema( {
+  userId: { type: Number, index: true },
+  serviceId: { type: Number, index: true },
+  amount: { type: Number, default: 1, min: 1 },
+  price: { type: Number, min: 0 },
+  summary: { type: String },
+  reason: { type: String }, // for cancel reason
+  status: { type: String }, // Unpaid, Paid, Cancel
+  createdAt: { type: Date, default: Date.now }
+} );
+
+ServiceOrderSchema.plugin(autoIncrPlugin, { model: 'ServiceOrder', field: 'id', startAt: 1 });
+
+export var ServiceOrder = mongoose.model('ServiceOrder', ServiceOrderSchema);
