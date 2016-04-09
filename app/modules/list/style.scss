@@ -1,22 +1,18 @@
 @import "~react-toolbox/lib/commons";
 
 .dropzone {
-  width: 100%;
-  height: 64px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   .avatar {
     position: absolute;
-    right: -18px;
-    top: 0;
-    width: 64px;
+    right: 48px;
+    top: 3px;
     img {
       height: 100%;
       width: 100%;
     }
-  }
-  .caption {
-    position: absolute;
-    margin-left: 16px;
-    top: 20px;
   }
 }

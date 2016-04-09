@@ -179,13 +179,16 @@ export default class Profile extends Component {
     return (
       <section>
         <List selectable ripple>
-          <Avatar
+          <ListItem
             ripple={true}
-            avatar={imgUrl}
             caption='头像'
             rightIcon='chevron_right'
-            onDrop={this.handleDrop}
-          />
+          >
+            <Avatar
+              avatar={imgUrl}
+              onDrop={this.handleDrop}
+            />
+          </ListItem>
           <ListDivider />
           <ListItem
             ripple={true}
