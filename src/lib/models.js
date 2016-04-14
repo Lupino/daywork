@@ -224,6 +224,7 @@ export var ServiceCategory = mongoose.model('ServiceCategory', ServiceCategorySc
 var ServiceOrderSchema = new Schema( {
   userId: { type: Number, index: true },
   serviceId: { type: Number, index: true },
+  serviceUserId: { type: Number, index: true },
   amount: { type: Number, default: 1, min: 1 },
   price: { type: Number, min: 0 },
   summary: { type: String },

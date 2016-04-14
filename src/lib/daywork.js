@@ -1260,10 +1260,12 @@ export default class extends Object {
         if (service.status !== 'Publish') {
           return next('service is not on publish');
         }
+        const serviceUserId = service.userId;
         const price = service.price * amount;
         const order = new ServiceOrder( {
           userId,
           serviceId,
+          serviceUserId,
           amount,
           price,
           summary,
