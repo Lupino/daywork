@@ -695,6 +695,99 @@ export default function(app, daywork) {
                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
+  app.post(apiPrefix + '/services/:serviceId/createOrder', requireLogin(), (req, res) => {
+    const { amount, summary } = req.body;
+    const userId = req.currentUser.userId;
+    const serviceId = req.service.serviceId;
+    daywork.createServiceOrder({ userId, serviceId, amount, summary }, (err, order) => {
+      sendJsonResponse(res, err, {order});
+    });
+  });
+
+  app.get(apiPrefix + '/orders/:orderId/', requireLogin(), (req, res) => {
+    const order = req.order;
+    const userId = req.currentUser.userId;
+    if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.getServiceOrder(order.id, { user: true, service: true },
+                            (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
+  app.get(apiPrefix + '/orders/', requireLogin(), (req, res) => {
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+
+    let skip = limit * page;
+
+    const userId = req.currentUser.userId;
+    let query = { userId };
+
+    const keys = ['status', 'serviceId'];
+    keys.forEach((key) => {
+      if (req.query[key]) {
+        query[key] = req.query[key];
+      }
+    });
+
+    daywork.getServiceOrders(query,
+                             { limit: limit, skip: skip },
+                             (err, orders) => {
+                               sendJsonResponse(res, err, { orders });
+                             });
+  });
+
+  app.get(apiPrefix + '/users/:userId/orders/', requireLogin(), (req, res) => {
+    if (!req.isOwner) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    let page = Number(req.query.page) || 0;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+
+    let skip = limit * page;
+
+    const serviceUserId = req.user.userId;
+    let query = { serviceUserId };
+
+    const keys = ['status', 'serviceId'];
+    keys.forEach((key) => {
+      if (req.query[key]) {
+        query[key] = req.query[key];
+      }
+    });
+
+    daywork.getServiceOrders(query,
+                             { limit: limit, skip: skip },
+                             (err, orders) => {
+                               sendJsonResponse(res, err, { orders });
+                             });
+  });
+
+  app.post(apiPrefix + '/orders/:orderId/pay', requireLogin(), (req, res) => {
+    const order = req.order;
+    if (!req.isOwnerServiceOrder) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.payServiceOrder(order.id,
+                            (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
+  app.post(apiPrefix + '/orders/:orderId/cancel', requireLogin(), (req, res) => {
+    const order = req.order;
+    const userId = req.currentUser.userId;
+    if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.cancelServiceOrder(order.id,
+                               (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
   app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
     const { categoryType } = req.params;
     daywork.getCategories(categoryType, (err, categories) => {
