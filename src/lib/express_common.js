@@ -47,4 +47,15 @@ export default function(app, daywork) {
     });
   });
 
+  app.param('orderId', (req, res, next, orderId) => {
+    daywork.getServiceOrder(orderId, { service: true }, (err, order) => {
+      if (err || !order) {
+        return sendJsonResponse(res, 'Order: ' + orderId + ' is not found.');
+      }
+      req.order = order;
+      req.isOwnerServiceOrder = req.isOwner = req.currentUser && req.currentUser.userId === order.userId;
+      next();
+    });
+  });
+
 }
