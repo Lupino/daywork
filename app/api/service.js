@@ -45,3 +45,31 @@ export function unfavoriteService({ serviceId }, callback) {
   request.post(getUri(`/api/services/${serviceId}/unfavorite`),
                wapperCallback(callback));
 }
+
+export function createServiceOrder({ serviceId, amount, summary }, callback) {
+  const form = {
+    amount, summary
+  };
+
+  request.post(getUri(`/api/services/${serviceId}/createOrder`), form, wapperCallback(callback));
+}
+
+export function getServiceOrder({ orderId }, callback) {
+  request.get(getUri(`/api/orders/${orderId}`), wapperCallback(callback));
+}
+
+export function getPurchaseOrders({ page, limit }, callback) {
+  request.get(getUri(`/api/orders/`, { page, limit }), wapperCallback(callback));
+}
+
+export function getSaleOrders({ userId, page, limit }, callback) {
+  request.get(getUri(`/api/users/${userId}/orders/`, { page, limit }), wapperCallback(callback));
+}
+
+export function payServiceOrder({ orderId }, callback) {
+  request.post(getUri(`/api/orders/${orderId}/pay`), wapperCallback(callback));
+}
+
+export function cancelServiceOrder({ orderId }, callback) {
+  request.post(getUri(`/api/orders/${orderId}/cancel`), wapperCallback(callback));
+}
