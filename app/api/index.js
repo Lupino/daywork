@@ -60,8 +60,8 @@ export {
   unfavoriteService,
   createServiceOrder,
   getServiceOrder,
-  getPurchaseOrders,
-  getSaleOrders,
+  getPurchasedOrders,
+  getSaledOrders,
   payServiceOrder,
   cancelServiceOrder,
   finishServiceOrder

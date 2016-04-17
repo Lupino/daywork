@@ -58,11 +58,11 @@ export function getServiceOrder({ orderId }, callback) {
   request.get(getUri(`/api/orders/${orderId}`), wapperCallback(callback));
 }
 
-export function getPurchaseOrders({ page, limit }, callback) {
+export function getPurchasedOrders({ page, limit }, callback) {
   request.get(getUri(`/api/orders/`, { page, limit }), wapperCallback(callback));
 }
 
-export function getSaleOrders({ userId, page, limit }, callback) {
+export function getSaledOrders({ userId, page, limit }, callback) {
   request.get(getUri(`/api/users/${userId}/orders/`, { page, limit }), wapperCallback(callback));
 }
 
