@@ -57,7 +57,14 @@ export {
   deleteService,
   updateService,
   favoriteService,
-  unfavoriteService
+  unfavoriteService,
+  createServiceOrder,
+  getServiceOrder,
+  getPurchaseOrders,
+  getSaleOrders,
+  payServiceOrder,
+  cancelServiceOrder,
+  finishServiceOrder
 } from './service';
 
 export {
