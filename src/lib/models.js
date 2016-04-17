@@ -229,7 +229,7 @@ var ServiceOrderSchema = new Schema( {
   price: { type: Number, min: 0 },
   summary: { type: String },
   reason: { type: String }, // for cancel reason
-  status: { type: String }, // Unpaid, Paid, Cancel
+  status: { type: String }, // Unpaid, Paid, Cancel, Finish
   createdAt: { type: Date, default: Date.now }
 } );
 

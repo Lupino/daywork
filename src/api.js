@@ -788,6 +788,16 @@ export default function(app, daywork) {
                                (err, order) => sendJsonResponse(res, err, { order }));
   });
 
+  app.post(apiPrefix + '/orders/:orderId/finish', requireLogin(), (req, res) => {
+    const order = req.order;
+    const userId = req.currentUser.userId;
+    if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.finishServiceOrder(order.id,
+                               (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
   app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
     const { categoryType } = req.params;
     daywork.getCategories(categoryType, (err, categories) => {
