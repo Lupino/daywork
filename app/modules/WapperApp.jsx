@@ -1,9 +1,8 @@
 import React, { Component, cloneElement } from 'react';
-import { App as ToolboxApp, Snackbar, Dialog, Input } from 'react-toolbox';
+import { Snackbar, Dialog, Input } from 'react-toolbox';
 import style from './style';
 
-export default function(App, Wapper) {
-  Wapper = Wapper || ToolboxApp;
+export default function(App) {
   return class extends Component {
     state = {
       snackbarActive: false,
@@ -148,7 +147,7 @@ export default function(App, Wapper) {
       }
 
       return (
-        <Wapper>
+        <div>
           <App ref="app" {...otherProps} {...props}>
            {child}
           </App>
@@ -170,7 +169,7 @@ export default function(App, Wapper) {
             onOverlayClick={this.handleDiaClose}>
             {diaChildren}
           </Dialog>
-        </Wapper>
+        </div>
       );
     }
   }
