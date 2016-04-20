@@ -1,5 +1,6 @@
 import request from './request';
 import { getUri, wapperCallback } from './utils';
+import store from '../modules/store';
 
 export function getService({ serviceId }, callback) {
   request.get(getUri(`/api/services/${serviceId}`), wapperCallback(callback));
@@ -63,6 +64,10 @@ export function getPurchasedOrders({ page, limit }, callback) {
 }
 
 export function getSaledOrders({ userId, page, limit }, callback) {
+  if (!userId) {
+    const profile = store.get('profile');
+    userId = profile.userId;
+  }
   request.get(getUri(`/api/users/${userId}/orders/`, { page, limit }), wapperCallback(callback));
 }
 
@@ -76,4 +81,12 @@ export function cancelServiceOrder({ orderId, reason }, callback) {
 
 export function finishServiceOrder({ orderId }, callback) {
   request.post(getUri(`/api/orders/${orderId}/finish`), wapperCallback(callback));
+}
+
+export function dealingServiceOrder({ orderId }, callback) {
+  request.post(getUri(`/api/orders/${orderId}/dealing`), wapperCallback(callback));
+}
+
+export function dealtServiceOrder({ orderId }, callback) {
+  request.post(getUri(`/api/orders/${orderId}/dealt`), wapperCallback(callback));
 }

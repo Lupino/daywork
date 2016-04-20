@@ -1373,6 +1373,14 @@ export default class extends Object {
     ServiceOrder.findOneAndUpdate({ id }, { status: 'Finish' }, ( err, o ) => callback(err, o));
   }
 
+  dealingServiceOrder(id, callback) {
+    ServiceOrder.findOneAndUpdate({ id }, { status: 'Dealing' }, ( err, o ) => callback(err, o));
+  }
+
+  dealtServiceOrder(id, callback) {
+    ServiceOrder.findOneAndUpdate({ id }, { status: 'Dealt' }, ( err, o ) => callback(err, o));
+  }
+
   getServiceOrder(id, options, callback) {
     if (typeof options === 'function') {
       callback = options;

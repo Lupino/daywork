@@ -70,6 +70,8 @@ export {
   getSaledOrders,
   payServiceOrder,
   cancelServiceOrder,
+  dealingServiceOrder,
+  dealtServiceOrder,
   finishServiceOrder
 } from './service';
 

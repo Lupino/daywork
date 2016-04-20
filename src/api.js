@@ -711,7 +711,11 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
     daywork.getServiceOrder(order.id, { user: true, service: true },
-                            (err, order) => sendJsonResponse(res, err, { order }));
+                            (err, order) => {
+                              order.isSaled = userId === order.serviceUserId;
+                              order.isPurchased = userId === order.userId;
+                              sendJsonResponse(res, err, { order });
+                            });
   });
 
   app.get(apiPrefix + '/orders/', requireLogin(), (req, res) => {
@@ -792,11 +796,31 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/orders/:orderId/finish', requireLogin(), (req, res) => {
     const order = req.order;
     const userId = req.currentUser.userId;
-    if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
+    if (!req.isOwnerServiceOrder) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
     daywork.finishServiceOrder(order.id,
                                (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
+  app.post(apiPrefix + '/orders/:orderId/dealing', requireLogin(), (req, res) => {
+    const order = req.order;
+    const userId = req.currentUser.userId;
+    if (userId !== order.service.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.dealingServiceOrder(order.id,
+                                (err, order) => sendJsonResponse(res, err, { order }));
+  });
+
+  app.post(apiPrefix + '/orders/:orderId/dealt', requireLogin(), (req, res) => {
+    const order = req.order;
+    const userId = req.currentUser.userId;
+    if (userId !== order.service.userId) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    daywork.dealtServiceOrder(order.id,
+                              (err, order) => sendJsonResponse(res, err, { order }));
   });
 
   app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
