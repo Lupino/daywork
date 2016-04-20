@@ -1419,6 +1419,13 @@ export default class extends Object {
     if (!options.sort) {
       options.sort = 'field -createdAt';
     }
-    ServiceOrder.find(query, null, options, (err, order) => callback(err, order));
+    ServiceOrder.find(query, null, options, (err, orders) => {
+      if (err) {
+        return callback(err);
+      }
+      async.map(orders, (order, done) => {
+        this.getServiceOrder(order.id, { user: true, service: true }, done)
+      }, callback);
+    });
   }
 }
