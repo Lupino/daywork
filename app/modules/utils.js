@@ -58,3 +58,18 @@ const units = {
 export function getUnit(unit) {
   return units[unit];
 }
+
+export function getOrderStatus(status) {
+  switch (status) {
+      case 'Unpaid':
+          return '未支付';
+      case 'Paid':
+          return '已支付';
+      case 'Cancel':
+          return '已取消';
+      case 'Finish':
+          return '已完成';
+      default:
+          return '未知';
+  }
+}

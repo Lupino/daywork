@@ -32,6 +32,8 @@ import EditService from './services/EditService';
 import Services from './services/Services';
 import Service from './services/Service';
 import ServiceInfo from './services/ServiceInfo';
+import Purchased from './orders/Purchased';
+import Order from './orders/Order';
 
 var router = module.exports = (
   <Router history={hashHistory}>
@@ -66,6 +68,8 @@ var router = module.exports = (
       <Route path="/services" component={Services} />
       <Route path="/services/:serviceId" component={Service} />
       <Route path="/service_info/:serviceId" component={ServiceInfo} />
+      <Route path="/purchased" component={Purchased} />
+      <Route path="/orders/:id" component={Order} />
     </Route>
   </Router>
 );

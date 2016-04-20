@@ -92,6 +92,7 @@ class App extends Component {
       menus.push(<MenuDivider key='div1' />)
       menus.push(<MenuItem value='new_service' icon='add' caption='发布新服务' key='new_service' />);
       menus.push(<MenuItem value='services' icon='check_box_outline_blank' caption='我发布的服务' key='services' />);
+      menus.push(<MenuItem value='purchased' icon='shopping_cart' caption='我买到的服务' key='purchased' />);
       menus.push(<MenuDivider key='div2' />)
       menus.push(<MenuItem value='new_job' icon='add' caption='发布新职位' key='new_job' />);
       menus.push(<MenuItem value='jobs' icon='check_box_outline_blank' caption='我发布的职位' key='jobs' />);

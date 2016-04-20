@@ -7,6 +7,19 @@ import style from '../style';
 import { imageRoot } from '../api';
 import { getUnit } from '../modules/utils';
 
+const getStatusString = (status) => {
+  switch (status) {
+      case 'Publish':
+          return '该服务正在热卖中';
+      case 'Finish':
+          return '该服务已下架';
+      case 'Delete':
+          return '该服务被已删除';
+      default:
+          return '该服务未知状态';
+  }
+}
+
 export default class ServiceItem extends Component {
   render() {
     const { service, heading, children } = this.props;
@@ -28,6 +41,7 @@ export default class ServiceItem extends Component {
             {prettyTime(createdAt)}
           </div>
         </CardTitle>
+        <CardText>状态：{getStatusString(status)}</CardText>
         <CardText>{summary}</CardText>
         <CardText>{`城市：${getCityName(city)}`}</CardText>
         <CardText>{`地址：${address || '不限'}`}</CardText>
