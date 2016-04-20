@@ -69,6 +69,10 @@ export function getOrderStatus(status) {
           return '已取消';
       case 'Finish':
           return '已完成';
+      case 'Dealing':
+          return '处理中';
+      case 'Dealt':
+          return '处理完成';
       default:
           return '未知';
   }

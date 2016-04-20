@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { List, ListItem, ProgressBar, Navigation } from 'react-toolbox';
-import { getServiceOrder, payServiceOrder, cancelServiceOrder, finishServiceOrder } from '../api';
+import {
+  getServiceOrder,
+  payServiceOrder,
+  cancelServiceOrder,
+  dealingServiceOrder,
+  dealtServiceOrder,
+  finishServiceOrder
+} from '../api';
 import { prettyTime, getOrderStatus, getUnit } from '../modules/utils';
 import lodash from 'lodash';
 import style from '../style';
@@ -23,9 +30,13 @@ export default class Order extends Component {
     });
   }
 
-  handleShowService(serviceId) {
+  handleShowService(serviceId, isSaled) {
     const { router } = this.context;
-    router.push(`/service_info/${serviceId}`);
+    if (isSaled) {
+      router.push(`/services/${serviceId}`);
+    } else {
+      router.push(`/service_info/${serviceId}`);
+    }
   }
 
   handlePayOrder(orderId) {
@@ -39,9 +50,15 @@ export default class Order extends Component {
     });
   }
 
-  handleCancelOrder(orderId) {
-    if (!confirm('确定取消订单？')) {return;}
-    const reason = '用户取消';
+  handleCancelOrder(orderId, isSaled) {
+    if (!isSaled && !confirm('确定取消订单？')) {return;}
+    let reason = '用户取消';
+    if (isSaled) {
+      reason = prompt('请输入取消的原因');
+      if (!reason || reason.length < 4) {
+        return alert('原因必须超过 4 个字');
+      }
+    }
     cancelServiceOrder({ orderId, reason }, (err, rsp) => {
       if (err) {
         return alert(err);
@@ -62,6 +79,28 @@ export default class Order extends Component {
     });
   }
 
+  handleDealingOrder(orderId) {
+    if (!confirm('确定处理交易？')) {return;}
+    dealingServiceOrder({ orderId }, (err, rsp) => {
+      if (err) {
+        return alert(err);
+      }
+      alert('交易处理中');
+      this.reload();
+    });
+  }
+
+  handleDealingOrder(orderId) {
+    if (!confirm('确定完成处理？')) {return;}
+    dealtServiceOrder({ orderId }, (err, rsp) => {
+      if (err) {
+        return alert(err);
+      }
+      alert('交易完成处理');
+      this.reload();
+    });
+  }
+
   reload() {
     this.loadOrder();
   }
@@ -77,23 +116,45 @@ export default class Order extends Component {
       return <ProgressBar mode='indeterminate' />;
     }
 
-    const { id, amount, price, status, service, serviceId, reason } = order;
+    const { id, amount, price, status, service, serviceId, reason, isPurchased, isSaled } = order;
     const { unit, title } = service;
 
-    const actions = [
-      status === 'Unpaid' && {
-        label: '支付', raised: true, primary: true,
-        onClick: this.handlePayOrder.bind(this, id)
-      },
-      status === 'Unpaid' && {
-        label: '取消', raised: true, accent: true,
-        onClick: this.handleCancelOrder.bind(this, id)
-      },
-      status === 'Paid' && {
-        label: '完成交易', raised: true, primary: true,
-        onClick: this.handleFinishOrder.bind(this, id)
+    let actions = [];
+    if (isPurchased) {
+      switch (status) {
+          case 'Unpaid':
+              actions.push({ label: '支付', raised: true, primary: true,
+                             onClick: this.handlePayOrder.bind(this, id) });
+              actions.push({ label: '取消', raised: true, primary: true,
+                             onClick: this.handleCancelOrder.bind(this, id) });
+              break;
+
+          case 'Paid':
+          case 'Dealing':
+          case 'Dealt':
+              actions.push({ label: '完成交易', raised: true, primary: true,
+                             onClick: this.handleFinishOrder.bind(this, id) });
+              break;
       }
-    ];
+    }
+
+    if (isSaled) {
+      switch (status) {
+          case 'Unpaid':
+              actions.push({ label: '取消', raised: true, primary: true,
+                             onClick: this.handleCancelOrder.bind(this, id, isSaled) });
+              break;
+
+          case 'Paid':
+              actions.push({ label: '处理交易', raised: true, primary: true,
+                             onClick: this.handleDealingOrder.bind(this, id) });
+              break;
+          case 'Dealing':
+              actions.push({ label: '处理完成', raised: true, primary: true,
+                             onClick: this.handleDealtOrder.bind(this, id) });
+              break;
+      }
+    }
 
     return (
       <div>
@@ -103,7 +164,7 @@ export default class Order extends Component {
           </ListItem>
           <ListItem caption="服务名称"
             rightIcon='chevron_right'
-            onClick={this.handleShowService.bind(this, serviceId)}
+            onClick={this.handleShowService.bind(this, serviceId, isSaled)}
           >
             <span className={style['legend-right']}>{title}</span>
           </ListItem>

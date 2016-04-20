@@ -33,6 +33,7 @@ import Services from './services/Services';
 import Service from './services/Service';
 import ServiceInfo from './services/ServiceInfo';
 import Purchased from './orders/Purchased';
+import Saled from './orders/Saled';
 import Order from './orders/Order';
 
 var router = module.exports = (
@@ -69,6 +70,7 @@ var router = module.exports = (
       <Route path="/services/:serviceId" component={Service} />
       <Route path="/service_info/:serviceId" component={ServiceInfo} />
       <Route path="/purchased" component={Purchased} />
+      <Route path="/saled" component={Saled} />
       <Route path="/orders/:id" component={Order} />
     </Route>
   </Router>
