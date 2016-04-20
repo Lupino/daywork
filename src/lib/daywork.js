@@ -1379,6 +1379,7 @@ export default class extends Object {
       options = {};
     }
 
+    const self = this;
     options = options || {};
     ServiceOrder.findOne({ id }, (err, order) => {
       if (!order) return callback('Order not found.');
