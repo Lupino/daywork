@@ -70,8 +70,8 @@ export function payServiceOrder({ orderId }, callback) {
   request.post(getUri(`/api/orders/${orderId}/pay`), wapperCallback(callback));
 }
 
-export function cancelServiceOrder({ orderId }, callback) {
-  request.post(getUri(`/api/orders/${orderId}/cancel`), wapperCallback(callback));
+export function cancelServiceOrder({ orderId, reason }, callback) {
+  request.post(getUri(`/api/orders/${orderId}/cancel`), { reason }, wapperCallback(callback));
 }
 
 export function finishServiceOrder({ orderId }, callback) {

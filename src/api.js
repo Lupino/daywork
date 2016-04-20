@@ -780,11 +780,12 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/orders/:orderId/cancel', requireLogin(), (req, res) => {
     const order = req.order;
+    const reason = req.body.reason;
     const userId = req.currentUser.userId;
     if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.cancelServiceOrder(order.id,
+    daywork.cancelServiceOrder({id: order.id, reason},
                                (err, order) => sendJsonResponse(res, err, { order }));
   });
 

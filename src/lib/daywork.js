@@ -1363,7 +1363,7 @@ export default class extends Object {
         next(null, order);
       },
       (order, next) => {
-        ServiceOrder.findOneAndUpdate({ id }, { status: 'Cancel' }, ( err, o ) => next(err, order));
+        ServiceOrder.findOneAndUpdate({ id }, { status: 'Cancel', reason }, ( err, o ) => next(err, order));
       }
 
     ], callback);
