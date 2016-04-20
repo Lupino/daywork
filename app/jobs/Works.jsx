@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, List, ListItem } from 'react-toolbox';
 import { getUserWorks, imageRoot } from '../api';
-import JobItem from './JobItem';
 import style from '../style';
 import lodash from 'lodash';
 
