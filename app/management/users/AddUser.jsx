@@ -34,7 +34,7 @@ export default class AddUser extends Component {
   handleAddUser = () => {
     let checkError = {};
     let hasError = false;
-    const { phoneNumber, realName, passwd } = this.state;
+    const { phoneNumber, realName, passwd, sex, intro, avatar } = this.state;
     const { router } = this.context;
     const { notify } = this.props;
     const next = this.props.location.query.next;
@@ -58,7 +58,7 @@ export default class AddUser extends Component {
       return;
     }
 
-    addUser({ phoneNumber, realName, passwd }, (err) => {
+    addUser({ phoneNumber, realName, passwd, sex, intro, avatar }, (err) => {
       if (err) {
         if (/phoneNumber/.exec(err)) {
           checkError.phoneNumber = `手机号码已经被注册了`;

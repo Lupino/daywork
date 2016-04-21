@@ -5,8 +5,8 @@ export function getUserList ({ page, limit }, callback) {
   request.get(getUri('/api/management/getUsers'), { page, limit }, wapperCallback(callback));
 }
 
-export function addUser({ phoneNumber, realName, passwd, avatar }, callback) {
-  request.post(getUri('/api/management/addUser'), { phoneNumber, realName, passwd, avatar },
+export function addUser({ phoneNumber, realName, passwd, sex, avatar, intro }, callback) {
+  request.post(getUri('/api/management/addUser'), { phoneNumber, realName, passwd, sex, avatar, intro },
                wapperCallback(callback));
 }
 
