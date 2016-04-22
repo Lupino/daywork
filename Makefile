@@ -1,4 +1,4 @@
-BABEL=node_modules/.bin/babel
+BABEL=node_modules/.bin/babel --presets=es2015,stage-0
 
 FILES=$(shell find app -name '*.jsx')
 
