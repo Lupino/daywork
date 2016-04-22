@@ -9,8 +9,7 @@
     "test": "",
     "start": "babel-node server.js",
     "lint": "eslint .",
-    "build": "webpack --config=webpack.production.config.js",
-    "worker": "babel-node src/lib/message_worker.js"
+    "build": "webpack --config=webpack.production.config.js"
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",
