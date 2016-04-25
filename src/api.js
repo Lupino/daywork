@@ -4,7 +4,7 @@ import { sendJsonResponse } from './lib/util';
 import async from 'async';
 import _ from 'lodash';
 import { requestSmsCode, verifySmsCode } from './lib/leancloud';
-import { hashedPassword } from './lib/daywork';
+import { hashedPassword } from './lib/zhaoshizuo';
 import { OauthToken } from './lib/models';
 import {
   createPayment,
@@ -16,8 +16,8 @@ import {
 import qs from 'querystring';
 import { search } from './lib/search';
 
-export default function(app, daywork) {
-  let  { requireLogin } = daywork;
+export default function(app, zhaoshizuo) {
+  let  { requireLogin } = zhaoshizuo;
 
   app.get(apiPrefix + '/users/me', requireLogin(),
           (req, res) => sendJsonResponse(res, null, { user: req.currentUser }));
@@ -31,7 +31,7 @@ export default function(app, daywork) {
             if (req.currentUser) {
               options.favorited = options.requested = req.currentUser.userId;
             }
-            daywork.getJob(req.job.jobId, options, (err, job) => {
+            zhaoshizuo.getJob(req.job.jobId, options, (err, job) => {
               sendJsonResponse(res, err, { job });
             });
           });
@@ -46,7 +46,7 @@ export default function(app, daywork) {
     let jobId = req.params.jobId;
     let skip = limit * page;
 
-    daywork.getJobWorkers(jobId,
+    zhaoshizuo.getJobWorkers(jobId,
                           { limit: limit, skip: skip, status: status },
                           (err, workers) => {
                             sendJsonResponse(res, err, { workers: workers });
@@ -57,7 +57,7 @@ export default function(app, daywork) {
     let userId = req.params.userId;
     let jobId = req.params.jobId;
 
-    daywork.getWorker({ userId, jobId },
+    zhaoshizuo.getWorker({ userId, jobId },
                     (err, worker) => {
                       if (worker) {
                         worker.job = req.job;
@@ -81,10 +81,10 @@ export default function(app, daywork) {
       query.status = status;
     }
 
-    daywork.getJobs(query ,
+    zhaoshizuo.getJobs(query ,
                     { limit: limit, skip: skip },
                     (err, jobs) => {
-                      daywork.countJob(query, (_, total) => {
+                      zhaoshizuo.countJob(query, (_, total) => {
                         sendJsonResponse(res, err, { jobs, total });
                       });
                     });
@@ -115,10 +115,10 @@ export default function(app, daywork) {
     if (req.currentUser) {
       extra.favorited = extra.requested = req.currentUser.userId;
     }
-    daywork.getJobs(query,
+    zhaoshizuo.getJobs(query,
                     { limit: limit, skip: skip, extra: extra },
                     (err, jobs) => {
-                      daywork.countJob(query, (_, total) => {
+                      zhaoshizuo.countJob(query, (_, total) => {
                         sendJsonResponse(res, err, { jobs, total });
                       });
                     });
@@ -134,7 +134,7 @@ export default function(app, daywork) {
     let userId = req.params.userId;
     let skip = limit * page;
 
-    daywork.getMyJobs(userId,
+    zhaoshizuo.getMyJobs(userId,
                       { limit: limit, skip: skip, status: status },
                       (err, jobs) => {
                         sendJsonResponse(res, err, { works: jobs });
@@ -150,7 +150,7 @@ export default function(app, daywork) {
     let userId = req.currentUser.userId;
     let skip = limit * page;
 
-    daywork.getMessages(userId, { limit, skip },
+    zhaoshizuo.getMessages(userId, { limit, skip },
                         (err, messages) => sendJsonResponse(res, err, { messages }));
 
   });
@@ -159,7 +159,7 @@ export default function(app, daywork) {
     let userId = req.params.userId;
     let jobId = req.params.jobId;
 
-    daywork.getWork({ userId, jobId },
+    zhaoshizuo.getWork({ userId, jobId },
                     (err, work) => {
                       sendJsonResponse(res, err, { work });
                     });
@@ -176,7 +176,7 @@ export default function(app, daywork) {
     let userId = req.query.userId || null;
     let skip = limit * page;
 
-    daywork.getRecordByJob(jobId,
+    zhaoshizuo.getRecordByJob(jobId,
                            { limit: limit, skip: skip, status: status, userId: userId },
                            (err, records) => {
                              sendJsonResponse(res, err, { records: records });
@@ -189,7 +189,7 @@ export default function(app, daywork) {
     if (!req.isOwnerJob || userId === req.currentUser.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.getPayment(jobId, userId,
+    zhaoshizuo.getPayment(jobId, userId,
                        (err, payment) => sendJsonResponse(res, err, { payment: payment }));
   });
 
@@ -204,7 +204,7 @@ export default function(app, daywork) {
     let jobId = req.query.jobId || null;
     let skip = limit * page;
 
-    daywork.getRecordByUser(userId,
+    zhaoshizuo.getRecordByUser(userId,
                             { limit: limit, skip: skip, status: status, jobId: jobId },
                             (err, records) => {
                               sendJsonResponse(res, err, { records: records });
@@ -220,12 +220,12 @@ export default function(app, daywork) {
     if (!job.salary) {
       return sendJsonResponse(res, '请填写单位工资');
     }
-    daywork.createJob(job, (err, job) => sendJsonResponse(res, err, { job: job }));
+    zhaoshizuo.createJob(job, (err, job) => sendJsonResponse(res, err, { job: job }));
   });
 
   app.post(apiPrefix + '/jobs/:jobId/publish', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.publishJob(req.job.jobId,
+      zhaoshizuo.publishJob(req.job.jobId,
                          (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -234,7 +234,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/jobs/:jobId/finish', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.finishJob(req.job.jobId,
+      zhaoshizuo.finishJob(req.job.jobId,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -243,7 +243,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/jobs/:jobId/delete', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.deleteJob(req.job.jobId,
+      zhaoshizuo.deleteJob(req.job.jobId,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -252,7 +252,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/jobs/:jobId/update', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.updateJob(req.job.jobId, req.body,
+      zhaoshizuo.updateJob(req.job.jobId, req.body,
                         (err, job) => sendJsonResponse(res, err, { job: job }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -263,7 +263,7 @@ export default function(app, daywork) {
     let userId = req.currentUser.userId;
     let jobId = Number(req.body.jobId);
 
-    daywork.getJob(jobId, (err, job) => {
+    zhaoshizuo.getJob(jobId, (err, job) => {
       if (!job) {
         return sendJsonResponse(res, 404, 'Job not found.');
       }
@@ -271,7 +271,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, 403, 'You can\'t request job for yourself.');
       }
 
-      daywork.requestMyJob(jobId, userId,
+      zhaoshizuo.requestMyJob(jobId, userId,
                            (err, myJob) => sendJsonResponse(res, err, { work: myJob }));
     });
   });
@@ -288,14 +288,14 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'You can\'t assign job for yourself.');
     }
 
-    daywork.getUser(userId, (err, user) => {
+    zhaoshizuo.getUser(userId, (err, user) => {
       if (err) {
         return sendJsonResponse(res, err);
       }
       if (!user || !user.userId) {
         return sendJsonResponse(res, 'User: ' + userId + ' is not exists.');
       }
-      daywork.assignMyJob(userId, jobId,
+      zhaoshizuo.assignMyJob(userId, jobId,
                           (err, myJob) => sendJsonResponse(res, err, { worker: myJob }));
     });
   });
@@ -308,7 +308,7 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
 
-    daywork.getUser(req.body.userId, (err, user) => {
+    zhaoshizuo.getUser(req.body.userId, (err, user) => {
       if (err) {
         return sendJsonResponse(res, err);
       }
@@ -316,7 +316,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, 'User: ' + userId + ' is not exists.');
       }
 
-      daywork.leaveMyJob(userId, jobId,
+      zhaoshizuo.leaveMyJob(userId, jobId,
                          (err, myJob) => sendJsonResponse(res, err, myJob));
     });
   });
@@ -324,14 +324,14 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/jobs/:jobId/favorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let jobId = req.job.jobId;
-    daywork.favorite(userId, jobId,
+    zhaoshizuo.favorite(userId, jobId,
                      (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/jobs/:jobId/unfavorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let jobId = req.job.jobId;
-    daywork.unfavorite(userId, jobId,
+    zhaoshizuo.unfavorite(userId, jobId,
                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
@@ -347,7 +347,7 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'You can\'t add work record for yourself.');
     }
 
-    daywork.getUser(userId, (err, user) => {
+    zhaoshizuo.getUser(userId, (err, user) => {
       if (err) {
         return sendJsonResponse(res, err);
       }
@@ -359,7 +359,7 @@ export default function(app, daywork) {
         userId: userId,
         recordNumber: Number(req.body.recordNumber) || 1
       };
-      daywork.addRecord(record,
+      zhaoshizuo.addRecord(record,
                         (err, rec) => sendJsonResponse(res, err, { record: rec }));
     });
   });
@@ -370,8 +370,8 @@ export default function(app, daywork) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
     async.waterfall([
-      (next) => daywork.getRecord(recId, next),
-      (record, next) => daywork.cancelRecord(recId, next)
+      (next) => zhaoshizuo.getRecord(recId, next),
+      (record, next) => zhaoshizuo.cancelRecord(recId, next)
     ], (err, rec) => sendJsonResponse(res, err, { record: rec }));
   });
 
@@ -381,7 +381,7 @@ export default function(app, daywork) {
     }
     let id = Number(req.body.id);
     let money = Number(req.body.money);
-    daywork.payOffline(id, money,
+    zhaoshizuo.payOffline(id, money,
                        (err, result) => sendJsonResponse(res, err, { result: result }));
   });
 
@@ -392,7 +392,7 @@ export default function(app, daywork) {
         return sendJsonResponse(res, err);
       }
       user.phoneVerified = true;
-      daywork.createUser(user, (err, user) => {
+      zhaoshizuo.createUser(user, (err, user) => {
         if (user && user.userId && req.session) {
           req.session.currentUser = user;
         }
@@ -442,7 +442,7 @@ export default function(app, daywork) {
         }
       },
       (next) => {
-        daywork.changePasswd(pwds, next);
+        zhaoshizuo.changePasswd(pwds, next);
       }
     ], (err) => sendJsonResponse(res, err, { result: 'success' }));
   });
@@ -450,7 +450,7 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/updateProfile', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let body = req.body;
-    daywork.updateUser(userId, body,
+    zhaoshizuo.updateUser(userId, body,
                        (err, user) => sendJsonResponse(res, err, { user: user }));
   });
 
@@ -463,7 +463,7 @@ export default function(app, daywork) {
       },
       (files, next) => {
         async.map(_.values(files), (file, done) => {
-          daywork.upload(file, (err, file) => done(err, file && file.toJSON()));
+          zhaoshizuo.upload(file, (err, file) => done(err, file && file.toJSON()));
         }, next);
       }
     ], (err, files) => {
@@ -482,10 +482,10 @@ export default function(app, daywork) {
           return next('请选择头像');
         }
         let file = files.avatar;
-        daywork.upload(file, next);
+        zhaoshizuo.upload(file, next);
       },
       (file, next) => {
-        daywork.updateUser(req.currentUser.userId, { avatar: file.toJSON() },
+        zhaoshizuo.updateUser(req.currentUser.userId, { avatar: file.toJSON() },
                            (err) => next(err, file));
       }
     ], (err, file) => {
@@ -570,7 +570,7 @@ export default function(app, daywork) {
             if (req.currentUser) {
               options.favorited = req.currentUser.userId;
             }
-            daywork.getService(req.service.serviceId, options, (err, service) => {
+            zhaoshizuo.getService(req.service.serviceId, options, (err, service) => {
               sendJsonResponse(res, err, { service });
             });
           });
@@ -590,10 +590,10 @@ export default function(app, daywork) {
       query.status = status;
     }
 
-    daywork.getServices(query ,
+    zhaoshizuo.getServices(query ,
                     { limit: limit, skip: skip },
                     (err, services) => {
-                      daywork.countService(query, (_, total) => {
+                      zhaoshizuo.countService(query, (_, total) => {
                         sendJsonResponse(res, err, { services, total });
                       });
                     });
@@ -624,10 +624,10 @@ export default function(app, daywork) {
     if (req.currentUser) {
       extra.favorited = req.currentUser.userId;
     }
-    daywork.getServices(query,
+    zhaoshizuo.getServices(query,
                     { limit: limit, skip: skip, extra: extra },
                     (err, services) => {
-                      daywork.countService(query, (_, total) => {
+                      zhaoshizuo.countService(query, (_, total) => {
                         sendJsonResponse(res, err, { services, total });
                       });
                     });
@@ -642,12 +642,12 @@ export default function(app, daywork) {
     if (!service.price) {
       return sendJsonResponse(res, '请填写服务价格');
     }
-    daywork.createService(service, (err, service) => sendJsonResponse(res, err, { service: service }));
+    zhaoshizuo.createService(service, (err, service) => sendJsonResponse(res, err, { service: service }));
   });
 
   app.post(apiPrefix + '/services/:serviceId/publish', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.publishService(req.service.serviceId,
+      zhaoshizuo.publishService(req.service.serviceId,
                          (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -656,7 +656,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/services/:serviceId/finish', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.finishService(req.service.serviceId,
+      zhaoshizuo.finishService(req.service.serviceId,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -665,7 +665,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/services/:serviceId/delete', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.deleteService(req.service.serviceId,
+      zhaoshizuo.deleteService(req.service.serviceId,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -674,7 +674,7 @@ export default function(app, daywork) {
 
   app.post(apiPrefix + '/services/:serviceId/update', requireLogin(), (req, res) => {
     if (req.isOwner || req.isAdmin) {
-      daywork.updateService(req.service.serviceId, req.body,
+      zhaoshizuo.updateService(req.service.serviceId, req.body,
                         (err, service) => sendJsonResponse(res, err, { service: service }));
     } else {
       sendJsonResponse(res, 403, 'no permission');
@@ -684,14 +684,14 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/services/:serviceId/favorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let serviceId = req.service.serviceId;
-    daywork.favoriteService(userId, serviceId,
+    zhaoshizuo.favoriteService(userId, serviceId,
                      (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/services/:serviceId/unfavorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let serviceId = req.service.serviceId;
-    daywork.unfavoriteService(userId, serviceId,
+    zhaoshizuo.unfavoriteService(userId, serviceId,
                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
@@ -699,7 +699,7 @@ export default function(app, daywork) {
     const { amount, summary } = req.body;
     const userId = req.currentUser.userId;
     const serviceId = req.service.serviceId;
-    daywork.createServiceOrder({ userId, serviceId, amount, summary }, (err, order) => {
+    zhaoshizuo.createServiceOrder({ userId, serviceId, amount, summary }, (err, order) => {
       sendJsonResponse(res, err, {order});
     });
   });
@@ -710,7 +710,7 @@ export default function(app, daywork) {
     if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.getServiceOrder(order.id, { user: true, service: true },
+    zhaoshizuo.getServiceOrder(order.id, { user: true, service: true },
                             (err, order) => {
                               order.isSaled = userId === order.serviceUserId;
                               order.isPurchased = userId === order.userId;
@@ -737,7 +737,7 @@ export default function(app, daywork) {
       }
     });
 
-    daywork.getServiceOrders(query,
+    zhaoshizuo.getServiceOrders(query,
                              { limit: limit, skip: skip },
                              (err, orders) => {
                                sendJsonResponse(res, err, { orders });
@@ -766,7 +766,7 @@ export default function(app, daywork) {
       }
     });
 
-    daywork.getServiceOrders(query,
+    zhaoshizuo.getServiceOrders(query,
                              { limit: limit, skip: skip },
                              (err, orders) => {
                                sendJsonResponse(res, err, { orders });
@@ -778,7 +778,7 @@ export default function(app, daywork) {
     if (!req.isOwnerServiceOrder) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.payServiceOrder(order.id,
+    zhaoshizuo.payServiceOrder(order.id,
                             (err, order) => sendJsonResponse(res, err, { order }));
   });
 
@@ -789,7 +789,7 @@ export default function(app, daywork) {
     if (!req.isOwnerServiceOrder && userId !== order.service.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.cancelServiceOrder({id: order.id, reason},
+    zhaoshizuo.cancelServiceOrder({id: order.id, reason},
                                (err, order) => sendJsonResponse(res, err, { order }));
   });
 
@@ -799,7 +799,7 @@ export default function(app, daywork) {
     if (!req.isOwnerServiceOrder) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.finishServiceOrder(order.id,
+    zhaoshizuo.finishServiceOrder(order.id,
                                (err, order) => sendJsonResponse(res, err, { order }));
   });
 
@@ -809,7 +809,7 @@ export default function(app, daywork) {
     if (userId !== order.service.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.dealingServiceOrder(order.id,
+    zhaoshizuo.dealingServiceOrder(order.id,
                                 (err, order) => sendJsonResponse(res, err, { order }));
   });
 
@@ -819,33 +819,33 @@ export default function(app, daywork) {
     if (userId !== order.service.userId) {
       return sendJsonResponse(res, 403, 'no permission.');
     }
-    daywork.dealtServiceOrder(order.id,
+    zhaoshizuo.dealtServiceOrder(order.id,
                               (err, order) => sendJsonResponse(res, err, { order }));
   });
 
   app.get(apiPrefix + '/categories/:categoryType/?', (req, res) => {
     const { categoryType } = req.params;
-    daywork.getCategories(categoryType, (err, categories) => {
+    zhaoshizuo.getCategories(categoryType, (err, categories) => {
       sendJsonResponse(res, err, { categories });
     });
   });
 
   app.get(apiPrefix + '/categories/:categoryType/:categoryId?', (req, res) => {
     const { categoryType, categoryId } = req.params;
-    daywork.getCategory({ categoryId, categoryType }, (err, category) => {
+    zhaoshizuo.getCategory({ categoryId, categoryType }, (err, category) => {
       sendJsonResponse(res, err, { category });
     });
   });
 
   app.get(apiPrefix + '/cities/?', (req, res) => {
-    daywork.getCities((err, cities) => {
+    zhaoshizuo.getCities((err, cities) => {
       sendJsonResponse(res, err, { cities });
     });
   });
 
   app.get(apiPrefix + '/cities/:cityId', (req, res) => {
     const { cityId } = req.params;
-    daywork.getCity(cityId, (err, city) => {
+    zhaoshizuo.getCity(cityId, (err, city) => {
       sendJsonResponse(res, err, { city });
     });
   });
@@ -866,9 +866,9 @@ export default function(app, daywork) {
       async.map(docs || [], (doc, done) => {
         const line = doc.id.split('-');
         if (line[0] === 'job') {
-          daywork.getJob(line[1], options, (err, job) => done(err, job));
+          zhaoshizuo.getJob(line[1], options, (err, job) => done(err, job));
         } else if (line[0] === 'service') {
-          daywork.getService(line[1], options, (err, service) => done(err, service));
+          zhaoshizuo.getService(line[1], options, (err, service) => done(err, service));
         } else {
           done();
         }

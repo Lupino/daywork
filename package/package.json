@@ -1,14 +1,13 @@
 {
   "author": "Lupino",
-  "name": "daywork",
+  "name": "zhaoshizuo",
   "repository": "",
   "description": "",
   "version": "1.0.0",
   "main": "./server.js",
   "scripts": {
     "test": "",
-    "start": "node server.js",
-    "worker": "node lib/message_worker.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",

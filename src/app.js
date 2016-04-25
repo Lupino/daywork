@@ -3,7 +3,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import config from './config';
-import Daywork from './lib/daywork';
+import ZhaoShiZuo from './lib/zhaoshizuo';
 import expressCommon from './lib/express_common';
 import api from './api';
 import management from './management';
@@ -11,7 +11,7 @@ import cors from 'cors';
 
 var app = module.exports = express();
 
-let daywork = new Daywork();
+let zhaoshizuo = new ZhaoShiZuo();
 
 app.set('port', config.port || process.env.PORT || 3000);
 app.set('host', config.host || process.env.HOST || '127.0.0.1');
@@ -24,9 +24,9 @@ app.use(methodOverride());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(daywork.auth('/auth'));
+app.use(zhaoshizuo.auth('/auth'));
 
-expressCommon(app, daywork);
+expressCommon(app, zhaoshizuo);
 
-api(app, daywork);
-management(app, daywork);
+api(app, zhaoshizuo);
+management(app, zhaoshizuo);
