@@ -27,24 +27,24 @@ front: $(APPJS)
 dist: $(DIST) front
 
 dist-app: front
-	cp -av $(DIST)/public/static Daywork/www
+	cp -av $(DIST)/public/static ZhaoShiZuoApp/www
 
 clean:
 	rm -r $(DIST)
 
 rsync: dist
-	rsync -avz --exclude=public/upload --exclude=node_modules --delete $(DIST) $(PUBLISHHOST):/data/apps/yiqilaila.ml
+	rsync -avz --exclude=public/upload --exclude=node_modules --delete $(DIST) $(PUBLISHHOST):/data/apps/zhaoshizuo.la
 
 publish: rsync
-	ssh asiaroad docker build -t yiqilaila /data/apps/yiqilaila.ml
+	ssh asiaroad docker build -t zhaoshizuo.la /data/apps/zhaoshizuo.la
 
 restart:
-	ssh $(PUBLISHHOST) docker stop yiqilaila
-	ssh $(PUBLISHHOST) docker rm yiqilaila
+	ssh $(PUBLISHHOST) docker stop zhaoshizuo.la
+	ssh $(PUBLISHHOST) docker rm zhaoshizuo.la
 	ssh $(PUBLISHHOST) docker run -d \
-		--name yiqilaila \
+		--name zhaoshizuo.la \
 		-e TMPDIR=/src/public/upload \
-		-v /data/conf/yiqilaila/config.json:/src/config.json \
-		-v /data/files/yiqilaila:/src/public/upload \
+		-v /data/conf/zhaoshizuo/config.json:/src/config.json \
+		-v /data/files/zhaoshizuo:/src/public/upload \
 		-p 192.168.42.1:4000:3000 \
-		yiqilaila
+		zhaoshizuo.la
