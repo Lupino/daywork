@@ -110,7 +110,7 @@ class App extends Component {
           <Button icon='list' floating mini ripple
             onClick={this.handleToggle}
           />
-          <div className={style['app-bar-text']}> {child.type.title || '一起来啦'} </div>
+          <div className={style['app-bar-text']}> {child.type.title || '找事做'} </div>
           <Navigation />
         </AppBar>
         <Drawer active={drawerActive} onOverlayClick={this.handleToggle}>
