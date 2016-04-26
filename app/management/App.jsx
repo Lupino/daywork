@@ -50,7 +50,7 @@ class App extends Component {
     return (
       <div>
         <AppBar fixed flat className={`${style['app-bar']} ${style['not-print']}`}>
-          <a href='#'> 一起来啦 管理中心</a>
+          <a href='#'> 找事做 管理中心</a>
           <Navigation className={style.menu} type='horizontal' routes={links} />
         </AppBar>
         <div className={style.container}>

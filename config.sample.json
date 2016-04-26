@@ -1,6 +1,6 @@
 {
-  "mongod": "mongodb://localhost/daywork",
-  "cookieSecret": "yabby-chknonlaedfasdwe",
+  "mongod": "mongodb://localhost/zhaoshizuo",
+  "cookieSecret": "zhaoshizuo-chknonlaedfasdwe",
   "host": "127.0.0.1",
   "apiPrefix": "/api",
   "uploadPath": "www/upload",

@@ -1,10 +1,10 @@
 import { sendJsonResponse } from './util';
 import { getPayment } from './payment';
 
-export default function(app, daywork) {
+export default function(app, zhaoshizuo) {
 
   app.param('jobId', (req, res, next, jobId) => {
-    daywork.getJob(jobId, (err, job) => {
+    zhaoshizuo.getJob(jobId, (err, job) => {
       if (err || !job) {
         return sendJsonResponse(res, 'Job: ' + jobId + ' is not found.');
       }
@@ -15,7 +15,7 @@ export default function(app, daywork) {
   });
 
   app.param('userId', (req, res, next, userId) => {
-    daywork.getUser(userId, (err, user) => {
+    zhaoshizuo.getUser(userId, (err, user) => {
       if (err || !user) {
         return sendJsonResponse(res, 'User: ' + userId + ' is not found.');
       }
@@ -37,7 +37,7 @@ export default function(app, daywork) {
   });
 
   app.param('serviceId', (req, res, next, serviceId) => {
-    daywork.getService(serviceId, (err, service) => {
+    zhaoshizuo.getService(serviceId, (err, service) => {
       if (err || !service) {
         return sendJsonResponse(res, 'Service: ' + serviceId + ' is not found.');
       }
@@ -48,7 +48,7 @@ export default function(app, daywork) {
   });
 
   app.param('orderId', (req, res, next, orderId) => {
-    daywork.getServiceOrder(orderId, { service: true }, (err, order) => {
+    zhaoshizuo.getServiceOrder(orderId, { service: true }, (err, order) => {
       if (err || !order) {
         return sendJsonResponse(res, 'Order: ' + orderId + ' is not found.');
       }

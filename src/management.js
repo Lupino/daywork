@@ -2,8 +2,8 @@ import { apiPrefix } from './config';
 import { sendJsonResponse } from './lib/util';
 import qs from 'querystring';
 
-export default function(app, daywork) {
-  const { requireAdmin } = daywork;
+export default function(app, zhaoshizuo) {
+  const { requireAdmin } = zhaoshizuo;
 
   app.get(apiPrefix + '/management/getUsers', requireAdmin(), (req, res) => {
     let page = Number(req.query.page) || 0;
@@ -13,9 +13,9 @@ export default function(app, daywork) {
     }
     let skip = limit * page;
 
-    daywork.getUsers({}, { limit: limit, skip: skip },
+    zhaoshizuo.getUsers({}, { limit: limit, skip: skip },
                      (err, users) => {
-                       daywork.countUser({}, (_, total) => {
+                       zhaoshizuo.countUser({}, (_, total) => {
                          sendJsonResponse(res, err, { users, total });
                        });
 
@@ -25,7 +25,7 @@ export default function(app, daywork) {
   app.post(apiPrefix + '/management/addUser', requireAdmin(), (req, res) => {
     let user = req.body;
     user.phoneVerified = false;
-    daywork.createUser(user, (err, user) => sendJsonResponse(res, err, { user }));
+    zhaoshizuo.createUser(user, (err, user) => sendJsonResponse(res, err, { user }));
   });
 
   app.post(apiPrefix + '/management/addJob', requireAdmin(), (req, res) => {
@@ -39,7 +39,7 @@ export default function(app, daywork) {
     if (!job.salary) {
       return sendJsonResponse(res, '请填写单位工资');
     }
-    daywork.createJob(job, (err, job) => sendJsonResponse(res, err, { job }));
+    zhaoshizuo.createJob(job, (err, job) => sendJsonResponse(res, err, { job }));
   });
 
   app.post(apiPrefix + '/management/addService', requireAdmin(), (req, res) => {
@@ -53,7 +53,7 @@ export default function(app, daywork) {
     if (!service.price) {
       return sendJsonResponse(res, '请填写服务价格');
     }
-    daywork.createService(service, (err, service) => sendJsonResponse(res, err, { service }));
+    zhaoshizuo.createService(service, (err, service) => sendJsonResponse(res, err, { service }));
   });
 
   app.post(apiPrefix + '/management/updateUser', requireAdmin(), (req, res) => {
@@ -63,7 +63,7 @@ export default function(app, daywork) {
     if (!userId) {
       return sendJsonResponse(res, '请选择用户');
     }
-    daywork.updateUser(userId, body,
+    zhaoshizuo.updateUser(userId, body,
                        (err, user) => sendJsonResponse(res, err, { user: user }));
   });
 
@@ -77,7 +77,7 @@ export default function(app, daywork) {
     if (!pwds.passwd) {
       return sendJsonResponse(res, '请输入密码');
     }
-    daywork.changePasswd(pwds,
+    zhaoshizuo.changePasswd(pwds,
                        (err, user) => sendJsonResponse(res, err, { user }));
   });
 
@@ -89,7 +89,7 @@ export default function(app, daywork) {
     if (!city.cityName) {
       return sendJsonResponse(res, 'cityName is required');
     }
-    daywork.addCity(city, (err, city) => {
+    zhaoshizuo.addCity(city, (err, city) => {
       sendJsonResponse(res, err, { city });
     });
   });
@@ -102,7 +102,7 @@ export default function(app, daywork) {
     if (!city.cityName) {
       return sendJsonResponse(res, 'cityName is required');
     }
-    daywork.updateCity(city, (err, city) => {
+    zhaoshizuo.updateCity(city, (err, city) => {
       sendJsonResponse(res, err, { city });
     });
   });
@@ -118,7 +118,7 @@ export default function(app, daywork) {
     if (!category.categoryType) {
       return sendJsonResponse(res, 'categoryType is required');
     }
-    daywork.addCategory(category, (err, category) => {
+    zhaoshizuo.addCategory(category, (err, category) => {
       sendJsonResponse(res, err, { category });
     });
   });
@@ -131,7 +131,7 @@ export default function(app, daywork) {
     if (!category.categoryName) {
       return sendJsonResponse(res, 'categoryName is required');
     }
-    daywork.updateCategory(category, (err, category) => {
+    zhaoshizuo.updateCategory(category, (err, category) => {
       sendJsonResponse(res, err, { category });
     });
   });

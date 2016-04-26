@@ -1,13 +1,13 @@
 {
   "author": "Lupino",
-  "name": "daywork",
+  "name": "zhaoshizuo",
   "repository": "",
   "description": "",
   "version": "1.0.0",
   "main": "./src/app.js",
   "scripts": {
     "test": "",
-    "start": "babel-node server.js",
+    "start": "babel-node --presets=es2015,stage-0 server.js",
     "lint": "eslint .",
     "build": "webpack --config=webpack.production.config.js"
   },

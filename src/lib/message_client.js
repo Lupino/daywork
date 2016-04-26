@@ -14,7 +14,7 @@ export function wrapperAddRecordCallback(callback) {
     };
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('daywork.addRecord', { recordId, userId }, cb);
+      submitJob('zhaoshizuo.addRecord', { recordId, userId }, cb);
       return;
     }
     cb();
@@ -28,7 +28,7 @@ export function wrapperCancelRecordCallback(callback) {
     };
     if (!err) {
       let { recordId, userId } = record;
-      submitJob('daywork.cancelRecord', { recordId, userId }, cb);
+      submitJob('zhaoshizuo.cancelRecord', { recordId, userId }, cb);
       return;
     }
     cb();
@@ -43,7 +43,7 @@ export function wrapperPaidRecordCallback(callback) {
     if (!err) {
       let { paidRecord } = result;
       let { recordId, userId } = paidRecord;
-      submitJob('daywork.paidRecord', { recordId, userId }, cb);
+      submitJob('zhaoshizuo.paidRecord', { recordId, userId }, cb);
       return;
     }
     cb();
@@ -57,7 +57,7 @@ export function wrapperRequestJobCallback(callback) {
     };
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('daywork.requestJob', { userId, jobId }, cb);
+      submitJob('zhaoshizuo.requestJob', { userId, jobId }, cb);
       return;
     }
     cb();
@@ -71,7 +71,7 @@ export function wrapperJoinJobCallback(callback) {
     };
     if (!err) {
       let { userId, jobId } = myJob;
-      submitJob('daywork.joinJob', { userId, jobId }, cb);
+      submitJob('zhaoshizuo.joinJob', { userId, jobId }, cb);
       return;
     }
     cb();

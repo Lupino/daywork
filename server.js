@@ -8,14 +8,14 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import appConfig from './src/config';
-import Daywork from './src/lib/daywork';
+import ZhaoShiZuo from './src/lib/zhaoshizuo';
 import expressCommon from './src/lib/express_common';
 import api from './src/api';
 import management from './src/management';
 import cors from 'cors';
 
 function setup(app) {
-  let daywork = new Daywork();
+  let zhaoshizuo = new ZhaoShiZuo();
 
   app.use(bodyParser.urlencoded({
     extended: false
@@ -25,10 +25,10 @@ function setup(app) {
   app.use(bodyParser.json());
   app.use(methodOverride());
 
-  app.use(daywork.auth('/auth'));
-  expressCommon(app, daywork);
-  api(app, daywork);
-  management(app, daywork);
+  app.use(zhaoshizuo.auth('/auth'));
+  expressCommon(app, zhaoshizuo);
+  api(app, zhaoshizuo);
+  management(app, zhaoshizuo);
   app.use(errorHandler());
 }
 

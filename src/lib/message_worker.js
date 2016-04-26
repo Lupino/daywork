@@ -6,7 +6,6 @@ export class Worker extends Object {
   constructor() {
     super();
     this.funcs = {};
-    this.daywork = null;
   }
   addFunction(funcName, callback) {
     this.funcs[funcName] = callback;
@@ -38,7 +37,7 @@ function wrapperCallback(callback) {
   };
 }
 
-worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
+worker.addFunction('zhaoshizuo.addRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'addRecord',
     content: { recordId }
@@ -46,7 +45,7 @@ worker.addFunction('daywork.addRecord', wrapperCallback(({ userId, recordId, cre
   addMessage({ userId, message, createdAt }, done);
 }));
 
-worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
+worker.addFunction('zhaoshizuo.cancelRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'cancelRecord',
     content: { recordId }
@@ -54,7 +53,7 @@ worker.addFunction('daywork.cancelRecord', wrapperCallback(({ userId, recordId, 
   addMessage({ userId, message, createdAt }, done);
 }));
 
-worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
+worker.addFunction('zhaoshizuo.paidRecord', wrapperCallback(({ userId, recordId, createdAt }, done) => {
   let message = {
     type: 'paidRecord',
     content: { recordId }
@@ -62,7 +61,7 @@ worker.addFunction('daywork.paidRecord', wrapperCallback(({ userId, recordId, cr
   addMessage({ userId, message, createdAt }, done());
 }));
 
-worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, createdAt }, done) => {
+worker.addFunction('zhaoshizuo.requestJob', wrapperCallback(({ jobId, userId, createdAt }, done) => {
   let message = {
     type: 'requestJob',
     content: { userId, jobId }
@@ -73,7 +72,7 @@ worker.addFunction('daywork.requestJob', wrapperCallback(({ jobId, userId, creat
   ], done);
 }));
 
-worker.addFunction('daywork.joinJob', wrapperCallback(({ userId, jobId, createdAt }, done) => {
+worker.addFunction('zhaoshizuo.joinJob', wrapperCallback(({ userId, jobId, createdAt }, done) => {
   let message = {
     type: 'joinJob',
     content: { jobId }
