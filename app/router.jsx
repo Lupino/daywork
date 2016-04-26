@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import App from './App';
 import About from './About';
 import Signin from './Signin';
@@ -37,7 +37,7 @@ import Saled from './orders/Saled';
 import Order from './orders/Order';
 
 var router = module.exports = (
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Default}/>
       <Route path="/about" component={About} />
