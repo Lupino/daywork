@@ -11,7 +11,7 @@ PUBLISHHOST=asiaroad
 
 all: dist
 
-$(DIST): $(SRC)
+$(DIST): $(SRC) Makefile
 	$(BABEL) -d $(DIST) src
 	@cp config.json $(DIST)
 	@sed -i 's@../config.json@./config.json@' $(DIST)config.js
