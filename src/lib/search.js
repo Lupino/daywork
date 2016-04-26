@@ -20,7 +20,7 @@ function wapperCallback(callback) {
   }
 }
 
-export default class Search extends Object {
+export default class Search {
   index(doc, callback) {
     request.post(searchRoot + '/api/docs/', { form: doc }, wapperCallback(callback));
   }
