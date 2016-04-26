@@ -2,9 +2,8 @@ import async from 'async';
 
 import { Message, Job } from './models';
 
-export class Worker extends Object {
+export class Worker {
   constructor() {
-    super();
     this.funcs = {};
   }
   addFunction(funcName, callback) {

@@ -49,7 +49,7 @@ function toMap(data) {
   return map;
 }
 
-export default class extends Object {
+export default class {
 
   createUser(user, callback) {
     async.waterfall([
