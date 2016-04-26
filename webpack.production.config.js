@@ -33,6 +33,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
     new ExtractTextPlugin('[name].css', { allChunks: true }),
     new webpack.optimize.UglifyJsPlugin({
       // include: /\.min\.js$|vendors.js$/,

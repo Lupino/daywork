@@ -18,7 +18,7 @@ $(DIST): $(SRC) Makefile
 	@cp package/Dockerfile $(DIST)
 	@cp package/package.json $(DIST)
 
-$(APPJS): $(FILES)
+$(APPJS): $(FILES) webpack.production.config.js
 	npm run build
 
 front: $(APPJS)
