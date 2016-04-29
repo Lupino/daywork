@@ -66,8 +66,8 @@ export default class Signin extends Component {
     const { phoneNumber, passwd, checkError } = this.state;
     const next = this.props.location.query.next;
     const links = [
-      { href: '#/signup' + (next?'?next=' + next: ''), label: '我是新用户?' },
-      { href: '#/problem', label: '登录遇到问题?'}
+      { href: '/signup' + (next?'?next=' + next: ''), label: '我是新用户?' },
+      { href: '/problem', label: '登录遇到问题?'}
     ];
     return (
       <section>

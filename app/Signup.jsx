@@ -104,7 +104,7 @@ export default class Signup extends Component {
     const { sendTimeout, phoneNumber, smsCode, realName, passwd, checkError } = this.state;
     const next = this.props.location.query.next;
     const links = [
-      { href: '#/signin' + (next?'?next=' + next: ''), label: '我是老用户?' }
+      { href: '/signin' + (next?'?next=' + next: ''), label: '我是老用户?' }
     ];
     return (
       <section>

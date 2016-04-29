@@ -74,7 +74,7 @@ export default class ResetPassword extends Component {
   render() {
     const { phoneNumber, passwd, smsCode, checkError } = this.state;
     const links = [
-      { href: '#/signin', label: '我想起密码了?' },
+      { href: '/signin', label: '我想起密码了?' },
     ];
     return (
       <section>

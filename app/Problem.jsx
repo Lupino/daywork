@@ -9,12 +9,12 @@ export default class Problem extends Component {
           <ListItem
             caption='忘记密码'
             rightIcon='done'
-            to='#/reset_password'
+            to='/reset_password'
           />
           <ListItem
             caption='注册新用户'
             rightIcon='done'
-            to='#/signup'
+            to='/signup'
           />
         </List>
       </section>
