@@ -9,17 +9,23 @@ export function getUri(path, query) {
   return path;
 }
 
-export function wapperCallback(callback) {
-  if (!callback)  callback = function() {};
+export function wapperCallback(callback, redirect) {
+  if (redirect === undefined) {
+    redirect = true;
+  }
   return function(err, res) {
     if (err) return callback(err);
     if (!res.ok) {
       return callback('请求失败！');
     }
     if (res && res.body) {
-      let rsp = res.body;
+      const rsp = res.body;
       if (rsp.err) {
-        return callback(rsp.msg || rsp.err);
+        const msg = rsp.msg || rsp.err;
+        if (msg === 'Unauthorized' && redirect) {
+          window.location.href=`/signin?next=${window.location.pathname}`
+        }
+        return callback(msg);
       }
       return callback(null, rsp);
     }

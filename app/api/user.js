@@ -3,7 +3,7 @@ import { getUri, wapperCallback } from './utils';
 import store from '../modules/store';
 
 export function getProfile(callback) {
-  request.get(getUri('/api/users/me'), wapperCallback(callback));
+  request.get(getUri('/api/users/me'), wapperCallback(callback, false));
 }
 
 export function getUser({ userId }, callback) {
