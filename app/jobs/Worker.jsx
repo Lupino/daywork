@@ -134,6 +134,7 @@ export default class Worker extends Component {
       currentPage:  0,
       loaded: false,
       activeRecord: false,
+      activePayment: false,
       recordNumber: 1
     }
   }
