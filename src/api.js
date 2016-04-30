@@ -324,15 +324,15 @@ export default function(app, zhaoshizuo) {
   app.post(apiPrefix + '/jobs/:jobId/favorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let jobId = req.job.jobId;
-    zhaoshizuo.favorite(userId, jobId,
-                     (err, fav) => sendJsonResponse(res, err, fav));
+    zhaoshizuo.favorite({ userId, jobId },
+                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/jobs/:jobId/unfavorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let jobId = req.job.jobId;
-    zhaoshizuo.unfavorite(userId, jobId,
-                       (err, fav) => sendJsonResponse(res, err, fav));
+    zhaoshizuo.unfavorite({ userId, jobId },
+                          (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/jobs/:jobId/addRecord', requireLogin(), (req, res) => {
@@ -684,15 +684,15 @@ export default function(app, zhaoshizuo) {
   app.post(apiPrefix + '/services/:serviceId/favorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let serviceId = req.service.serviceId;
-    zhaoshizuo.favoriteService(userId, serviceId,
-                     (err, fav) => sendJsonResponse(res, err, fav));
+    zhaoshizuo.favorite({ userId, serviceId },
+                        (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/services/:serviceId/unfavorite', requireLogin(), (req, res) => {
     let userId = req.currentUser.userId;
     let serviceId = req.service.serviceId;
-    zhaoshizuo.unfavoriteService(userId, serviceId,
-                       (err, fav) => sendJsonResponse(res, err, fav));
+    zhaoshizuo.unfavorite({ userId, serviceId },
+                          (err, fav) => sendJsonResponse(res, err, fav));
   });
 
   app.post(apiPrefix + '/services/:serviceId/createOrder', requireLogin(), (req, res) => {

@@ -138,8 +138,9 @@ MessageSchema.plugin(autoIncrPlugin, { model: 'Message', field: 'msgId', startAt
 export var Message = mongoose.model('Message', MessageSchema);
 
 var FavoriteSchema = new Schema({
-  userId: Number,
+  userId: { type: Number, index: true },
   jobId: Number,
+  serviceId: Number,
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -184,16 +185,6 @@ var ServiceSchema = new Schema({
 ServiceSchema.plugin(autoIncrPlugin, { model: 'Service', field: 'serviceId', startAt: 1 });
 
 export var Service = mongoose.model('Service', ServiceSchema);
-
-var FavoriteServiceSchema = new Schema({
-  userId: Number,
-  serviceId: Number,
-  createdAt: { type: Date, default: Date.now }
-});
-
-FavoriteServiceSchema.plugin(autoIncrPlugin, { model: 'FavoriteService', field: 'id', startAt: 1 });
-
-export var FavoriteService = mongoose.model('FavoriteService', FavoriteServiceSchema);
 
 var CitySchema = new Schema({
   cityId: { type: String, index: { unique: true } },

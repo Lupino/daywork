@@ -16,7 +16,6 @@ import {
   Favorite,
   Message,
   Service,
-  FavoriteService,
   JobCategory,
   ServiceCategory,
   City,
@@ -957,8 +956,9 @@ export default class {
     });
   }
 
-  favorite(userId, jobId, callback) {
-    let query = { userId: userId, jobId: jobId };
+  favorite({ userId, jobId, serviceId }, callback) {
+    let query = { userId, jobId, serviceId };
+    console.log(query);
     Favorite.findOne(query, (err, favorte) => {
       if (err) {
         return callback(err);
@@ -971,8 +971,9 @@ export default class {
     });
   }
 
-  unfavorite(userId, jobId, callback) {
-    let query = { userId: userId, jobId: jobId };
+  unfavorite({ userId, jobId, serviceId }, callback) {
+    let query = { userId, jobId, serviceId };
+    console.log(query);
     Favorite.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
   }
 
@@ -1113,7 +1114,7 @@ export default class {
         favorited(done) {
           if (!options.favorited) { return done(); }
           const userId = options.favorited;
-          FavoriteService.findOne({ userId, serviceId }, (err, fav) => done(err, fav? true : false));
+          Favorite.findOne({ userId, serviceId }, (err, fav) => done(err, fav? true : false));
         }
       }, (err, result) => {
         if (err) return callback(err);
@@ -1159,7 +1160,7 @@ export default class {
           if (!extra.favorited) return done();
           let userId = extra.favorited;
           let serviceIds = _.uniq(_.compact(services.map(service => service.serviceId)));
-          FavoriteService.find({ userId: userId, serviceId: { $in: serviceIds } }, (err, favs) => done(err, favs));
+          Favorite.find({ userId: userId, serviceId: { $in: serviceIds } }, (err, favs) => done(err, favs));
         }
       }, (err, result) => {
         if (err) {
@@ -1187,25 +1188,6 @@ export default class {
   countService(query, callback) {
     query = { $and: [ query, { status: { $nin: [ 'Deleted' ] } } ] };
     Service.count(query, (err, counter) => callback(err, counter));
-  }
-
-  favoriteService(userId, serviceId, callback) {
-    let query = { userId: userId, serviceId: serviceId };
-    FavoriteService.findOne(query, (err, favorte) => {
-      if (err) {
-        return callback(err);
-      }
-      if (favorte) {
-        return callback(null, favorte);
-      }
-      favorte = new FavoriteService(query);
-      favorte.save((err, favorte) => callback(err, favorte));
-    });
-  }
-
-  unfavoriteService(userId, serviceId, callback) {
-    let query = { userId: userId, serviceId: serviceId };
-    FavoriteService.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
   }
 
   addCity({ cityName, cityId }, callback) {
