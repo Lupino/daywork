@@ -877,4 +877,43 @@ export default function(app, zhaoshizuo) {
       });
     });
   });
+
+  app.get(apiPrefix + '/users/:userId/favortes', (req, res) => {
+    let from = Number(req.query.from) || 0;
+    let size = Number(req.query.size) || 10;
+    if (size > 50) {
+      size = 50;
+    }
+    let status = req.query.status || null;
+    let userId = Number(req.params.userId);
+
+    let query = { userId: userId };
+    if (status) {
+      query.status = status;
+    }
+
+    let options = { user: true };
+    if (req.currentUser) {
+      options.favorited = options.requested = req.currentUser.userId;
+    }
+
+    zhaoshizuo.getFavorites(query ,
+                    { limit: size, skip: from },
+                    (err, docs) => {
+                      async.map(docs || [], ({ jobId, serviceId }, done) => {
+                        if (jobId) {
+                          zhaoshizuo.getJob(jobId, options, (err, job) => done(err, job));
+                        } else if (serviceId) {
+                          zhaoshizuo.getService(serviceId, options, (err, service) => done(err, service));
+                        } else {
+                          done();
+                        }
+                      }, (err, docs) => {
+                        zhaoshizuo.countFavorite(query, (_, total) => {
+                          sendJsonResponse(res, err, { docs, total, from, size });
+                        });
+                      });
+                    });
+  });
+
 }

@@ -69,3 +69,11 @@ export function updateAvatar(file, callback) {
   req.attach('avatar', file, file.name);
   req.end(wapperCallback(callback));
 }
+
+export function getFavorites({ userId, from, size }, callback) {
+  if (!userId) {
+    const profile = store.get('profile');
+    userId = profile.userId;
+  }
+  request.get(getUri(`/api/users/{userId}/favorites`, { from, size }), wapperCallback(callback));
+}

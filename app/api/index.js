@@ -14,7 +14,8 @@ export {
   getUserWork,
   getUserRecords,
   updateProfile,
-  updateAvatar
+  updateAvatar,
+  getFavorites
 } from './user';
 
 export {

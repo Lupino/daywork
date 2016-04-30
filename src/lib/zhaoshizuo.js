@@ -1418,4 +1418,23 @@ export default class {
       }, callback);
     });
   }
+
+  getFavorites(query, options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    options = options || {};
+
+    if (!options.sort) {
+      options.sort = 'field -createdAt';
+    }
+
+    Favorite.find(query, null, { limit, skip }, (err, favs) => callback(err, favs));
+  }
+
+  countFavorite(query, callback) {
+    Favorite.count(query, (err, counter) => callback(err, counter));
+  }
 }
