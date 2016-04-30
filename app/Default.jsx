@@ -78,13 +78,13 @@ export default class Default extends Component {
   }
 
   updateRequestButton(jobId, requested) {
-    let jobs = this.state.jobs.map(job => {
-      if (job.jobId === jobId) {
-        job.requested = requested;
+    const docs = this.state.docs.map(doc => {
+      if (doc.jobId === jobId) {
+        doc.requested = requested;
       }
-      return job;
+      return doc;
     });
-    this.setState({ jobs });
+    this.setState({ docs });
   }
 
   handleFavorite(jobId, fav) {
