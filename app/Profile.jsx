@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox, Button } from 'react-toolbox';
+import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox, Button, Dialog, Input } from 'react-toolbox';
 import Avatar from './modules/list/Avatar';
 import ButtonInput from './modules/input/ButtonInput';
 import SMSCodeInput from './modules/input/SMSCodeInput';
@@ -108,11 +108,61 @@ class ListSex extends Component {
   }
 }
 
+class IntroForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: props.active,
+      intro: props.intro || ''
+    };
+  }
+
+  handleInputChange = (intro) => {
+    this.setState({ intro });
+  };
+
+  handleCloseDialog = () => {
+    this.setState({active: false});
+    if ( this.props.onClose ) {
+      this.props.onClose();
+    }
+  };
+
+  handleSave = () => {
+    const { intro } = this.state;
+    this.props.onSave(intro);
+    this.handleCloseDialog();
+  };
+
+  componentWillReceiveProps(props) {
+    this.setState({ active: props.active, intro: props.intro });
+  }
+
+  render() {
+    const { intro, active } = this.state;
+    const actions = [
+      { label: '关闭', raised: true, onClick: this.handleCloseDialog },
+      { label: '保存', raised: true, primary: true, onClick: this.handleSave}
+    ];
+    return (
+      <Dialog actions={actions} active={active} title={'简介'}>
+        <Input
+          type='text'
+          className={style['intro-input']}
+          multiline
+          onChange={this.handleInputChange}
+          value={intro} />
+      </Dialog>
+    );
+  }
+}
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showInput: ''
+      showInput: '',
+      activeIntro: false
     }
   }
 
@@ -156,6 +206,14 @@ export default class Profile extends Component {
     });
   };
 
+  handleShowIntroForm = () => {
+    this.setState({ activeIntro: true });
+  }
+
+  handleCloseIntroForm = () => {
+    this.setState({ activeIntro: false });
+  }
+
   render() {
     const profile = this.props.getProfile();
     let imgUrl = '/static/default-avatar.png';
@@ -163,7 +221,7 @@ export default class Profile extends Component {
       imgUrl = `${imageRoot}${profile.avatar.key}`
     }
 
-    const { showInput } = this.state;
+    const { showInput, activeIntro } = this.state;
     const getArrow = (name) => {
       if (showInput === name) {
         return 'keyboard_arrow_down';
@@ -223,12 +281,23 @@ export default class Profile extends Component {
           >
             <span className={style['legend-right']}> {profile.phoneNumber} </span>
           </ListItem>
+          <ListDivider />
+          <li className={style.intro} onClick={this.handleShowIntroForm}>
+            <span className={style['intro-title']}> 简介 </span>
+            <span className={style['intro-content']}> {profile.intro || '无'} </span>
+          </li>
         </List>
         <Button
           label='退出当前帐号'
           accent raised
           className={style['load-more']}
           onClick={this.handleLogOut} />
+        <IntroForm
+          onSave={this.handleUpdate.bind(this, 'intro')}
+          onClose={this.handleCloseIntroForm}
+          active={activeIntro}
+          intro={profile.intro}
+        />
       </section>
     );
   }

@@ -75,6 +75,29 @@ ul li .right {
   white-space: normal;
 }
 
+.intro {
+  padding: 10px 30px;
+}
+
+.intro-title {
+  color: #212121;
+  font-size: 1.6rem;
+}
+
+.intro-content {
+  display: block;
+  font-size: $font-size-small;
+  color: $color-text-secondary;
+  white-space: normal;
+  margin: 10px 0;
+}
+
+.intro-input {
+  textarea {
+    height: 108px;
+  }
+}
+
 .load-more {
   width: 100%;
   margin-bottom: 5px;
