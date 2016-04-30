@@ -155,7 +155,7 @@ export default class Default extends Component {
         <CardActions>
           <IconButton icon='favorite'
             accent={favorited}
-            onClick={this.handleFavorite.bind(this, serviceId, !favorited)} />
+            onClick={this.handleFavoriteService.bind(this, serviceId, !favorited)} />
           <IconButton icon='remove_red_eye' raised onClick={this.handleShowService.bind(this, serviceId, { isOwner })} />
           <IconButton icon='call' onClick={this.handleShowPhoneNumber.bind(this, phoneNumber)} />
         </CardActions>
