@@ -21,6 +21,10 @@ const getStatusString = (status) => {
 }
 
 export default class ServiceItem extends Component {
+  handleShowUserInfo(userId) {
+    const { router } = this.context;
+    router.push(`/user_info/${userId}`);
+  }
   render() {
     const { service, heading, children } = this.props;
     const { image, title, unit, price, summary, serviceId, createdAt, status, user, city, address } = service;
@@ -30,6 +34,7 @@ export default class ServiceItem extends Component {
           avatar={user.avatar && user.avatar.key ? `${imageRoot}${user.avatar.key}` : '/static/default-avatar.png'}
           title={user.realName}
           subtitle={user.phoneNumber}
+          onClick={this.handleShowUserInfo.bind(this, user.userId)}
         />}
         { image && image.key && <CardMedia aspectRatio='wide' image={`${imageRoot}${image.key}`} /> }
         <CardTitle
@@ -60,4 +65,8 @@ ServiceItem.propTypes = {
 ServiceItem.defaultProps = {
   heading: true,
   service: {}
+}
+
+ServiceItem.contextTypes = {
+  router: PropTypes.object
 }

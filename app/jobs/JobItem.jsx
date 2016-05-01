@@ -7,6 +7,10 @@ import style from '../style';
 import { imageRoot } from '../api';
 
 export default class JobItem extends Component {
+  handleShowUserInfo(userId) {
+    const { router } = this.context;
+    router.push(`/user_info/${userId}`);
+  }
   render() {
     const { job, heading, children } = this.props;
     const { image, title, payMethod, salary, summary, jobId, createdAt, status,
@@ -17,6 +21,7 @@ export default class JobItem extends Component {
           avatar={user.avatar && user.avatar.key ? `${imageRoot}${user.avatar.key}` : '/static/default-avatar.png'}
           title={user.realName}
           subtitle={user.phoneNumber}
+          onClick={this.handleShowUserInfo.bind(this, user.userId)}
         />}
         { image && image.key && <CardMedia aspectRatio='wide' image={`${imageRoot}${image.key}`} /> }
         <CardTitle
@@ -47,4 +52,8 @@ JobItem.propTypes = {
 JobItem.defaultProps = {
   heading: true,
   job: {}
+}
+
+JobItem.contextTypes = {
+  router: PropTypes.object
 }
