@@ -1,8 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import {
-  CardActions,
-  Button, IconButton
-} from 'react-toolbox';
+import { Button } from 'react-toolbox';
 
 import Documents from './Documents';
 

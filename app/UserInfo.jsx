@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox, Avatar } from 'react-toolbox';
-import ButtonInput from './modules/input/ButtonInput';
-import SMSCodeInput from './modules/input/SMSCodeInput';
+import { List, ListItem, ListDivider, Avatar } from 'react-toolbox';
 import style from './style';
 import { getUser, imageRoot } from './api';
 
