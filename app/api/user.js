@@ -75,5 +75,5 @@ export function getFavorites({ userId, from, size }, callback) {
     const profile = store.get('profile');
     userId = profile.userId;
   }
-  request.get(getUri(`/api/users/{userId}/favorites`, { from, size }), wapperCallback(callback));
+  request.get(getUri(`/api/users/${userId}/favorites`, { from, size }), wapperCallback(callback));
 }

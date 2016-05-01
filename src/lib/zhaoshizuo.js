@@ -1431,7 +1431,7 @@ export default class {
       options.sort = 'field -createdAt';
     }
 
-    Favorite.find(query, null, { limit, skip }, (err, favs) => callback(err, favs));
+    Favorite.find(query, null, options, (err, favs) => callback(err, favs));
   }
 
   countFavorite(query, callback) {

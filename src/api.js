@@ -878,7 +878,7 @@ export default function(app, zhaoshizuo) {
     });
   });
 
-  app.get(apiPrefix + '/users/:userId/favortes', (req, res) => {
+  app.get(apiPrefix + '/users/:userId/favorites', (req, res) => {
     let from = Number(req.query.from) || 0;
     let size = Number(req.query.size) || 10;
     if (size > 50) {
