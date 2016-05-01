@@ -36,6 +36,8 @@ import Purchased from './orders/Purchased';
 import Saled from './orders/Saled';
 import Order from './orders/Order';
 
+import Favorites from './Favorites';
+
 var router = module.exports = (
   <Router history={browserHistory}>
     <Route path="/" component={App}>
@@ -72,6 +74,7 @@ var router = module.exports = (
       <Route path="/purchased" component={Purchased} />
       <Route path="/saled" component={Saled} />
       <Route path="/orders/:id" component={Order} />
+      <Route path="favorites" component={Favorites} />
     </Route>
   </Router>
 );

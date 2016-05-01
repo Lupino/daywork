@@ -89,6 +89,7 @@ class App extends Component {
     let menus = [];
     if (logIn) {
       menus.push(<MenuItem value='profile' icon='account_box' caption='账户信息' key='profile' />);
+      menus.push(<MenuItem value='favorites' icon='favorite' caption='我的收藏' key='favorites' />);
       menus.push(<MenuDivider key='div1' />)
       menus.push(<MenuItem value='new_service' icon='add' caption='发布新服务' key='new_service' />);
       menus.push(<MenuItem value='services' icon='check_box_outline_blank' caption='我发布的服务' key='services' />);
