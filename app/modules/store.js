@@ -1,4 +1,3 @@
-"use strict"
 // https://raw.githubusercontent.com/marcuswestin/store.js/master/store.js
 // Module export pattern from
 // https://github.com/umdjs/umd/blob/master/returnExports.js
@@ -134,7 +133,7 @@
 		// In IE7, keys cannot start with a digit or contain certain chars.
 		// See https://github.com/marcuswestin/store.js/issues/40
 		// See https://github.com/marcuswestin/store.js/issues/83
-		var forbiddenCharsRegex = new RegExp("[!\"#$%&'()*+,/\\\\:;<=>?@[\\]^`{|}~]", "g")
+		var forbiddenCharsRegex = new RegExp('[!"#$%&\'()*+,/\\\\:;<=>?@[\\]^`{|}~]', 'g')
 		var ieKeyFix = function(key) {
 			return key.replace(/^d/, '___$&').replace(forbiddenCharsRegex, '___')
 		}

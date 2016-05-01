@@ -60,7 +60,7 @@ export function getServiceOrder({ orderId }, callback) {
 }
 
 export function getPurchasedOrders({ page, limit }, callback) {
-  request.get(getUri(`/api/orders/`, { page, limit }), wapperCallback(callback));
+  request.get(getUri('/api/orders/', { page, limit }), wapperCallback(callback));
 }
 
 export function getSaledOrders({ userId, page, limit }, callback) {

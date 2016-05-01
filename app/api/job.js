@@ -2,7 +2,7 @@ import request from './request';
 import { getUri, wapperCallback } from './utils';
 
 export function requestJob({ jobId }, callback) {
-  request.post(getUri(`/api/requestJob`), {jobId}, wapperCallback(callback));
+  request.post(getUri('/api/requestJob'), {jobId}, wapperCallback(callback));
 }
 
 export function getJob({ jobId }, callback) {
