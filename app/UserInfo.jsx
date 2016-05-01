@@ -76,3 +76,5 @@ export default class UserInfo extends Component {
     );
   }
 }
+
+UserInfo.title = '用户详情';
