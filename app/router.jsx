@@ -39,6 +39,8 @@ import Order from './orders/Order';
 import Favorites from './Favorites';
 import UserInfo from './UserInfo';
 
+import Search from './Search';
+
 var router = module.exports = (
   <Router history={browserHistory}>
     <Route path="/" component={App}>
@@ -77,6 +79,7 @@ var router = module.exports = (
       <Route path="/orders/:id" component={Order} />
       <Route path="favorites" component={Favorites} />
       <Route path="user_info/:userId" component={UserInfo} />
+      <Route path="/search/:query" component={Search} />
     </Route>
   </Router>
 );

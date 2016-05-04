@@ -9,3 +9,14 @@
     top: 19px;
   }
 }
+
+.search {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  .search-btn {
+    position: absolute;
+    top: 18px;
+    right: 0;
+  }
+}
