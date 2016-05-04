@@ -13,7 +13,6 @@ export default class Search extends Component {
   state = {
     loadMoreButton: true,
     docs: [],
-    query: '',
     total: 0,
     from: 0,
     size: 10
@@ -38,7 +37,7 @@ export default class Search extends Component {
       docs = docs.concat(lodash.clone(rsp.docs));
       const { total, size, from } = rsp;
       const loadMoreButton = total > from + size;
-      this.setState({ docs, total, size, from, query, loadMoreButton } );
+      this.setState({ docs, total, size, from, loadMoreButton } );
     });
   }
 
@@ -59,7 +58,8 @@ export default class Search extends Component {
   }
 
   render() {
-    const { docs, loadMoreButton, from, size, query } = this.state;
+    const { docs, loadMoreButton, from, size } = this.state;
+    const { query } = this.props.params;
 
     return (
       <div>
