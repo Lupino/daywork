@@ -8,7 +8,7 @@ import {
 import {
   getJob, getJobWorker, getJobRecords,
   addRecord, cancelRecord, assignWorker,
-  payOffline
+  payOffline, payOnline
 } from '../api';
 import UserItem from './UserItem';
 import style from '../style';
@@ -35,22 +35,31 @@ class Payment extends Component {
     }
   };
 
-  handlePayOffline = () => {
+  handlePay(online) {
     const { notify, jobId, id, confirm } = this.props;
     const { money } = this.state;
+    if (Number(money) === 0) {
+      return notify( '请输入支付金额' );
+    }
     this.handleCloseDialog();
     confirm({ message: '确定支付？', onConfirm: () => {
-      payOffline({ jobId, id, money }, (err, rsp) => {
+      const method = online ? payOnline : payOffline;
+      method({ jobId, id, money }, (err, rsp) => {
         if (err) {
-          return notify(err);
+          if (/Too/.exec(err)) {
+            return alert('支付失败，支付金额不正确');
+          }
+          if (/Not/.exec(err)) {
+            return alert('支付失败，余额不足，请充值');
+          }
+          return alert('支付失败');
         }
-        this.handleCloseDialog();
         if (this.props.onPaid) {
           this.props.onPaid();
         }
       });
     } });
-  };
+  }
 
   componentWillReceiveProps(props) {
     this.setState({ active: props.active });
@@ -60,7 +69,8 @@ class Payment extends Component {
     const { money, active } = this.state;
     const actions = [
       { label: '关闭', raised: true, accent: true, onClick: this.handleCloseDialog },
-      { label: '线下支付', raised: true, onClick: this.handlePayOffline}
+      { label: '线下支付', raised: true, onClick: this.handlePay.bind(this, false)},
+      { label: '余额支付', raised: true, onClick: this.handlePay.bind(this, true)}
     ];
     return (
       <Dialog actions={actions} active={active} title={'支付工资'}>

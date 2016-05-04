@@ -956,6 +956,160 @@ export default class {
     });
   }
 
+  payOnline(id, money, callback) {
+    let context = {};
+    callback = wrapperPaidRecordCallback(callback);
+    function errRecover() {
+      let myJob = context.myJob;
+      async.waterfall([
+        (next) => {
+          if (context.jobUser) {
+            User.findOneAndUpdate({ userId: context.jobUser.userId },
+                                  { $inc: { remainMoney: money } },
+                                  (err) => next(err));
+
+          } else {
+            next();
+          }
+        },
+        (next) => {
+          if (context.user) {
+            User.findOneAndUpdate({ userId: myJob.userId },
+                                  { $inc: { unpaid: money, paidOnline: - money, remainMoney: - money } },
+                                  (err) => next(err));
+
+          } else {
+            next();
+          }
+        },
+        (next) => {
+          if (!context.updatedMyJob) {
+            return next();
+          }
+          MyJob.findOneAndUpdate({ id: id },
+                                 { $inc: { unpaid: money, recordNumber: context.recordNumber,  paidOnline: - money },
+                                   remainMoney: myJob.remainMoney },
+                                 (err) => next(err));
+
+        },
+        (next) => {
+          async.eachLimit(context.paidRecs, 4,
+                          (recordId, done) => WorkRecord.findOneAndUpdate({ recordId },
+                                                                          { status: 'Unpaid' },
+                                                                          (err) => done(err)),
+                          (err) => next(err));
+        }
+      ], (err) => {
+        if (!err) {
+          err = 'success';
+        }
+        callback('paidOnline and recover: ' + err);
+      });
+    }
+    async.waterfall([
+      (next) => MyJob.findOne({ id: id }, (err, myJob) => next(err, myJob)),
+      (myJob, next) => {
+        if (myJob.unpaid < money) {
+          next('Too more money to pay, pleace check.');
+        } else {
+          context.myJob = myJob;
+          this.getJob(myJob.jobId, { user: true }, next);
+        }
+      },
+      (job, next) => {
+        if (job.user.remainMoney < money) {
+          return next('Not enought remainMoney.');
+        }
+        context.job = job;
+        let needMore = 1;
+        function wantPayLoop() {
+          let wantPay = money + context.myJob.remainMoney;
+          let limit = Math.floor(wantPay / job.salary) + needMore;
+          let query = { userId: context.myJob.userId, jobId: context.myJob.jobId, status: 'Unpaid' };
+          let options = { sort: 'field +seq', limit: limit };
+          WorkRecord.find(query, null, options, (err, recs) => {
+            if (err) {
+              return next(err);
+            }
+            let paidRecs = [];
+            _.each(recs, (rec) => {
+              wantPay = wantPay - rec.salary;
+              if (wantPay >= 0) {
+                paidRecs.push(rec.recordId);
+              }
+            });
+            if (wantPay > job.salary && paidRecs.length === recs.length && limit === recs) {
+              needMore += 10;
+              wantPayLoop();
+            } else {
+              context.remainMoney = wantPay;
+              next(null, paidRecs);
+            }
+          });
+        }
+        wantPayLoop();
+      },
+      (paidRecs, next) => {
+        context.paidRecs = paidRecs;
+        async.eachLimit(paidRecs, 4,
+                        (recordId, done) => WorkRecord.findOneAndUpdate({ recordId },
+                                                                        { status: 'PaidOnline' },
+                                                                        (err) => done(err)),
+                        (err) => next(err, paidRecs));
+      },
+      (paidRecs, next) => {
+        WorkRecord.find({ recordId: { $in: paidRecs } }, (err, recs) => next(err, recs));
+      },
+      (recs, next) => {
+        let recordNumber = _.sum(recs, 'recordNumber');
+        context.recordNumber = recordNumber;
+        MyJob.findOneAndUpdate({ id: id },
+                               { $inc: { unpaid: - money, recordNumber: - recordNumber, paidOnline: money },
+                                 remainMoney: context.remainMoney },
+                               (err, myJob) => next(err, myJob));
+      },
+      (myJob, next) => {
+        context.updatedMyJob = myJob;
+        User.findOneAndUpdate({ userId: myJob.userId },
+                              { $inc: { unpaid: - money, paidOnline: money, remainMoney: money } },
+                              (err, user) => next(err, user));
+      },
+      (user, next) => {
+        context.user = user;
+        User.findOneAndUpdate({ userId: context.job.userId },
+                              { $inc: { remainMoney: - money } },
+                              (err, user) => next(err, user));
+      },
+      (user, next) => {
+        context.jobUser = user;
+        let myJob = context.myJob;
+        let prec = new PaidRecord({
+          jobId: myJob.jobId,
+          userId: myJob.userId,
+          money: money,
+          payMethod: 'PaidOnline'
+        });
+        Sequence.next('paid-record-'+myJob.id, (_, seq) => {
+          prec.seq = seq;
+          prec.save((err, prec) => next(err, prec));
+        });
+      }
+    ], (err, prec) => {
+      if (err) {
+        if (context.paidRecs) {
+          return errRecover();
+        }
+        return callback(err);
+      } else {
+        callback(null, {
+          workRecords: context.paidRecs,
+          paidRecord: prec,
+          remainMoney: context.remainMoney,
+          worker: context.updatedMyJob });
+      }
+    });
+  }
+
   favorite({ userId, jobId, serviceId }, callback) {
     let query = { userId, jobId, serviceId };
     console.log(query);

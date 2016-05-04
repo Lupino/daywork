@@ -385,6 +385,16 @@ export default function(app, zhaoshizuo) {
                        (err, result) => sendJsonResponse(res, err, { result: result }));
   });
 
+  app.post(apiPrefix + '/jobs/:jobId/payOnline', requireLogin(), (req, res) => {
+    if (!req.isOwner) {
+      return sendJsonResponse(res, 403, 'no permission.');
+    }
+    let id = Number(req.body.id);
+    let money = Number(req.body.money);
+    zhaoshizuo.payOnline(id, money,
+                         (err, result) => sendJsonResponse(res, err, { result: result }));
+  });
+
   app.post(apiPrefix + '/signup', (req, res) => {
     let user = req.body;
     verifySmsCode(user.smsCode, user.phoneNumber, (err) => {

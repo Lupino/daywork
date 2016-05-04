@@ -29,6 +29,7 @@ export {
   addRecord,
   cancelRecord,
   payOffline,
+  payOnline,
   createJob,
   publishJob,
   finishJob,

@@ -98,3 +98,9 @@ export function payOffline({ jobId, id, money }, callback) {
                  { id, money },
                  wapperCallback(callback));
 }
+
+export function payOnline({ jobId, id, money }, callback) {
+    request.post(getUri(`/api/jobs/${jobId}/payOnline`),
+                 { id, money },
+                 wapperCallback(callback));
+}
