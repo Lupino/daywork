@@ -57,7 +57,7 @@ worker.addFunction('zhaoshizuo.paidRecord', wrapperCallback(({ userId, recordId,
     type: 'paidRecord',
     content: { recordId }
   };
-  addMessage({ userId, message, createdAt }, done());
+  addMessage({ userId, message, createdAt }, done);
 }));
 
 worker.addFunction('zhaoshizuo.requestJob', wrapperCallback(({ jobId, userId, createdAt }, done) => {
