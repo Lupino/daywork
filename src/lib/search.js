@@ -1,5 +1,6 @@
 import request from 'request';
 import { searchRoot } from '../config';
+import qs from 'querystring';
 
 function wapperCallback(callback) {
   return (err, rsp, body) => {
@@ -47,7 +48,7 @@ export default class Search {
     request.get(searchRoot + '/api/docs/' + docId, wapperCallback(callback));
   }
   search({q, from, size}, callback) {
-    request.get(`${searchRoot}/api/search/?q=${q}&from=${from}&size=${size}`,
+    request.get(`${searchRoot}/api/search/?${qs.stringify({q, from, size})}`,
                 wapperCallback(callback));
   }
 }
