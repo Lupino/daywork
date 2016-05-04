@@ -134,7 +134,14 @@ export default class Documents extends Component {
     );
   }
 
+  renderEmpty() {
+    return <div> {this.props.empty || '没有结果'} </div>
+  }
+
   render() {
+    if (!this.props.docs || this.props.docs.length === 0) {
+      return this.renderEmpty();
+    }
     const docs = this.props.docs.map((doc) => {
       if (doc.jobId) {
         return this.renderJob(doc);
