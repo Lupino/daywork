@@ -45,7 +45,7 @@ export default class Favorite extends Component {
 
     return (
       <div>
-        <Documents docs={docs} onUpdate={this.handleUpdateDocuments.bind(this)} />
+        <Documents docs={docs} onUpdate={this.handleUpdateDocuments.bind(this)} {...this.props} />
         { loadMoreButton &&
           <Button
             label='加载更多...'

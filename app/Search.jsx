@@ -64,7 +64,11 @@ export default class Search extends Component {
     return (
       <div>
         <SearchInput onSearch={this.handleNewSearch.bind(this)} query={query} />
-        <Documents docs={docs} onUpdate={this.handleUpdateDocuments.bind(this)} />
+        <Documents
+          docs={docs}
+          onUpdate={this.handleUpdateDocuments.bind(this)}
+          {...this.props}
+        />
         { loadMoreButton &&
           <Button
             label='加载更多...'
