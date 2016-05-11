@@ -1113,7 +1113,6 @@ export default class {
 
   favorite({ userId, jobId, serviceId }, callback) {
     let query = { userId, jobId, serviceId };
-    console.log(query);
     Favorite.findOne(query, (err, favorte) => {
       if (err) {
         return callback(err);
@@ -1128,7 +1127,6 @@ export default class {
 
   unfavorite({ userId, jobId, serviceId }, callback) {
     let query = { userId, jobId, serviceId };
-    console.log(query);
     Favorite.findOneAndRemove(query, (err, favorte) => callback(err, favorte));
   }
 
