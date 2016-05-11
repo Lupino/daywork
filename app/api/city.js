@@ -14,5 +14,5 @@ export function getAreas(cityId, callback) {
 }
 
 export function getArea(areaId, callback) {
-  request.get(getUri(`/api/areas/:areaId`), wapperCallback(callback));
+  request.get(getUri(`/api/areas/${areaId}`), wapperCallback(callback));
 }
