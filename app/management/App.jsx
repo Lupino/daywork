@@ -15,36 +15,36 @@ class App extends Component {
     const { location } = this.props;
     const isCurrent = (pathname) => {
       if (location.pathname.indexOf(pathname) > -1
-        || (pathname === '/dashboard' && location.pathname === '/')) {
+          || (pathname === '/management/dashboard' && location.pathname === '/management')) {
         return linkStyle.active;
       }
       return '';
     }
     const links = [
       {
-        href: '#/',
+        href: '/management/',
         label: '控制面板',
-        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/dashboard')}`
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/management/dashboard')}`
       },
       {
-        href: '#/users',
+        href: '/management/users',
         label: '用户管理',
-        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/users')}`
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/management/users')}`
       },
       {
-        href: '#/jobs',
+        href: '/management/jobs',
         label: '职位管理',
-        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/jobs')}`
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/management/jobs')}`
       },
       {
-        href: '#/services',
+        href: '/management/services',
         label: '服务管理',
-        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/services')}`
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/management/services')}`
       },
       {
-        href: '#/cities',
+        href: '/management/cities',
         label: '城市管理',
-        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/cities')}`
+        className: `${navStyle.link} ${style['color-white']} ${isCurrent('/management/cities')}`
       }
     ];
     return (

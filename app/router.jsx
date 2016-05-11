@@ -1,45 +1,69 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import App from './App';
-import About from './About';
-import Signin from './Signin';
-import Signup from './Signup';
-import Settings from './Settings';
-import Message from './Message';
-import Help from './Help';
-import Default from './Default';
-import Problem from './Problem';
+import App           from './App';
+import About         from './About';
+import Signin        from './Signin';
+import Signup        from './Signup';
+import Settings      from './Settings';
+import Message       from './Message';
+import Help          from './Help';
+import Default       from './Default';
+import Problem       from './Problem';
 import ResetPassword from './ResetPassword';
-import Profile from './Profile';
-import NewJob from './jobs/NewJob';
-import EditJob from './jobs/EditJob';
-import Jobs from './jobs/Jobs';
-import Works from './jobs/Works';
-import Job from './jobs/Job';
-import JobInfo from './jobs/JobInfo';
-import Work from './jobs/Work';
-import Worker from './jobs/Worker';
-import Request from './jobs/Request';
-import Balance from './Balance';
-import Payment from './payment/Payment';
-import Result from './payment/Result';
-import Cancel from './payment/Cancel';
-import DrawMoney from './payment/DrawMoney';
+import Profile       from './Profile';
+import NewJob        from './jobs/NewJob';
+import EditJob       from './jobs/EditJob';
+import Jobs          from './jobs/Jobs';
+import Works         from './jobs/Works';
+import Job           from './jobs/Job';
+import JobInfo       from './jobs/JobInfo';
+import Work          from './jobs/Work';
+import Worker        from './jobs/Worker';
+import Request       from './jobs/Request';
+import Balance       from './Balance';
+import Payment       from './payment/Payment';
+import Result        from './payment/Result';
+import Cancel        from './payment/Cancel';
+import DrawMoney     from './payment/DrawMoney';
 
 // service
-import NewService from './services/NewService';
-import EditService from './services/EditService';
-import Services from './services/Services';
-import Service from './services/Service';
-import ServiceInfo from './services/ServiceInfo';
-import Purchased from './orders/Purchased';
-import Saled from './orders/Saled';
-import Order from './orders/Order';
+import NewService    from './services/NewService';
+import EditService   from './services/EditService';
+import Services      from './services/Services';
+import Service       from './services/Service';
+import ServiceInfo   from './services/ServiceInfo';
+import Purchased     from './orders/Purchased';
+import Saled         from './orders/Saled';
+import Order         from './orders/Order';
 
-import Favorites from './Favorites';
-import UserInfo from './UserInfo';
+import Favorites     from './Favorites';
+import UserInfo      from './UserInfo';
 
-import Search from './Search';
+import Search        from './Search';
+
+import ManagementApp from './management/App';
+import Dashboard     from './management/Dashboard';
+import UserPannel    from './management/UserPannel';
+import UserList      from './management/users/UserList';
+import AddUser       from './management/users/AddUser';
+import EditUser      from './management/users/EditUser';
+import AddJob        from './management/users/AddJob';
+import AddService    from './management/users/AddService';
+import JobPannel     from './management/JobPannel';
+import JobList       from './management/jobs/JobList';
+import ServicePannel from './management/ServicePannel';
+import ServiceList   from './management/services/ServiceList';
+import CityPannel    from './management/CityPannel';
+import CityList      from './management/cities/CityList';
+import AddCity       from './management/cities/AddCity';
+import EditCity      from './management/cities/EditCity';
+import AddArea       from './management/cities/AddArea';
+import EditArea      from './management/cities/EditArea';
+import AreaList      from './management/cities/AreaList';
+
+import CategoryList  from './management/categories/CategoryList';
+import AddCategory   from './management/categories/AddCategory';
+import EditCategory  from './management/categories/EditCategory';
 
 var router = module.exports = (
   <Router history={browserHistory}>
@@ -80,6 +104,43 @@ var router = module.exports = (
       <Route path="favorites" component={Favorites} />
       <Route path="user_info/:userId" component={UserInfo} />
       <Route path="/search/:query" component={Search} />
+    </Route>
+
+    <Route path="/management/" component={ManagementApp}>
+      <IndexRoute component={Dashboard} />
+      <Route path="/management/dashboard" component={Dashboard} />
+      <Route path="/management/users" component={UserPannel}>
+        <IndexRoute component={UserList} />
+        <Route path="/management/users/p/:page" component={UserList} />
+        <Route path="/management/users/add" component={AddUser} />
+        <Route path="/management/users/edit/:userId" component={EditUser} />
+        <Route path="/management/users/:userId/addJob" component={AddJob} />
+        <Route path="/management/users/:userId/addService" component={AddService} />
+      </Route>
+      <Route path="/management/jobs" component={JobPannel}>
+        <IndexRoute component={JobList} />
+        <Route path="/management/jobs/p/:page" component={JobList} />
+        <Route path="/management/jobs/edit/:jobId" component={EditJob} />
+        <Route path="/management/jobs/categories/" component={CategoryList} />
+        <Route path="/management/jobs/categories/add" component={AddCategory} />
+        <Route path="/management/jobs/categories/edit/:categoryId" component={EditCategory} />
+      </Route>
+      <Route path="/management/services" component={ServicePannel}>
+        <IndexRoute component={ServiceList} />
+        <Route path="/management/services/p/:page" component={ServiceList} />
+        <Route path="/management/services/edit/:serviceId" component={EditService} />
+        <Route path="/management/services/categories/" component={CategoryList} />
+        <Route path="/management/services/categories/add" component={AddCategory} />
+        <Route path="/management/services/categories/edit/:categoryId" component={EditCategory} />
+      </Route>
+      <Route path="/management/cities" component={CityPannel}>
+        <IndexRoute component={CityList} />
+        <Route path="/management/cities/add" component={AddCity} />
+        <Route path="/management/cities/edit/:cityId" component={EditCity} />
+        <Route path="/management/cities/:cityId/addArea" component={AddArea} />
+        <Route path="/management/areas/edit/:areaId" component={EditArea} />
+        <Route path="/management/cities/:cityId/areas" component={AreaList} />
+      </Route>
     </Route>
   </Router>
 );
