@@ -326,7 +326,7 @@ export default class {
         },
         areaName(done) {
           if (!job.area) return done();
-          self.getCity(job.area, (err, area) => done(err, area? area.areaName : ''));
+          self.getArea(job.area, (err, area) => done(err, area? area.areaName : ''));
         }
       }, (err, result) => {
         if (err) return callback(err);
@@ -1299,7 +1299,7 @@ export default class {
         },
         areaName(done) {
           if (!service.area) return done();
-          self.getCity(service.area, (err, area) => done(err, area ? area.areaName : ''));
+          self.getArea(service.area, (err, area) => done(err, area ? area.areaName : ''));
         }
       }, (err, result) => {
         if (err) return callback(err);
