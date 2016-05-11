@@ -488,20 +488,38 @@ export default class {
       if (err) {
         return callback(err);
       }
+      let isJoin = false;
       if (!myJob) {
         myJob = new MyJob(query);
         myJob.status = 'Join';
+        isJoin = true;
       }
       if (myJob.status === 'Request') {
         myJob.status = 'Join';
+        isJoin = true;
       }
-      myJob.save((err, myJob) => callback(err, myJob));
+      myJob.save((err, myJob) => {
+        if (err) {
+          return callback(err);
+        }
+        if (isJoin) {
+          Job.findOneAndUpdate({ jobId }, { $inc: { workerCount: 1 } }, (err) => callback(err, myJob));
+        } else {
+          callback(err, myJob);
+        }
+      });
     });
   }
 
   leaveMyJob(userId, jobId, callback) {
     let query = { userId: userId, jobId: jobId, status: 'Join' };
-    MyJob.findOneAndUpdate(query, {status: 'Leave'}, (err, myJob) => callback(err, myJob));
+    MyJob.findOneAndUpdate(query, {status: 'Leave'}, (err, myJob) => {
+      if (myJob && myJob.status === 'Leave') {
+        Job.findOneAndUpdate({ jobId }, { $inc: { workerCount: -1 } }, (err) => callback(err, myJob));
+      } else {
+        callback(err, myJob);
+      }
+    });
   }
 
   finishMyJob(userId, jobId, callback) {

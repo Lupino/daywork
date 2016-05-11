@@ -65,6 +65,7 @@ var JobSchema = new Schema({
   payMethod: { type: String, default: 'Daily' }, // Daily | Hourly
   requiredPeople: Number,
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
+  workerCount: { type: Number, min: 0, default: 0 },
   image: Mixed,
   category: { type: String, index: true },
   createdAt: { type: Date, default: Date.now }
