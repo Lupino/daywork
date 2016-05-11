@@ -173,6 +173,7 @@ export default class JobList extends Component {
         if (job.requiredPeople === 0) {
           job.requiredPeople = '不限';
         }
+        job.requiredPeople = `${job.workerCount || 0} / ${job.requiredPeople}`;
         return job;
       });
       this.setState({ source, loaded: true, currentPage: Number(page), total: Number(total) });

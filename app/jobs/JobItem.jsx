@@ -14,7 +14,7 @@ export default class JobItem extends Component {
   render() {
     const { job, heading, children } = this.props;
     const { image, title, payMethod, salary, summary, jobId, createdAt, status,
-      requiredPeople, user, cityName, areaName, address } = job;
+      requiredPeople, workerCount, user, cityName, areaName, address } = job;
     return (
       <Card className={style.card}>
         { heading && user && <CardTitle
@@ -37,7 +37,7 @@ export default class JobItem extends Component {
         <CardText>{`城市：${cityName || '不限'}`}</CardText>
         <CardText>{`区域：${areaName || '不限'}`}</CardText>
         <CardText>{`地址：${address || '不限'}`}</CardText>
-        <CardText>{`需要人数：${requiredPeople > 0 ? requiredPeople + '个' : '不做限制'}`}</CardText>
+        <CardText>{`需要人数：${workerCount || 0} / ${requiredPeople > 0 ? requiredPeople + '个' : '不限'}`}</CardText>
         {children}
       </Card>
     );
