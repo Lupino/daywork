@@ -1589,7 +1589,22 @@ export default class {
   }
 
   finishServiceOrder(id, callback) {
-    ServiceOrder.findOneAndUpdate({ id }, { status: 'Finish' }, ( err, o ) => callback(err, o));
+    ServiceOrder.findOne({ id }, (err, o) => {
+      if (err) {
+        return callback(err);
+      }
+      if (o.status === 'Finish') {
+        return callback(null, o);
+      }
+      ServiceOrder.findOneAndUpdate({ id }, { status: 'Finish' }, ( err, o ) => {
+        if (!err && o) {
+          Service.findOneAndUpdate({ serviceId: o.serviceId }, { $inc: { saledCount: 1 } },
+                                   (err) => callback(err, o));
+        } else {
+          callback(err, o);
+        }
+      });
+    });
   }
 
   dealingServiceOrder(id, callback) {

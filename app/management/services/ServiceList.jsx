@@ -13,6 +13,7 @@ const ServiceModel = {
   realName: { type: String, title: '姓名' },
   title: { type: String, title: '标题' },
   price: { type: String, title: '价格' },
+  saledCount: { type: String, title: '销量' },
   cityName: { type: String, title: '城市' },
   areaName: { type: String, title: '区域' },
   status: { type: String, title: '状态' },
@@ -169,6 +170,7 @@ export default class ServiceList extends Component {
           service[key] = service.user[key];
         });
         service.price = service.price + ' RMB/' + getUnit(service.unit)
+        service.saledCount = `${service.saledCount || 0} ${getUnit(service.unit)}`;
         return service;
       });
       this.setState({ source, loaded: true, currentPage: Number(page), total: Number(total) });

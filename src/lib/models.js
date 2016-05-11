@@ -180,6 +180,7 @@ var ServiceSchema = new Schema({
   price: { type: Number, min: 0 },
   unit: { type: String },
   status: { type: String, default: 'Draft' }, // Draft | Publish | Finish | Deleted
+  saledCount: { type: Number, min: 0, default: 0 },
   image: Mixed,
   category: { type: String, index: true },
   createdAt: { type: Date, default: Date.now }

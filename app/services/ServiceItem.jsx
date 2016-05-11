@@ -27,7 +27,7 @@ export default class ServiceItem extends Component {
   }
   render() {
     const { service, heading, children } = this.props;
-    const { image, title, unit, price, summary, serviceId, createdAt, status,
+    const { image, title, unit, price, saledCount, summary, serviceId, createdAt, status,
       user, cityName, areaName, address } = service;
     return (
       <Card className={style.card}>
@@ -48,6 +48,7 @@ export default class ServiceItem extends Component {
           </div>
         </CardTitle>
         <CardText>状态：{getStatusString(status)}</CardText>
+        <CardText>{`销量：${saledCount || 0} ${getUnit(unit)}`}</CardText>
         <CardText>{summary}</CardText>
         <CardText>{`城市：${cityName || '不限'}`}</CardText>
         <CardText>{`区域：${areaName || '不限'}`}</CardText>
