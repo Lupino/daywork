@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import {
   Card, CardTitle, CardText, CardMedia, CardActions
 } from 'react-toolbox';
-import { prettyTime, getCityName } from '../modules/utils';
+import { prettyTime } from '../modules/utils';
 import style from '../style';
 import { imageRoot } from '../api';
 import { getUnit } from '../modules/utils';
@@ -27,7 +27,8 @@ export default class ServiceItem extends Component {
   }
   render() {
     const { service, heading, children } = this.props;
-    const { image, title, unit, price, summary, serviceId, createdAt, status, user, city, address } = service;
+    const { image, title, unit, price, summary, serviceId, createdAt, status,
+      user, cityName, areaName, address } = service;
     return (
       <Card className={style.card}>
         { heading && user && <CardTitle
@@ -48,7 +49,8 @@ export default class ServiceItem extends Component {
         </CardTitle>
         <CardText>状态：{getStatusString(status)}</CardText>
         <CardText>{summary}</CardText>
-        <CardText>{`城市：${getCityName(city)}`}</CardText>
+        <CardText>{`城市：${cityName || '不限'}`}</CardText>
+        <CardText>{`区域：${areaName || '不限'}`}</CardText>
         <CardText>{`地址：${address || '不限'}`}</CardText>
         {children}
       </Card>

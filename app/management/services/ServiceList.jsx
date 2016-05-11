@@ -4,7 +4,7 @@ import { Table, ProgressBar, Navigation } from 'react-toolbox';
 import { getServices, deleteService, publishService, finishService } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
-import { prettyTime, getCityName, getUnit } from '../../modules/utils';
+import { prettyTime, getUnit } from '../../modules/utils';
 import async from 'async';
 
 const ServiceModel = {
@@ -13,7 +13,8 @@ const ServiceModel = {
   realName: { type: String, title: '姓名' },
   title: { type: String, title: '标题' },
   price: { type: String, title: '价格' },
-  city: { type: String, title: '城市' },
+  cityName: { type: String, title: '城市' },
+  areaName: { type: String, title: '区域' },
   status: { type: String, title: '状态' },
   createdAt: { type: String, title: '创建时间' }
 };
@@ -167,7 +168,6 @@ export default class ServiceList extends Component {
         ['userName', 'realName'].forEach((key) => {
           service[key] = service.user[key];
         });
-        service.city = getCityName(service.city)
         service.price = service.price + ' RMB/' + getUnit(service.unit)
         return service;
       });

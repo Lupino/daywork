@@ -4,7 +4,7 @@ import { Table, ProgressBar, Navigation } from 'react-toolbox';
 import { getJobs, deleteJob, publishJob, finishJob } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
-import { prettyTime, getCityName, getUnit } from '../../modules/utils';
+import { prettyTime, getUnit } from '../../modules/utils';
 import async from 'async';
 
 const JobModel = {
@@ -13,7 +13,8 @@ const JobModel = {
   realName: { type: String, title: '姓名' },
   title: { type: String, title: '标题' },
   salary: { type: String, title: '薪资' },
-  city: { type: String, title: '城市' },
+  cityName: { type: String, title: '城市' },
+  areaName: { type: String, title: '区域' },
   requiredPeople: { type: String, title: '需要人数(个)' },
   status: { type: String, title: '状态' },
   createdAt: { type: String, title: '创建时间' }
@@ -168,7 +169,6 @@ export default class JobList extends Component {
         ['userName', 'realName'].forEach((key) => {
           job[key] = job.user[key];
         });
-        job.city = getCityName(job.city)
         job.salary = job.salary + ' RMB/' + getUnit(job.payMethod)
         if (job.requiredPeople === 0) {
           job.requiredPeople = '不限';

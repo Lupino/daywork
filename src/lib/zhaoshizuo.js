@@ -319,6 +319,14 @@ export default class {
           if (!options.requested) return done();
           let userId = options.requested;
           MyJob.findOne({ userId, jobId }, (err, myJob) => done(err, myJob));
+        },
+        cityName(done) {
+          if (!job.city) return done();
+          self.getCity(job.city, (err, city) => done(err, city? city.cityName : ''));
+        },
+        areaName(done) {
+          if (!job.area) return done();
+          self.getCity(job.area, (err, area) => done(err, area? area.areaName : ''));
         }
       }, (err, result) => {
         if (err) return callback(err);
@@ -349,6 +357,8 @@ export default class {
             job.work = false;
           }
         }
+        job.areaName = result.areaName;
+        job.cityName = result.cityName;
         callback(null, job);
       });
     });
@@ -391,6 +401,14 @@ export default class {
           let userId = extra.requested;
           let jobIds = _.uniq(_.compact(jobs.map(job => job.jobId)));
           MyJob.find({ userId: userId, jobId: { $in: jobIds } }, (err, myJobs) => done(err, myJobs));
+        },
+        cities(done) {
+          let cityIds = _.uniq(jobs.map(job => job.city));
+          City.find( { cityId: { $in: cityIds } }, (err, cities) => done(err, cities) );
+        },
+        areas(done) {
+          let areaIds = _.uniq(jobs.map(job => job.area));
+          Area.find( { areaId: { $in: areaIds } }, (err, areas) => done(err, areas) );
         }
       }, (err, result) => {
         if (err) {
@@ -399,9 +417,13 @@ export default class {
         result.users = result.users || [];
         result.favs = result.favs || [];
         result.reqs = result.reqs || [];
+        result.areas = result.areas || [];
+        result.cities = result.cities || [];
         let userMap = toMap(result.users.map(user => [user.userId, user]));
         let favMap = toMap(result.favs.map(fav => [fav.jobId, true]));
         let reqMap = toMap(result.reqs.map(req => [req.jobId, req]));
+        let areaMap = toMap(result.areas.map(({ areaId, areaName }) => [areaId, areaName]));
+        let cityMap = toMap(result.cities.map(({ cityId, cityName }) => [cityId, cityName]));
         jobs = jobs.map((job) => {
           job = job.toJSON();
           if (extra.user) {
@@ -430,6 +452,8 @@ export default class {
               job.work = false;
             }
           }
+          job.areaName = areaMap[job.area];
+          job.cityName = cityMap[job.city];
           return job;
         });
         callback(null, jobs);
@@ -1268,6 +1292,14 @@ export default class {
           if (!options.favorited) { return done(); }
           const userId = options.favorited;
           Favorite.findOne({ userId, serviceId }, (err, fav) => done(err, fav? true : false));
+        },
+        cityName(done) {
+          if (!service.city) return done();
+          self.getCity(service.city, (err, city) => done(err, city ? city.cityName : ''));
+        },
+        areaName(done) {
+          if (!service.area) return done();
+          self.getCity(service.area, (err, area) => done(err, area ? area.areaName : ''));
         }
       }, (err, result) => {
         if (err) return callback(err);
@@ -1278,6 +1310,8 @@ export default class {
         if (options.favorited) {
           service.favorited = result.favorited;
         }
+        service.cityName = result.cityName;
+        service.areaName = result.areaName;
         callback(null, service);
       });
     });
@@ -1314,6 +1348,14 @@ export default class {
           let userId = extra.favorited;
           let serviceIds = _.uniq(_.compact(services.map(service => service.serviceId)));
           Favorite.find({ userId: userId, serviceId: { $in: serviceIds } }, (err, favs) => done(err, favs));
+        },
+        cities(done) {
+          let cityIds = _.uniq(services.map(service => service.city));
+          City.find( { cityId: { $in: cityIds } }, (err, cities) => done(err, cities) );
+        },
+        areas(done) {
+          let areaIds = _.uniq(services.map(service => service.area));
+          Area.find( { areaId: { $in: areaIds } }, (err, areas) => done(err, areas) );
         }
       }, (err, result) => {
         if (err) {
@@ -1321,8 +1363,12 @@ export default class {
         }
         result.users = result.users || [];
         result.favs = result.favs || [];
+        result.areas = result.areas || [];
+        result.cities = result.cities || [];
         let userMap = toMap(result.users.map(user => [user.userId, user]));
         let favMap = toMap(result.favs.map(fav => [fav.serviceId, true]));
+        let areaMap = toMap(result.areas.map(({ areaId, areaName }) => [areaId, areaName]));
+        let cityMap = toMap(result.cities.map(({ cityId, cityName }) => [cityId, cityName]));
         services = services.map((service) => {
           service = service.toJSON();
           if (extra.user) {
@@ -1331,6 +1377,8 @@ export default class {
           if (extra.favorited) {
             service.favorited = favMap[service.serviceId];
           }
+          service.cityName = cityMap[service.city];
+          service.areaName = areaMap[service.area];
           return service;
         });
         callback(null, services);
@@ -1365,8 +1413,8 @@ export default class {
     areaObj.save((err, areaObj) => callback(err, areaObj));
   }
 
-  updateArea({ cityId, areaName, areaId }, callback) {
-    Area.findOneAndUpdate({ areaId }, { areaName, cityId },
+  updateArea({ areaName, areaId }, callback) {
+    Area.findOneAndUpdate({ areaId }, { areaName },
                           (err, areaObj) => callback(err, areaObj));
   }
 

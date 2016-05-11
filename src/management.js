@@ -128,9 +128,6 @@ export default function(app, zhaoshizuo) {
     if (!area.areaId) {
       return sendJsonResponse(res, 'areaId is required');
     }
-    if (!area.cityId) {
-      return sendJsonResponse(res, 'cityId is required');
-    }
     if (!area.areaName) {
       return sendJsonResponse(res, 'areaName is required');
     }

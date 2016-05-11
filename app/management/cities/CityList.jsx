@@ -4,7 +4,7 @@ import { Table, ProgressBar, Navigation } from 'react-toolbox';
 import { getCities } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
-import { prettyTime, getCityName, getUnit } from '../../modules/utils';
+import { prettyTime, getUnit } from '../../modules/utils';
 import async from 'async';
 
 const CityModel = {
