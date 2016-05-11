@@ -8,3 +8,11 @@ export function getCities(callback) {
 export function getCity(cityId, callback) {
   request.get(getUri(`/api/cities/${cityId}`), wapperCallback(callback));
 }
+
+export function getAreas(cityId, callback) {
+  request.get(getUri(`/api/cities/${cityId}/areas/`), wapperCallback(callback));
+}
+
+export function getArea(areaId, callback) {
+  request.get(getUri(`/api/areas/:areaId`), wapperCallback(callback));
+}

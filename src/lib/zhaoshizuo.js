@@ -19,6 +19,7 @@ import {
   JobCategory,
   ServiceCategory,
   City,
+  Area,
   ServiceOrder
 } from './models';
 import { sendJsonResponse } from './util';
@@ -1359,6 +1360,24 @@ export default class {
 
   getCity(cityId, callback) {
     City.findOne({ cityId }, (err, city) => callback(err, city));
+  }
+
+  addArea({ areaId, areaName, cityId }, callback) {
+    let areaObj = new Area({ areaId, areaName, cityId });
+    areaObj.save((err, areaObj) => callback(err, areaObj));
+  }
+
+  updateArea({ cityId, areaName, areaId }, callback) {
+    Area.findOneAndUpdate({ areaId }, { areaName, cityId },
+                          (err, areaObj) => callback(err, areaObj));
+  }
+
+  getAreas(cityId, callback) {
+    Area.find({cityId}, (err, areas) => callback(err, areas));
+  }
+
+  getArea(areaId, callback) {
+    Area.findOne({ areaId }, (err, area) => callback(err, area));
   }
 
   addCategory({ categoryId, categoryName, categoryType, icon }, callback) {

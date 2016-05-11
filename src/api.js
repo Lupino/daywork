@@ -860,6 +860,20 @@ export default function(app, zhaoshizuo) {
     });
   });
 
+  app.get(apiPrefix + '/cities/:cityId/areas/?', (req, res) => {
+    const { cityId } = req.params;
+    zhaoshizuo.getAreas(cityId, (err, areas) => {
+      sendJsonResponse(res, err, { areas });
+    });
+  });
+
+  app.get(apiPrefix + '/areas/:areaId', (req, res) => {
+    const { areaId } = req.params;
+    zhaoshizuo.getArea(areaId, (err, area) => {
+      sendJsonResponse(res, err, { area });
+    });
+  });
+
   app.get(apiPrefix + '/search/?', (req, res) => {
     const { q, from, size } = req.query;
     search({ q, from, size }, (err, rsp) => {

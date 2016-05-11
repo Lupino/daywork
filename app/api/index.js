@@ -84,7 +84,9 @@ export {
 
 export {
   getCities,
-  getCity
+  getCity,
+  getAreas,
+  getArea
 } from './city';
 
 export {

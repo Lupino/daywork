@@ -194,6 +194,15 @@ var CitySchema = new Schema({
 
 export var City = mongoose.model('City', CitySchema);
 
+var AreaSchema = new Schema({
+  areaId: { type: String, index: { unique: true } },
+  cityId: { type: String, index: true },
+  areaName: { type: String, index: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export var Area = mongoose.model('Area', AreaSchema);
+
 var JobCategorySchema = new Schema({
   categoryId: { type: String, index: { unique: true } },
   categoryName: { type: String, index: { unique: true }},

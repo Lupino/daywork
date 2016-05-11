@@ -107,6 +107,38 @@ export default function(app, zhaoshizuo) {
     });
   });
 
+  app.post(apiPrefix + '/management/addArea', requireAdmin(), (req, res) => {
+    const area = req.body;
+    if (!area.areaId) {
+      return sendJsonResponse(res, 'areaId is required');
+    }
+    if (!area.cityId) {
+      return sendJsonResponse(res, 'cityId is required');
+    }
+    if (!area.areaName) {
+      return sendJsonResponse(res, 'areaName is required');
+    }
+    zhaoshizuo.addArea(area, (err, area) => {
+      sendJsonResponse(res, err, { area });
+    });
+  });
+
+  app.post(apiPrefix + '/management/updateArea', requireAdmin(), (req, res) => {
+    const area = req.body;
+    if (!area.areaId) {
+      return sendJsonResponse(res, 'areaId is required');
+    }
+    if (!area.cityId) {
+      return sendJsonResponse(res, 'cityId is required');
+    }
+    if (!area.areaName) {
+      return sendJsonResponse(res, 'areaName is required');
+    }
+    zhaoshizuo.updateArea(area, (err, area) => {
+      sendJsonResponse(res, err, { area });
+    });
+  });
+
   app.post(apiPrefix + '/management/addCategory', requireAdmin(), (req, res) => {
     const category = req.body;
     if (!category.categoryId) {

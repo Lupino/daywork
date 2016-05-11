@@ -44,6 +44,16 @@ export function updateCity({ cityId, cityName }, callback) {
                wapperCallback(callback));
 }
 
+export function addArea({ areaId, areaName, cityId }, callback) {
+  request.post(getUri('/api/management/addArea'), { areaId, areaName, cityId },
+               wapperCallback(callback));
+}
+
+export function updateArea({ areaId, areaName, cityId }, callback) {
+  request.post(getUri('/api/management/updateArea'), { areaId, areaName, cityId },
+               wapperCallback(callback));
+}
+
 export function addCategory({ categoryId, categoryName, categoryType, icon }, callback) {
   request.post(getUri('/api/management/addCategory'), { categoryId, categoryName, categoryType, icon },
                wapperCallback(callback));
