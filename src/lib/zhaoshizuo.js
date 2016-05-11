@@ -247,14 +247,14 @@ export default class {
     };
   }
 
-  createJob({ userId, title, summary, city, address, salary, payMethod, requiredPeople,
+  createJob({ userId, title, summary, city, area, address, salary, payMethod, requiredPeople,
             category, image, status }, callback) {
     callback = wapperIndexJobCallback(callback);
     if (status !== 'Draft' && status !== 'Publish') {
       status = 'Draft';
     }
     let jobObj = new Job({
-      userId, title, summary, city, address, salary, payMethod, requiredPeople,
+      userId, title, summary, city, area, address, salary, payMethod, requiredPeople,
       status, category, image
     });
     jobObj.save((err, jobObj) => callback(err, jobObj));
@@ -281,7 +281,7 @@ export default class {
   updateJob(jobId, job, callback) {
     callback = wapperIndexJobCallback(callback);
     let updated = {};
-    ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'category', 'city', 'area', 'address'].forEach(key => {
       if (job[key]) {
         updated[key] = job[key];
       }
@@ -1205,13 +1205,13 @@ export default class {
   }
 
   // service
-  createService({ userId, title, summary, price, unit, status, category, image, city, address }, callback) {
+  createService({ userId, title, summary, price, unit, status, category, image, city, area, address }, callback) {
     callback = wapperIndexServiceCallback(callback);
     if (status !== 'Draft' && status !== 'Publish') {
       status = 'Draft';
     }
     let serviceObj = new Service({
-      userId, title, summary, price, unit, status, category, image, city, address
+      userId, title, summary, price, unit, status, category, image, city, area, address
     });
     serviceObj.save((err, serviceObj) => callback(err, serviceObj));
   }
@@ -1237,7 +1237,7 @@ export default class {
   updateService(serviceId, service, callback) {
     callback = wapperIndexServiceCallback(callback);
     let updated = {};
-    ['title', 'summary', 'status', 'image', 'category', 'city', 'address'].forEach(key => {
+    ['title', 'summary', 'status', 'image', 'category', 'city', 'area', 'address'].forEach(key => {
       if (service[key]) {
         updated[key] = service[key];
       }

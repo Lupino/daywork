@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'react-toolbox';
-import { getCities } from '../../api';
+import { getCities, getAreas } from '../../api';
+import style from './style';
 
 export default class Cities extends Component {
 
   state = {
-    source: []
+    source: [],
+    source2: []
   };
 
+  handleChange(name, value) {
+    this.props.onChange(name, value);
+  }
+
   loadCities() {
-    const { type } = this.props;
     getCities((err, rsp) => {
       if (err) {
         alert(err);
@@ -23,18 +28,50 @@ export default class Cities extends Component {
     });
   }
 
+  loadAreas(cityId) {
+    getAreas(cityId, (err, rsp) => {
+      if (err) {
+        return alert(err);
+      }
+      const { areas } = rsp;
+      const source2 = areas.map(({ areaId, areaName }) => {
+        return { value: areaId, label: areaName }
+      });
+      this.setState({ source2 });
+    });
+  }
+
   componentDidMount() {
     this.loadCities();
+    if (this.props.city) {
+      this.loadAreas(this.props.city);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.city !== nextProps.city) {
+      this.loadAreas(nextProps.city);
+    }
   }
 
   render() {
-    const { ...props } = this.props;
-    const { source } = this.state;
+    const { city, area } = this.props;
+    const { source, source2 } = this.state;
     return (
-      <Dropdown
-        source={source}
-        {...props}
-      />
+      <div className={style['city-group']}>
+        <Dropdown
+          source={source}
+          onChange={this.handleChange.bind(this, 'city')}
+          value={city}
+          className={`${style['city-item']} ${style['city-item-first']}`}
+          label="城市" />
+        <Dropdown
+          source={source2}
+          onChange={this.handleChange.bind(this, 'area')}
+          value={area}
+          className={style['city-item']}
+          label="区域" />
+      </div>
     );
   }
 }

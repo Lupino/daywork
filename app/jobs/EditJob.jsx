@@ -18,6 +18,7 @@ export default class EditJob extends Component {
       image: {},
       category: '',
       city: '',
+      area: '',
       address: '',
       errors: {},
       loaded: false
@@ -29,7 +30,7 @@ export default class EditJob extends Component {
   handleSave = () => {
     const { params, notify } = this.props;
     const jobId = params.jobId;
-    const { title, summary, image, category, city, address } = this.state;
+    const { title, summary, image, category, city, area, address } = this.state;
     const { router } = this.context;
 
     let hasError = false;
@@ -44,7 +45,7 @@ export default class EditJob extends Component {
       return notify('发现一些错误');
     }
 
-    updateJob({ jobId, title, summary, image, category, city, address }, (err, job) => {
+    updateJob({ jobId, title, summary, image, category, city, area, address }, (err, job) => {
       if (err) {
         return notify(err);
       }
@@ -67,15 +68,15 @@ export default class EditJob extends Component {
       if (err) {
         return notify(err);
       }
-      const { title, summary, image, city, address, category } = rsp.job;
-      this.setState({ title, summary, image, city, address, category, loaded: true });
+      const { title, summary, image, city, area, address, category } = rsp.job;
+      this.setState({ title, summary, image, city, area, address, category, loaded: true });
     })
   };
   componentDidMount() {
     this.loadJob();
   }
   render() {
-    const { title, summary, image, category, city, address, errors } = this.state;
+    const { title, summary, image, category, city, area, address, errors } = this.state;
     return (
       <div data-name='edit-job'>
         <List selectable ripple>
@@ -103,9 +104,10 @@ export default class EditJob extends Component {
           </li>
           <li>
             <Cities
-              label="城市"
-              onChange={this.handleInputChange.bind(this, 'city')}
-              value={city} />
+              onChange={this.handleInputChange.bind(this)}
+              city={city}
+              area={area}
+            />
           </li>
           <li>
             <Input label="地址"

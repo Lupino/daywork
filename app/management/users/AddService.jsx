@@ -23,6 +23,7 @@ export default class AddService extends Component {
       image: {},
       category: '',
       city: '',
+      area: '',
       address: '',
       errors: {}
     }
@@ -73,7 +74,7 @@ export default class AddService extends Component {
     });
   };
   render() {
-    const { title, summary, price, unit, status, category, city, address, image, errors } = this.state;
+    const { title, summary, price, unit, status, category, city, area, address, image, errors } = this.state;
     return (
       <div style={{width: 600}}>
         <List selectable ripple>
@@ -101,9 +102,10 @@ export default class AddService extends Component {
           </li>
           <li>
             <Cities
-              label="城市"
-              onChange={this.handleInputChange.bind(this, 'city')}
-              value={city} />
+              onChange={this.handleInputChange.bind(this)}
+              city={city}
+              area={area}
+            />
           </li>
           <li>
             <Input label="地址"

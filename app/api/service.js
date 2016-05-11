@@ -12,9 +12,9 @@ export function getServices({ category, status, userId, page, limit }, callback)
 }
 
 export function createService({ title, summary, unit, price, status, category,
-                              image, city, address }, callback) {
+                              image, city, area, address }, callback) {
   request.post(getUri('/api/services/create'),
-               { title, summary, unit, price, status, category, image, city, address },
+               { title, summary, unit, price, status, category, image, city, area, address },
                wapperCallback(callback));
 }
 
@@ -31,9 +31,9 @@ export function deleteService({ serviceId }, callback) {
                wapperCallback(callback));
 }
 
-export function updateService({ serviceId, title, summary, image, status, category, city, address }, callback) {
+export function updateService({ serviceId, title, summary, image, status, category, city, area, address }, callback) {
   request.post(getUri(`/api/services/${serviceId}/update`),
-               { title, summary, image, status, category, city, address },
+               { title, summary, image, status, category, city, area, address },
                wapperCallback(callback));
 }
 

@@ -18,6 +18,7 @@ export default class EditService extends Component {
       image: {},
       category: '',
       city: '',
+      area: '',
       address: '',
       errors: {},
       loaded: false
@@ -29,7 +30,7 @@ export default class EditService extends Component {
   handleSave = () => {
     const { params, notify } = this.props;
     const serviceId = params.serviceId;
-    const { title, summary, image, category, city, address } = this.state;
+    const { title, summary, image, category, city, area, address } = this.state;
     const { router } = this.context;
 
     let hasError = false;
@@ -44,7 +45,7 @@ export default class EditService extends Component {
       return notify('发现一些错误');
     }
 
-    updateService({ serviceId, title, summary, image, category, city, address }, (err, service) => {
+    updateService({ serviceId, title, summary, image, category, city, area, address }, (err, service) => {
       if (err) {
         return notify(err);
       }
@@ -67,15 +68,15 @@ export default class EditService extends Component {
       if (err) {
         return notify(err);
       }
-      const { title, summary, image, category, city, address } = rsp.service;
-      this.setState({ title, summary, image, category, city, address, loaded: true });
+      const { title, summary, image, category, city, area, address } = rsp.service;
+      this.setState({ title, summary, image, category, city, area, address, loaded: true });
     })
   };
   componentDidMount() {
     this.loadService();
   }
   render() {
-    const { title, summary, image, category, city, address, errors } = this.state;
+    const { title, summary, image, category, city, area, address, errors } = this.state;
     return (
       <div data-name='edit-service'>
         <List selectable ripple>
@@ -103,9 +104,10 @@ export default class EditService extends Component {
           </li>
           <li>
             <Cities
-              label="城市"
-              onChange={this.handleInputChange.bind(this, 'city')}
-              value={city} />
+              onChange={this.handleInputChange.bind(this)}
+              city={city}
+              area={area}
+            />
           </li>
           <li>
             <Input label="地址"

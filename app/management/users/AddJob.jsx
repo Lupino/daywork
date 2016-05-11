@@ -23,6 +23,7 @@ export default class AddJob extends Component {
       image: {},
       category: '',
       city: 'xiamen',
+      area: '',
       address: '',
       errors: {}
     }
@@ -73,7 +74,7 @@ export default class AddJob extends Component {
   };
   render() {
     const { title, summary, salary, payMethod, requiredPeople, status, category,
-      city, address, image, errors } = this.state;
+      city, area, address, image, errors } = this.state;
     const { router } = this.context;
     return (
       <div style={{width: 600}}>
@@ -102,9 +103,10 @@ export default class AddJob extends Component {
           </li>
           <li>
             <Cities
-              label="城市"
-              onChange={this.handleInputChange.bind(this, 'city')}
-              value={city} />
+              onChange={this.handleInputChange.bind(this)}
+              city={city}
+              area={area}
+            />
           </li>
           <li>
             <Input label="地址"

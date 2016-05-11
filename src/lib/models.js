@@ -59,6 +59,7 @@ var JobSchema = new Schema({
   title: String,
   summary: String,
   city: String,
+  area: String,
   address: String,
   salary: { type: Number, min: 0 },
   payMethod: { type: String, default: 'Daily' }, // Daily | Hourly
@@ -173,6 +174,7 @@ var ServiceSchema = new Schema({
   title: String,
   summary: String,
   city: String,
+  area: String,
   address: String,
   price: { type: Number, min: 0 },
   unit: { type: String },
