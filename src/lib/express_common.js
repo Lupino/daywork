@@ -58,4 +58,24 @@ export default function(app, zhaoshizuo) {
     });
   });
 
+  app.param('cityId', (req, res, next, cityId) => {
+    zhaoshizuo.getCity(cityId, (err, city) => {
+      if (err || !city) {
+        return sendJsonResponse(res, 'City: ' + cityId + ' is not found.');
+      }
+      req.city = city;
+      next();
+    });
+  });
+
+  app.param('areaId', (req, res, next, areaId) => {
+    zhaoshizuo.getArea(areaId, (err, area) => {
+      if (err || !area) {
+        return sendJsonResponse(res, 'Area: ' + areaId + ' is not found.');
+      }
+      req.area = area;
+      next();
+    });
+  });
+
 }

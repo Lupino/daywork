@@ -854,22 +854,28 @@ export default function(app, zhaoshizuo) {
   });
 
   app.get(apiPrefix + '/cities/:cityId', (req, res) => {
-    const { cityId } = req.params;
-    zhaoshizuo.getCity(cityId, (err, city) => {
-      sendJsonResponse(res, err, { city });
-    });
+    const { city } = req;
+    sendJsonResponse(res, err, { city });
   });
 
   app.get(apiPrefix + '/cities/:cityId/areas/?', (req, res) => {
     const { cityId } = req.params;
     zhaoshizuo.getAreas(cityId, (err, areas) => {
+      if (areas) {
+        areas = areas.map((area) => {
+          area = area.toJSON();
+          area.cityName = req.city.cityName;
+          return area;
+        });
+      }
       sendJsonResponse(res, err, { areas });
     });
   });
 
   app.get(apiPrefix + '/areas/:areaId', (req, res) => {
-    const { areaId } = req.params;
-    zhaoshizuo.getArea(areaId, (err, area) => {
+    zhaoshizuo.getCity(req.area.cityId, (err, city) => {
+      let area = req.area.toJSON();
+      area.cityName = city.cityName;
       sendJsonResponse(res, err, { area });
     });
   });
