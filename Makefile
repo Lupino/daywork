@@ -17,6 +17,7 @@ $(DIST): $(SRC) Makefile
 	@sed -i 's@../config.json@./config.json@' $(DIST)config.js
 	@cp package/Dockerfile $(DIST)
 	@cp package/package.json $(DIST)
+	@cp package/.dockerignore $(DIST)
 
 $(APPJS): $(FILES) webpack.production.config.js
 	npm run build
