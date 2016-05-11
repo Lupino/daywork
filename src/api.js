@@ -855,7 +855,7 @@ export default function(app, zhaoshizuo) {
 
   app.get(apiPrefix + '/cities/:cityId', (req, res) => {
     const { city } = req;
-    sendJsonResponse(res, err, { city });
+    sendJsonResponse(res, null, { city });
   });
 
   app.get(apiPrefix + '/cities/:cityId/areas/?', (req, res) => {
