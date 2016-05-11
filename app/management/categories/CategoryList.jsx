@@ -30,7 +30,7 @@ export default class CategoryList extends Component {
     const { router } = this.context;
     const { categoryType } = this.props;
     const prefix = categoryType === 'job' ? 'jobs' : 'services';
-    router.push(`${prefix}/categories/edit/${category.categoryId}`);
+    router.push(`/management/${prefix}/categories/edit/${category.categoryId}`);
   }
 
   loadCategoryList(page) {

@@ -3,10 +3,10 @@ import React, { Component, PropTypes, cloneElement } from 'react';
 import { Menu, MenuItem, MenuDivider } from 'react-toolbox';
 import style from './style';
 
-export default class Dashboard extends Component {
+export default class CityPannel extends Component {
   handleMenuSelect = (menuValue) => {
     const { router } = this.context;
-    router.push('cities' + menuValue);
+    router.push('/management/cities' + menuValue);
   };
 
   render() {
@@ -30,6 +30,6 @@ export default class Dashboard extends Component {
   }
 }
 
-Dashboard.contextTypes = {
+CityPannel.contextTypes = {
   router: PropTypes.object
 }

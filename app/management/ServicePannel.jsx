@@ -3,10 +3,10 @@ import React, { Component, PropTypes, cloneElement } from 'react';
 import { Menu, MenuItem, MenuDivider } from 'react-toolbox';
 import style from './style';
 
-export default class Dashboard extends Component {
+export default class ServicePannel extends Component {
   handleMenuSelect = (menuValue) => {
     const { router } = this.context;
-    router.push('services' + menuValue);
+    router.push('/management/services' + menuValue);
   };
 
   render() {
@@ -31,6 +31,6 @@ export default class Dashboard extends Component {
   }
 }
 
-Dashboard.contextTypes = {
+ServicePannel.contextTypes = {
   router: PropTypes.object
 }

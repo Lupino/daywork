@@ -79,7 +79,7 @@ export default class AddUser extends Component {
           checkError: {}
         });
       } else {
-        router.push('/users');
+        router.push('/management/users');
       }
     });
   };

@@ -35,7 +35,7 @@ export default class ServiceList extends Component {
 
   handlePagenavClick = (page) => {
     const { router } = this.context;
-    router.push(`/services/p/${page}`);
+    router.push(`/management/services/p/${page}`);
   };
 
   handleShowEditService = () => {
@@ -45,7 +45,7 @@ export default class ServiceList extends Component {
     }
     const service = source[selected[0]];
     const { router } = this.context;
-    router.push(`/services/edit/${service.serviceId}`);
+    router.push(`/management/services/edit/${service.serviceId}`);
   }
 
   handleDeleteService = () => {

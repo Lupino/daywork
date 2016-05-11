@@ -36,7 +36,7 @@ export default class JobList extends Component {
 
   handlePagenavClick = (page) => {
     const { router } = this.context;
-    router.push(`/jobs/p/${page}`);
+    router.push(`/management/jobs/p/${page}`);
   };
 
   handleShowEditJob = () => {
@@ -46,7 +46,7 @@ export default class JobList extends Component {
     }
     const job = source[selected[0]];
     const { router } = this.context;
-    router.push(`/jobs/edit/${job.jobId}`);
+    router.push(`/management/jobs/edit/${job.jobId}`);
   }
 
   handleDeleteJob = () => {

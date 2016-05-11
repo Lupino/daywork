@@ -28,7 +28,7 @@ export default class AreaList extends Component {
   handleShowAddArea = () => {
     const { router } = this.context;
     const { cityId } = this.props.params;
-    router.push(`/cities/${cityId}/addArea`);
+    router.push(`/management/cities/${cityId}/addArea`);
   }
 
 
@@ -39,7 +39,7 @@ export default class AreaList extends Component {
     }
     const area = source[selected[0]];
     const { router } = this.context;
-    router.push(`/areas/edit/${area.areaId}`);
+    router.push(`/management/areas/edit/${area.areaId}`);
   }
 
   loadAreaList(page) {

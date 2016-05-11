@@ -31,7 +31,7 @@ export default class CityList extends Component {
     }
     const city = source[selected[0]];
     const { router } = this.context;
-    router.push(`/cities/edit/${city.cityId}`);
+    router.push(`/management/cities/edit/${city.cityId}`);
   }
 
   handleShowArea = () => {
@@ -41,7 +41,7 @@ export default class CityList extends Component {
     }
     const city = source[selected[0]];
     const { router } = this.context;
-    router.push(`/cities/${city.cityId}/areas`);
+    router.push(`/management/cities/${city.cityId}/areas`);
   }
 
   handleShowAddArea = () => {
@@ -51,7 +51,7 @@ export default class CityList extends Component {
     }
     const city = source[selected[0]];
     const { router } = this.context;
-    router.push(`/cities/${city.cityId}/addArea`);
+    router.push(`/management/cities/${city.cityId}/addArea`);
   }
 
   loadCityList(page) {

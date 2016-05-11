@@ -87,7 +87,7 @@ export default class UserList extends Component {
 
   handlePagenavClick = (page) => {
     const { router } = this.context;
-    router.push(`/users/p/${page}`);
+    router.push(`/management/users/p/${page}`);
   };
 
   handleClose = () => {
@@ -110,7 +110,7 @@ export default class UserList extends Component {
     }
     const user = source[selected[0]];
     const { router } = this.context;
-    router.push(`/users/edit/${user.userId}`);
+    router.push(`/management/users/edit/${user.userId}`);
   }
 
   handleShowAddJob = () => {
@@ -120,7 +120,7 @@ export default class UserList extends Component {
     }
     const user = source[selected[0]];
     const { router } = this.context;
-    router.push(`/users/${user.userId}/addJob`);
+    router.push(`/management/users/${user.userId}/addJob`);
   }
 
   handleShowAddService = () => {
@@ -130,7 +130,7 @@ export default class UserList extends Component {
     }
     const user = source[selected[0]];
     const { router } = this.context;
-    router.push(`/users/${user.userId}/addService`);
+    router.push(`/management/users/${user.userId}/addService`);
   }
 
   loadUserList(page) {
