@@ -18,6 +18,9 @@ import CityPannel from './CityPannel';
 import CityList from './cities/CityList';
 import AddCity from './cities/AddCity';
 import EditCity from './cities/EditCity';
+import AddArea from './cities/AddArea';
+import EditArea from './cities/EditArea';
+import AreaList from './cities/AreaList';
 
 import CategoryList from './categories/CategoryList';
 import AddCategory from './categories/AddCategory';
@@ -56,6 +59,9 @@ var router = module.exports = (
         <IndexRoute component={CityList} />
         <Route path="/cities/add" component={AddCity} />
         <Route path="/cities/edit/:cityId" component={EditCity} />
+        <Route path="/cities/:cityId/addArea" component={AddArea} />
+        <Route path="/areas/edit/:areaId" component={EditArea} />
+        <Route path="/cities/:cityId/areas" component={AreaList} />
       </Route>
     </Route>
   </Router>

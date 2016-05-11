@@ -1,19 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Table, ProgressBar, Navigation } from 'react-toolbox';
-import { getCities } from '../../api';
+import { getAreas } from '../../api';
 import Pagenav from '../../modules/Pagenav';
 import PasswordInput from '../../modules/input/PasswordInput';
-import { prettyTime, getCityName, getUnit } from '../../modules/utils';
+import { prettyTime, getAreaName, getUnit } from '../../modules/utils';
 import async from 'async';
 
-const CityModel = {
-  cityId: { type: String, title: '#' },
+const AreaModel = {
+  areaId: { type: String, title: '#' },
   cityName: { type: String, title: '城市' },
+  areaName: { type: String, title: '区域' },
   createdAt: { type: String, title: '添加时间' }
 };
 
-export default class CityList extends Component {
+export default class AreaList extends Component {
   state = {
     selected: [],
     source: [],
@@ -24,57 +25,45 @@ export default class CityList extends Component {
     this.setState({selected});
   };
 
-  handleShowEditCity = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const city = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/cities/edit/${city.cityId}`);
-  }
-
-  handleShowArea = () => {
-    const { selected, source } = this.state;
-    if (selected.length === 0) {
-      return;
-    }
-    const city = source[selected[0]];
-    const { router } = this.context;
-    router.push(`/cities/${city.cityId}/areas`);
-  }
-
   handleShowAddArea = () => {
+    const { router } = this.context;
+    const { cityId } = this.props.params;
+    router.push(`/cities/${cityId}/addArea`);
+  }
+
+
+  handleShowEditArea = () => {
     const { selected, source } = this.state;
     if (selected.length === 0) {
       return;
     }
-    const city = source[selected[0]];
+    const area = source[selected[0]];
     const { router } = this.context;
-    router.push(`/cities/${city.cityId}/addArea`);
+    router.push(`/areas/edit/${area.areaId}`);
   }
 
-  loadCityList(page) {
+  loadAreaList(page) {
     const { notify } = this.props;
+    const { cityId } = this.props.params;
 
     this.setState({ loaded: false });
-    getCities((err, rsp) => {
+    getAreas(cityId, (err, rsp) => {
       if (err) {
         return notify(err);
       }
 
-      const { cities } = rsp;
+      const { areas } = rsp;
 
-      const source = (cities || []).map((city) => {
-        city.createdAt = prettyTime(city.createdAt);
-        return city;
+      const source = (areas || []).map((area) => {
+        area.createdAt = prettyTime(area.createdAt);
+        return area;
       });
       this.setState({ source, loaded: true });
     });
   }
 
   componentDidMount() {
-    this.loadCityList();
+    this.loadAreaList();
   }
 
   render() {
@@ -84,16 +73,15 @@ export default class CityList extends Component {
 
     const { source, selected } = this.state;
     const actions = [
-      { label: '查看区域', raised: true, disabled: selected.length !== 1, onClick: this.handleShowArea },
-      { label: '添加区域', raised: true, disabled: selected.length !== 1, onClick: this.handleShowAddArea },
-      { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditCity }
+      { label: '添加', raised: true, onClick: this.handleShowAddArea },
+      { label: '编辑', raised: true, disabled: selected.length !== 1, onClick: this.handleShowEditArea }
     ]
     return (
       <section>
         <Navigation type='horizontal' actions={actions}>
         </Navigation>
         <Table
-          model={CityModel}
+          model={AreaModel}
           source={source}
           onSelect={this.handleSelect}
           selectable={true}
@@ -105,6 +93,6 @@ export default class CityList extends Component {
   }
 }
 
-CityList.contextTypes = {
+AreaList.contextTypes = {
   router: PropTypes.object
 }
